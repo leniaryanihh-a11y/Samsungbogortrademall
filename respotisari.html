@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aplikasi Dashboard & Form Penjualan</title>
+<title>Aplikasi Dashboard & Form Penjualan Enterprise</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <!-- FontAwesome -->
@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v2.7</p>
+<p class="text-[10px] text-slate-400">Sales Pro v2.8</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -95,7 +95,7 @@ body { font-family: 'Inter', sans-serif; }
 <p class="text-xs text-slate-500">Pilih mode perbandingan (Tahunan, Bulanan, Harian) dan atur target bulanan toko.</p>
 </div>
 <div class="flex items-center gap-2">
-<button onclick="openMonthlySetupModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold px-4 py-2 rounded-xl transition">
+<button onclick="openMonthlySetupModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold px-4 py-2 rounded-xl transition cursor-pointer">
 <i class="fa-solid fa-calendar-plus mr-1"></i> Setup Target Bulanan
 </button>
 </div>
@@ -103,9 +103,9 @@ body { font-family: 'Inter', sans-serif; }
 
 <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
 <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
-<button onclick="setFilterMode('yearly')" id="mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Tahunan</button>
-<button onclick="setFilterMode('monthly')" id="mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Bulanan</button>
-<button onclick="setFilterMode('daily')" id="mode-daily" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Harian (Pertanggal)</button>
+<button onclick="setFilterMode('yearly')" id="mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Tahunan</button>
+<button onclick="setFilterMode('monthly')" id="mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Bulanan</button>
+<button onclick="setFilterMode('daily')" id="mode-daily" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Harian (Pertanggal)</button>
 </div>
 
 <div class="flex items-center gap-3 w-full sm:w-auto" id="filterControlContainer"></div>
@@ -187,7 +187,7 @@ body { font-family: 'Inter', sans-serif; }
 <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i> Performa & Target per Segment</h3>
 <p class="text-xs text-slate-500">Z, S, High, Mid, Entry, Tab, Watch, Buds, Band, TWS</p>
 </div>
-<button onclick="openSegmentModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl transition">
+<button onclick="openSegmentModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl transition cursor-pointer">
 <i class="fa-solid fa-pen-to-square mr-1"></i> Atur Target Segment
 </button>
 </div>
@@ -248,7 +248,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-sm text-sm">
+<button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-sm text-sm cursor-pointer">
 <i class="fa-solid fa-plus mr-1"></i> Simpan Transaksi Penjualan
 </button>
 </form>
@@ -261,7 +261,7 @@ body { font-family: 'Inter', sans-serif; }
 <label class="block text-xs font-semibold text-slate-500 uppercase">Tambah Nama Produk</label>
 <div class="flex gap-2">
 <input type="text" id="newProductInput" placeholder="Contoh: S26 ULTRA 256" class="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-<button type="button" id="addProductBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm transition"><i class="fa-solid fa-plus"></i></button>
+<button type="button" id="addProductBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm transition cursor-pointer"><i class="fa-solid fa-plus"></i></button>
 </div>
 </div>
 <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Daftar Produk Aktif</label>
@@ -309,7 +309,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-brands fa-whatsapp text-emerald-600 mr-2"></i> Generator Laporan WhatsApp (1-Klik Salin)</h2>
 <p class="text-xs text-slate-500">Format teks laporan harian otomatis sesuai standar perusahaan.</p>
 </div>
-<button onclick="copyWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
+<button onclick="copyWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm cursor-pointer">
 <i class="fa-regular fa-copy"></i> Salin Teks WhatsApp
 </button>
 </div>
@@ -334,9 +334,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 
 <div class="border-t pt-3">
 <label class="block text-xs font-bold text-slate-700 uppercase mb-2"><i class="fa-solid fa-box-open mr-1 text-indigo-600"></i> Pilih Produk Fokus Weekly & Ceklis</label>
-<div id="focusProductCheckboxList" class="space-y-2 bg-white p-3 rounded-xl border border-slate-200">
-<!-- Render via JS -->
-</div>
+<div id="focusProductCheckboxList" class="space-y-2 bg-white p-3 rounded-xl border border-slate-200"></div>
 </div>
 
 <div class="border-t pt-3 space-y-3">
@@ -363,7 +361,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <input type="text" id="reportActionPlan" value="FU , CANVASING" oninput="generateWAReport()" class="w-full px-3 py-2 text-xs border rounded-lg bg-white" placeholder="Contoh: FU, CANVASING">
 </div>
 
-<button onclick="generateWAReport()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-lg text-xs font-semibold transition">Perbarui Preview Laporan</button>
+<button onclick="generateWAReport()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-lg text-xs font-semibold transition cursor-pointer">Perbarui Preview Laporan</button>
 </div>
 </div>
 </div>
@@ -395,7 +393,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <option value="Resolved">Resolved (Selesai)</option>
 </select>
 </div>
-<button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm">
+<button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm cursor-pointer">
 <i class="fa-solid fa-paper-plane mr-1"></i> Simpan Data Issue
 </button>
 </form>
@@ -445,13 +443,13 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <p class="text-xs text-slate-500">Unduh atau kelola data master lengkap. Pilih data tertentu atau hapus semua.</p>
 </div>
 <div class="flex flex-wrap items-center gap-2">
-<button onclick="deleteSelectedSales()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<button onclick="deleteSelectedSales()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs cursor-pointer">
 <i class="fa-solid fa-square-minus"></i> Hapus yang Dipilih
 </button>
-<button onclick="deleteAllSales()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<button onclick="deleteAllSales()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs cursor-pointer">
 <i class="fa-solid fa-trash-can"></i> Hapus Semua Data
 </button>
-<button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs cursor-pointer">
 <i class="fa-solid fa-file-excel"></i> Download CSV
 </button>
 </div>
@@ -486,12 +484,12 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
 <div class="flex justify-between items-center border-b pb-3">
 <h3 class="text-base font-bold text-slate-800">Atur Target Qty per Segment</h3>
-<button onclick="closeSegmentModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+<button onclick="closeSegmentModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
 </div>
 <div class="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto p-1" id="segmentModalInputs"></div>
 <div class="flex justify-end gap-2 pt-3 border-t">
-<button onclick="closeSegmentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Batal</button>
-<button onclick="saveSegmentTargets()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold">Simpan Target</button>
+<button onclick="closeSegmentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer">Batal</button>
+<button onclick="saveSegmentTargets()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold cursor-pointer">Simpan Target</button>
 </div>
 </div>
 </div>
@@ -501,7 +499,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
 <div class="flex justify-between items-center border-b pb-3">
 <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-600 mr-2"></i> Setup & Arsip Target Bulanan</h3>
-<button onclick="closeMonthlySetupModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+<button onclick="closeMonthlySetupModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
 </div>
 <p class="text-xs text-slate-500">Tambah, hapus, atau atur target bulanan (Januari, Februari, dll) beserta nilai dan unit targetnya.</p>
 
@@ -512,7 +510,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <input type="number" id="newMonthTargetValue" placeholder="Target Value (Rp)" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium">
 <input type="number" id="newMonthTargetQty" placeholder="Target Qty" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium">
 </div>
-<button onclick="addNewMonthlyTarget()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl text-xs transition">
+<button onclick="addNewMonthlyTarget()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl text-xs transition cursor-pointer">
 <i class="fa-solid fa-plus mr-1"></i> Simpan / Tambah Setup Bulan
 </button>
 </div>
@@ -523,7 +521,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 </div>
 
 <div class="flex justify-end pt-3 border-t">
-<button onclick="closeMonthlySetupModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold">Tutup</button>
+<button onclick="closeMonthlySetupModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">Tutup</button>
 </div>
 </div>
 </div>
@@ -558,7 +556,6 @@ let segmentTargets = JSON.parse(localStorage.getItem('app_segment_targets')) || 
 "Z": 9, "S": 23, "High": 14, "Mid": 18, "Entry": 50, "Tab": 17, "Watch": 1, "Buds": 5, "Band": 9, "TWS": 0
 };
 
-// Mapping nama segment di laporan WA
 const segmentDisplayNames = {
 "S": "S Series",
 "Z": "Z Series",
@@ -641,9 +638,9 @@ currentFilterMode = mode;
 ['yearly', 'monthly', 'daily'].forEach(m => {
 const btn = document.getElementById('mode-' + m);
 if(m === mode) {
-btn.className = "px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-xs";
+btn.className = "px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-xs cursor-pointer";
 } else {
-btn.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:bg-slate-200";
+btn.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:bg-slate-200 cursor-pointer";
 }
 });
 
@@ -741,7 +738,7 @@ div.innerHTML = `
 <strong class="text-slate-800 text-sm">${monthName}</strong>
 <div class="text-slate-500 mt-0.5">Target Value: ${formatRupiah(item.targetValue)} | Target Qty: ${item.targetQty} Unit</div>
 </div>
-<button onclick="deleteMonthlyTarget('${k}')" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus Setup Bulan"><i class="fa-solid fa-trash-can text-sm"></i></button>`;
+<button onclick="deleteMonthlyTarget('${k}')" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer" title="Hapus Setup Bulan"><i class="fa-solid fa-trash-can text-sm"></i></button>`;
 container.appendChild(div);
 });
 }
@@ -796,7 +793,7 @@ let div = document.createElement('div');
 div.className = "flex justify-between items-center bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-xl text-sm border border-slate-100 transition";
 div.innerHTML = `
 <span class="font-medium text-slate-700 truncate mr-2">${p}</span>
-<button onclick="deleteProduct(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1 rounded-lg hover:bg-rose-50 transition" title="Hapus Produk"><i class="fa-solid fa-trash-can text-xs"></i></button>`;
+<button onclick="deleteProduct(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1 rounded-lg hover:bg-rose-50 transition cursor-pointer" title="Hapus Produk"><i class="fa-solid fa-trash-can text-xs"></i></button>`;
 container.appendChild(div);
 });
 
@@ -826,7 +823,6 @@ showToast('Produk berhasil dihapus.');
 }
 }
 
-// --- Render Checkbox Produk Fokus untuk WA ---
 function renderFocusProductCheckboxes() {
 const container = document.getElementById('focusProductCheckboxList');
 if(!container) return;
@@ -1136,13 +1132,13 @@ tr.innerHTML = `
 <td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
 <td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
 <td class="p-3">
-<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
 ${segmentOptions}
 </select>
 </td>
 <td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
 <td class="p-3 text-center">
-<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
+<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
 </td>`;
 tbody.appendChild(tr);
 });
@@ -1173,14 +1169,14 @@ tr.innerHTML = `
 <td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
 <td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
 <td class="p-3">
-<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
 ${segmentOptions}
 </select>
 </td>
 <td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
 <td class="p-3 text-xs font-semibold text-slate-700">${formatRupiah(item.value)}</td>
 <td class="p-3 text-center">
-<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
+<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
 </td>`;
 tbody.appendChild(tr);
 });
@@ -1291,7 +1287,7 @@ tr.innerHTML = `
 <td class="p-3 text-slate-600 text-xs">${item.desc}</td>
 <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${badgeColor}">${item.status}</span></td>
 <td class="p-3 text-center">
-<button onclick="deleteIssue(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+<button onclick="deleteIssue(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>
 </td>`;
 tbody.appendChild(tr);
 });
@@ -1306,26 +1302,22 @@ showToast('Kendala dihapus.');
 }
 }
 
-// --- WhatsApp Report Generator ---
 function generateWAReport() {
 const filteredData = getFilteredSalesData();
 let totalValue = filteredData.reduce((sum, item) => sum + item.value, 0);
 let totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
 let { targetVal, targetQty } = getActiveTarget();
 
-let valPct = targetVal > 0 ? ((totalValue / targetVal) * 100).toFixed(0) : 0;
-let qtyPct = targetQty > 0 ? ((totalQty / targetQty) * 100).toFixed(0) : 0;
+let valPct = targetVal > 0 ? Math.round((totalValue / targetVal) * 100) : 0;
+let qtyPct = targetQty > 0 ? Math.round((totalQty / targetQty) * 100) : 0;
 
-// TG Value/TG Qty (+/-) selisih terhadap target
 let diffValuePct = valPct - 100;
 let diffQtyPct = qtyPct - 100;
 let tgDiffStr = `(${diffValuePct >= 0 ? '+' + diffValuePct : diffValuePct}%/${diffQtyPct >= 0 ? '+' + diffQtyPct : diffQtyPct}%)`;
 
-// Format tanggal hari ini (DD/MM/YYYY)
 const todayObj = new Date();
 const formattedDateWA = String(todayObj.getDate()).padStart(2, '0') + '/' + String(todayObj.getMonth() + 1).padStart(2, '0') + '/' + todayObj.getFullYear();
 
-// Estimasi Akhir Bulan
 const currentDay = todayObj.getDate() || 1;
 const totalDaysInMonth = new Date(todayObj.getFullYear(), todayObj.getMonth() + 1, 0).getDate();
 let estValue = (totalValue / currentDay) * totalDaysInMonth;
@@ -1333,13 +1325,10 @@ let estQty = Math.round((totalQty / currentDay) * totalDaysInMonth);
 let estValPct = targetVal > 0 ? Math.round((estValue / targetVal) * 100) : 0;
 let estQtyPct = targetQty > 0 ? Math.round((estQty / targetQty) * 100) : 0;
 
-// Comitment Weekly
 let weeklyPctInput = parseFloat(document.getElementById('reportWeeklyPct')?.value) || 60;
 let weeklyDiv = parseInt(document.getElementById('reportWeeklyDiv')?.value) || 4;
 let weeklyTargetValue = targetVal * (weeklyPctInput / 100);
-let weeklyTargetQty = Math.round(targetQty * (weeklyPctInput / 100));
 
-// Product Fokus Weekly
 let focusText = "";
 const focusCheckboxes = document.querySelectorAll('.focus-prod-cb');
 focusCheckboxes.forEach(cb => {
@@ -1352,7 +1341,6 @@ focusText += `${prodName} : ${tg}/${ac}/${pct}%\n`;
 }
 });
 
-// All Segment Week (Target / Actual)
 let allSegmentText = "";
 const segmentOrder = ["S", "Z", "High", "Mid", "Entry", "Tab", "Watch", "Buds", "Band"];
 segmentOrder.forEach(seg => {
@@ -1362,15 +1350,12 @@ let segActual = filteredData.filter(item => item.segment === seg).reduce((sum, i
 allSegmentText += `${segLabel} : ${segTarget}/${segActual}\n`;
 });
 
-// Target & Pencapaian Samsung Harian
 let samsungValTg = parseFloat(document.getElementById('reportSamsungVal')?.value) || 17931191;
 let samsungQtyTg = parseInt(document.getElementById('reportSamsungQty')?.value) || 13;
-// Ambil data harian hari ini
 let todaySales = salesData.filter(item => item.tanggal === todayStr);
 let samsungValAch = todaySales.reduce((sum, item) => sum + item.value, 0);
 let samsungQtyAch = todaySales.reduce((sum, item) => sum + item.qty, 0);
 
-// Update Qty Daily per produk hari ini
 let dailyProductSummary = "";
 let prodQtyMap = {};
 todaySales.forEach(item => {
@@ -1386,7 +1371,6 @@ dailyProductSummary = "S26 256 / 1\n";
 let issueText = document.getElementById('reportIssueText')?.value || "WIC SKALA 1";
 let actionPlanText = document.getElementById('reportActionPlan')?.value || "FU , CANVASING";
 
-// Rakit template akhir sesuai contoh user
 let report = `*Nama Toko* :${storeConfig.storeName}
 ${formattedDateWA}
 *TG Value/TG Qty (+/-)* : ${tgDiffStr}
