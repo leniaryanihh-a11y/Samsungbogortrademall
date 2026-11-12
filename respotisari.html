@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v3.2</p>
+<p class="text-[10px] text-slate-400">Sales Pro v3.3</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -95,7 +95,7 @@ body { font-family: 'Inter', sans-serif; }
 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-filter text-blue-600 mr-2"></i> Perbandingan & Filter Periode</h2>
-<p class="text-xs text-slate-500">Pilih mode perbandingan (Tahunan, Bulanan, Harian) dan atur target bulanan toko.</p>
+<p class="text-xs text-slate-500">Pilih mode perbandingan (Tahunan atau Bulanan) dan atur target bulanan toko.</p>
 </div>
 <div class="flex items-center gap-2">
 <button onclick="openMonthlySetupModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold px-4 py-2 rounded-xl transition cursor-pointer">
@@ -108,7 +108,6 @@ body { font-family: 'Inter', sans-serif; }
 <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
 <button onclick="setFilterMode('yearly')" id="mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Tahunan</button>
 <button onclick="setFilterMode('monthly')" id="mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Bulanan</button>
-<button onclick="setFilterMode('daily')" id="mode-daily" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Harian (Pertanggal)</button>
 </div>
 
 <div class="flex items-center gap-3 w-full sm:w-auto" id="filterControlContainer"></div>
@@ -204,7 +203,7 @@ body { font-family: 'Inter', sans-serif; }
 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-handshake-angle text-indigo-600 mr-2"></i> Dashboard VAS (Value Added Services)</h2>
-<p class="text-xs text-slate-500">Analisis pencapaian Trade-In, Asuransi (Insurance), dan Finance secara Tahunan, Bulanan, atau Harian.</p>
+<p class="text-xs text-slate-500">Analisis pencapaian Trade-In, Asuransi (Insurance), dan Finance secara Tahunan atau Bulanan.</p>
 </div>
 <div class="flex items-center gap-2">
 <button onclick="openVasTargetModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold px-4 py-2 rounded-xl transition cursor-pointer">
@@ -218,7 +217,6 @@ body { font-family: 'Inter', sans-serif; }
 <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
 <button onclick="setVasFilterMode('yearly')" id="vas-mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Tahunan</button>
 <button onclick="setVasFilterMode('monthly')" id="vas-mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Bulanan</button>
-<button onclick="setVasFilterMode('daily')" id="vas-mode-daily" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Harian (Pertanggal)</button>
 </div>
 <div class="flex items-center gap-3 w-full sm:w-auto" id="vasFilterControlContainer"></div>
 </div>
@@ -625,24 +623,33 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
-<!-- Modal Setup Target Bulanan -->
+<!-- Modal Setup Target Bulanan (Pilih Tanggal/Bulan & Berfungsi) -->
 <div id="monthlySetupModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
 <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
 <div class="flex justify-between items-center border-b pb-3">
-<h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-600 mr-2"></i> Setup & Arsip Target Bulanan</h3>
+<h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-calendar-days text-indigo-600 mr-2"></i> Setup & Pilih Target Bulanan</h3>
 <button onclick="closeMonthlySetupModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
 </div>
-<p class="text-xs text-slate-500">Tambah, hapus, atau atur target bulanan (Januari, Februari, dll) beserta nilai dan unit targetnya.</p>
+<p class="text-xs text-slate-500">Pilih tanggal atau bulan pada input di bawah untuk menetapkan atau memperbarui target Value dan Qty secara spesifik.</p>
 
 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-<h4 class="text-xs font-bold text-slate-700 uppercase">Tambah / Perbarui Bulan</h4>
+<h4 class="text-xs font-bold text-slate-700 uppercase">Pilih Tanggal / Bulan & Atur Target</h4>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-<input type="month" id="newMonthKey" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium">
-<input type="number" id="newMonthTargetValue" placeholder="Target Value (Rp)" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium">
-<input type="number" id="newMonthTargetQty" placeholder="Target Qty" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium">
+<div>
+<label class="block text-[10px] font-bold text-slate-500 mb-1">Pilih Bulan/Tanggal</label>
+<input type="month" id="newMonthKey" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium w-full">
 </div>
-<button onclick="addNewMonthlyTarget()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl text-xs transition cursor-pointer">
-<i class="fa-solid fa-plus mr-1"></i> Simpan / Tambah Setup Bulan
+<div>
+<label class="block text-[10px] font-bold text-slate-500 mb-1">Target Value (Rp)</label>
+<input type="number" id="newMonthTargetValue" placeholder="Contoh: 850000000" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium w-full">
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 mb-1">Target Qty (Unit)</label>
+<input type="number" id="newMonthTargetQty" placeholder="Contoh: 150" class="px-3 py-2 text-xs border rounded-xl bg-white font-medium w-full">
+</div>
+</div>
+<button onclick="addNewMonthlyTarget()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer shadow-sm">
+<i class="fa-solid fa-floppy-disk mr-1"></i> Simpan / Terapkan Target Bulanan
 </button>
 </div>
 
@@ -805,7 +812,7 @@ toast.classList.add('translate-y-20', 'opacity-0');
 
 function setFilterMode(mode) {
 currentFilterMode = mode;
-['yearly', 'monthly', 'daily'].forEach(m => {
+['yearly', 'monthly'].forEach(m => {
 const btn = document.getElementById('mode-' + m);
 if(m === mode) {
 btn.className = "px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-xs cursor-pointer";
@@ -855,19 +862,13 @@ container.innerHTML = `
 ${monthOptions}
 </select>
 </div>`;
-} else if(currentFilterMode === 'daily') {
-container.innerHTML = `
-<div class="w-full flex flex-col">
-<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal</label>
-<input type="date" id="filterDailyDate" value="${todayStr}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
-</div>`;
 }
 }
 
 // --- Dashboard VAS Filter Controls ---
 function setVasFilterMode(mode) {
 currentVasFilterMode = mode;
-['yearly', 'monthly', 'daily'].forEach(m => {
+['yearly', 'monthly'].forEach(m => {
 const btn = document.getElementById('vas-mode-' + m);
 if(m === mode) {
 btn.className = "px-3.5 py-1.5 rounded-lg transition bg-indigo-600 text-white shadow-xs cursor-pointer";
@@ -914,12 +915,6 @@ container.innerHTML = `
 ${monthOptions}
 </select>
 </div>`;
-} else if(currentVasFilterMode === 'daily') {
-container.innerHTML = `
-<div class="w-full flex flex-col">
-<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal</label>
-<input type="date" id="vasFilterDailyDate" value="${todayStr}" onchange="renderVasDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
-</div>`;
 }
 }
 
@@ -930,9 +925,6 @@ return vasData.filter(item => item.tanggal.startsWith(year));
 } else if(currentVasFilterMode === 'monthly') {
 const monthKey = document.getElementById('vasFilterMonthKey')?.value || currentMonthKey;
 return vasData.filter(item => item.tanggal.startsWith(monthKey));
-} else if(currentVasFilterMode === 'daily') {
-const dateVal = document.getElementById('vasFilterDailyDate')?.value || todayStr;
-return vasData.filter(item => item.tanggal === dateVal);
 }
 return vasData;
 }
@@ -948,13 +940,11 @@ const categories = [
 { key: 'Finance', title: 'Finance', icon: 'fa-file-invoice-dollar', color: 'indigo' }
 ];
 
-const mult = (currentVasFilterMode === 'daily') ? (1/30) : 1;
-
 categories.forEach(cat => {
 const catItems = filteredVas.filter(item => item.category === cat.key);
 const achQty = catItems.reduce((sum, item) => sum + item.qty, 0);
 const achVal = catItems.reduce((sum, item) => sum + item.value, 0);
-const targetQty = Math.round((vasTargets[cat.key] || 20) * mult);
+const targetQty = vasTargets[cat.key] || 20;
 const pct = targetQty > 0 ? ((achQty / targetQty) * 100).toFixed(1) : 0;
 
 let card = document.createElement('div');
@@ -1113,7 +1103,7 @@ let div = document.createElement('div');
 div.className = "flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200 text-xs";
 div.innerHTML = `
 <div>
-<strong class="text-slate-800 text-sm">${monthName}</strong>
+<strong class="text-slate-800 text-sm">${monthName} (${k})</strong>
 <div class="text-slate-500 mt-0.5">Target Value: ${formatRupiah(item.targetValue)} | Target Qty: ${item.targetQty} Unit</div>
 </div>
 <button onclick="deleteMonthlyTarget('${k}')" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer" title="Hapus Setup Bulan"><i class="fa-solid fa-trash-can text-sm"></i></button>`;
@@ -1127,7 +1117,7 @@ const valInput = parseFloat(document.getElementById('newMonthTargetValue').value
 const qtyInput = parseInt(document.getElementById('newMonthTargetQty').value);
 
 if(!monthKeyInput || isNaN(valInput) || isNaN(qtyInput)) {
-showToast('Harap isi bulan, target value, dan target qty dengan benar!', 'warning');
+showToast('Harap pilih bulan/tanggal, isi target value, dan target qty dengan benar!', 'warning');
 return;
 }
 
@@ -1142,7 +1132,9 @@ document.getElementById('newMonthTargetValue').value = '';
 document.getElementById('newMonthTargetQty').value = '';
 
 renderMonthlyList();
-showToast('Setup target bulanan berhasil disimpan!');
+renderFilterControls();
+renderDashboard();
+showToast('Setup target bulanan berhasil disimpan & diterapkan!');
 }
 
 function deleteMonthlyTarget(key) {
@@ -1150,6 +1142,8 @@ if(confirm(`Hapus setup target untuk periode ${key}?`)) {
 delete monthlyTargets[key];
 localStorage.setItem('app_monthly_targets', JSON.stringify(monthlyTargets));
 renderMonthlyList();
+renderFilterControls();
+renderDashboard();
 showToast('Setup bulanan dihapus.');
 }
 }
@@ -1358,16 +1352,6 @@ targetQty += monthlyTargets[k].targetQty;
 }
 });
 if(targetVal === 0) { targetVal = 891647942; targetQty = 147; }
-} else if(currentFilterMode === 'daily') {
-const dateVal = document.getElementById('filterDailyDate')?.value || todayStr;
-let mKey = dateVal.substring(0, 7);
-let daysInMonth = new Date(dateVal.substring(0,4), dateVal.substring(5,7), 0).getDate();
-if(monthlyTargets[mKey]) {
-targetVal = monthlyTargets[mKey].targetValue / daysInMonth;
-targetQty = monthlyTargets[mKey].targetQty / daysInMonth;
-} else {
-targetVal = 28762836; targetQty = 5;
-}
 }
 return { targetVal, targetQty };
 }
@@ -1379,9 +1363,6 @@ return salesData.filter(item => item.tanggal.startsWith(year));
 } else if(currentFilterMode === 'monthly') {
 const monthKey = document.getElementById('filterMonthKey')?.value || currentMonthKey;
 return salesData.filter(item => item.tanggal.startsWith(monthKey));
-} else if(currentFilterMode === 'daily') {
-const dateVal = document.getElementById('filterDailyDate')?.value || todayStr;
-return salesData.filter(item => item.tanggal === dateVal);
 }
 return salesData;
 }
@@ -1441,7 +1422,7 @@ grid.innerHTML = '';
 segmentsList.forEach(seg => {
 let segSales = filteredData.filter(item => item.segment === seg);
 let segQty = segSales.reduce((sum, item) => sum + item.qty, 0);
-let segTarget = Math.round((segmentTargets[seg] || 0) * (currentFilterMode === 'daily' ? 1/30 : 1));
+let segTarget = segmentTargets[seg] || 0;
 let pct = segTarget > 0 ? ((segQty / segTarget) * 100).toFixed(0) : 0;
 
 let card = document.createElement('div');
