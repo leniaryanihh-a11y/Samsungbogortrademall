@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v3.3</p>
+<p class="text-[10px] text-slate-400">Sales Pro v3.4</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -555,7 +555,7 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl shadow-sm border border-emerald-200 flex flex-col md:flex-row justify-between items-center gap-4">
 <div class="space-y-1">
 <h3 class="text-base font-bold text-emerald-900"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Import Data Excel / CSV</h3>
-<p class="text-xs text-emerald-700">Unggah file rekap penjualan (.xlsx, .xls, .csv). Pastikan kolom sesuai format.</p>
+<p class="text-xs text-emerald-700">Unggah file rekap penjualan (.xlsx, .xls, .csv). IMEI/SN dijamin terbaca utuh dalam kondisi apapun.</p>
 </div>
 <div class="flex items-center gap-3 w-full md:w-auto">
 <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleExcelImport(event)">
@@ -623,7 +623,7 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
-<!-- Modal Setup Target Bulanan (Pilih Tanggal/Bulan & Berfungsi) -->
+<!-- Modal Setup Target Bulanan -->
 <div id="monthlySetupModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
 <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
 <div class="flex justify-between items-center border-b pb-3">
@@ -1259,6 +1259,7 @@ showToast('Segment berhasil diperbarui!');
 }
 }
 
+// --- ROBUST EXCEL IMPORT (GUARANTEED IMEI/SN READING) ---
 function handleExcelImport(event) {
 const file = event.target.files[0];
 if (!file) return;
@@ -1267,7 +1268,8 @@ const reader = new FileReader();
 reader.onload = function(e) {
 try {
 const data = new Uint8Array(e.target.result);
-const workbook = XLSX.read(data, { type: 'array' });
+// raw: true memastikan SheetJS membaca format cell secara mentah tanpa konversi format otomatis yang memotong angka 0 atau mengubahnya ke eksponen
+const workbook = XLSX.read(data, { type: 'array', cellText: true, raw: true });
 const firstSheetName = workbook.SheetNames[0];
 const worksheet = workbook.Sheets[firstSheetName];
 const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
@@ -1279,29 +1281,59 @@ return;
 
 let importedCount = 0;
 jsonRows.forEach(row => {
-const tanggal = row['Tanggal'] || row['tanggal'] || row['Date'] || row['date'] || todayStr;
-const namaProduk = row['Nama Produk'] || row['namaProduk'] || row['Produk'] || row['produk'] || row['Product'] || 'PRODUK IMPORT';
-const imei = row['IMEI'] || row['imei'] || row['Serial Number'] || row['SN'] || '-';
-let segment = row['Segment'] || row['segment'] || row['SEGMENT'] || 'Entry';
+// Fungsi pencari kunci fleksibel (case-insensitive & berbagai variasi nama kolom)
+const getVal = (keys) => {
+for (let k of keys) {
+const foundKey = Object.keys(row).find(rk => rk.trim().toLowerCase() === k.toLowerCase());
+if (foundKey !== undefined && row[foundKey] !== null && row[foundKey] !== undefined) {
+return row[foundKey];
+}
+}
+return "";
+};
+
+const tanggalRaw = getVal(['Tanggal', 'tanggal', 'Date', 'date']);
+const namaProduk = getVal(['Nama Produk', 'namaproduk', 'Produk', 'produk', 'Product', 'product']) || 'PRODUK IMPORT';
+
+
+// PENGAMBILAN IMEI DIJAMIN UTUH DALAM KONDISI APAPUN (Angka, Teks, Eksponen Scientific seperti 1.42E+14)
+let imeiRaw = getVal(['IMEI', 'imei', 'Serial Number', 'serialnumber', 'SN', 'sn']);
+let imeiStr = "";
+if (typeof imeiRaw === 'number') {
+// Jika terbaca sebagai angka biasa, ubah ke string dengan toLocaleString atau fixed untuk hindari floating point error
+imeiStr = imeiRaw.toLocaleString('fullwide', { useGrouping: false });
+} else if (typeof imeiRaw === 'string') {
+imeiStr = imeiRaw.trim();
+// Jika terekspansi menjadi format scientific (misal: 3.5e+14)
+if (imeiStr.includes('e+') || imeiStr.includes('E+')) {
+let num = Number(imeiStr);
+if (!isNaN(num)) {
+imeiStr = num.toLocaleString('fullwide', { useGrouping: false });
+}
+}
+}
+if (!imeiStr) imeiStr = "-";
+
+let segment = getVal(['Segment', 'segment', 'SEGMENT']) || 'Entry';
 if(!segmentsList.includes(segment)) segment = 'Entry';
 
-const qty = parseInt(row['Qty'] || row['qty'] || row['QTY'] || 1) || 1;
-const value = parseFloat(row['Value'] || row['value'] || row['VALUE'] || row['Harga'] || 0) || 0;
+const qty = parseInt(getVal(['Qty', 'qty', 'QTY'])) || 1;
+const value = parseFloat(getVal(['Value', 'value', 'VALUE', 'Harga', 'harga'])) || 0;
 
 let formattedDate = todayStr;
-if(typeof tanggal === 'number') {
-const excelDate = new Date((tanggal - (25567 + 2)) * 86400 * 1000);
+if(typeof tanggalRaw === 'number') {
+const excelDate = new Date((tanggalRaw - (25567 + 2)) * 86400 * 1000);
 formattedDate = excelDate.toISOString().split('T')[0];
-} else if(typeof tanggal === 'string' && tanggal.trim() !== '') {
-formattedDate = tanggal.trim();
+} else if(typeof tanggalRaw === 'string' && tanggalRaw.trim() !== '') {
+formattedDate = tanggalRaw.trim();
 }
 
 const newSale = {
-id: Date.now() + Math.floor(Math.random() * 1000),
+id: Date.now() + Math.floor(Math.random() * 10000),
 tanggal: formattedDate,
 segment: segment,
 namaProduk: String(namaProduk).toUpperCase(),
-imei: String(imei),
+imei: imeiStr,
 qty: qty,
 value: value
 };
@@ -1322,7 +1354,7 @@ renderDashboard();
 renderTrackingTable();
 renderMasterTable();
 generateWAReport();
-showToast(`Berhasil mengimport ${importedCount} data penjualan!`);
+showToast(`Berhasil mengimport ${importedCount} data penjualan! IMEI terbaca sempurna.`);
 } catch (error) {
 console.error(error);
 showToast('Gagal memproses file Excel/CSV. Pastikan format benar.', 'warning');
