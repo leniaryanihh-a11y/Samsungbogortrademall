@@ -450,18 +450,29 @@ Perbarui Preview Laporan
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-database text-blue-600 mr-2"></i> Data Master Penjualan & Export</h2>
-<p class="text-xs text-slate-500">Unduh atau kelola data master lengkap. Anda juga dapat mengubah segment langsung dari tabel ini.</p>
+<p class="text-xs text-slate-500">Unduh atau kelola data master lengkap. Pilih data tertentu atau hapus semua.</p>
 </div>
-<button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
-<i class="fa-solid fa-file-excel"></i> Download Excel / CSV (.csv)
+<div class="flex flex-wrap items-center gap-2">
+<button onclick="deleteSelectedSales()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<i class="fa-solid fa-square-minus"></i> Hapus yang Dipilih
 </button>
+<button onclick="deleteAllSales()" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<i class="fa-solid fa-trash-can"></i> Hapus Semua Data
+</button>
+<button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow-xs">
+<i class="fa-solid fa-file-excel"></i> Download CSV
+</button>
+</div>
 </div>
 
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse text-sm">
 <thead>
 <tr class="bg-slate-50 text-slate-600 border-b">
-<th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
+<th class="p-3 w-10 text-center rounded-l-xl">
+<input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+</th>
+<th class="p-3 font-semibold">Tanggal</th>
 <th class="p-3 font-semibold">Nama Produk</th>
 <th class="p-3 font-semibold">IMEI / SN</th>
 <th class="p-3 font-semibold">Segment (Bisa Diedit)</th>
@@ -935,16 +946,6 @@ renderDashboard();
 showToast('Target segment berhasil diperbarui!');
 }
 
-// --- Helper generator option dropdown segment ---
-function generateSegmentDropdown(currentSegment) {
-let options = '';
-segmentsList.forEach(s => {
-let selected = (s === currentSegment) ? 'selected' : '';
-options += `<option value="${s}" ${selected}>${s}</option>`;
-});
-return `<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-white font-medium text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">${options}</select>`;
-}
-
 // --- Tracking Produk Table ---
 function renderTrackingTable() {
 const tbody = document.getElementById('trackingTableBody');
@@ -957,7 +958,6 @@ totalUnit += item.qty;
 let tr = document.createElement('tr');
 tr.className = "hover:bg-slate-50/80 transition";
 
-// Dropdown pilihan segment agar bisa langsung diedit
 let segmentOptions = '';
 segmentsList.forEach(s => {
 let selected = (s === item.segment) ? 'selected' : '';
@@ -983,10 +983,11 @@ tbody.appendChild(tr);
 document.getElementById('trackingTotalUnit').innerText = totalUnit;
 }
 
-// --- Master Table & Export ---
+// --- Master Table, Bulk Select & Delete ---
 function renderMasterTable() {
 const tbody = document.getElementById('masterTableBody');
 tbody.innerHTML = '';
+document.getElementById('selectAllCheckbox').checked = false;
 
 salesData.forEach(item => {
 let id = item.id;
@@ -1000,6 +1001,9 @@ segmentOptions += `<option value="${s}" ${selected}>${s}</option>`;
 });
 
 tr.innerHTML = `
+<td class="p-3 text-center">
+<input type="checkbox" value="${id}" class="row-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+</td>
 <td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
 <td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
 <td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
@@ -1015,6 +1019,49 @@ ${segmentOptions}
 </td>`;
 tbody.appendChild(tr);
 });
+}
+
+function toggleSelectAll(master) {
+const checkboxes = document.querySelectorAll('.row-checkbox');
+checkboxes.forEach(cb => cb.checked = master.checked);
+}
+
+function deleteSelectedSales() {
+const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+if(checkboxes.length === 0) {
+showToast('Pilih minimal satu data yang ingin dihapus!', 'warning');
+return;
+}
+
+if(confirm(`Hapus ${checkboxes.length} data transaksi yang dipilih?`)) {
+const idsToDelete = Array.from(checkboxes).map(cb => Number(cb.value));
+salesData = salesData.filter(item => !idsToDelete.includes(item.id));
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+showToast('Data terpilih berhasil dihapus.');
+}
+}
+
+function deleteAllSales() {
+if(salesData.length === 0) {
+showToast('Data penjualan sudah kosong!', 'warning');
+return;
+}
+
+if(confirm('PERINGATAN: Apakah Anda yakin ingin menghapus SEMUA data penjualan? Tindakan ini tidak dapat dibatalkan!')) {
+salesData = [];
+localStorage.removeItem('app_sales');
+
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+showToast('Semua data penjualan berhasil dihapus.');
+}
 }
 
 function deleteSale(id) {
