@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Sales Hub &middot; Phone Sales Manager Pro</title>
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Optional Platform SDKs with Safe Fallback -->
+  <script src="/_sdk/5b33708ee0f39e4b.element_sdk.js" onerror="console.info('Element SDK offline, fallback to standalone mode.')"></script>
+  <script src="/_sdk/8fed440c6f94b5da.data_sdk.js" onerror="console.info('Data SDK offline, fallback to standalone LocalStorage.')"></script>
+
+  <style>
+    * {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Custom Glassmorphism System */
+    .glass-surface {
+      background: rgba(18, 24, 38, 0.72);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .glass-card {
+      background: rgba(23, 31, 50, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .glass-input {
+      background: rgba(11, 17, 32, 0.65) !important;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: #f8fafc !important;
+      transition: all 0.2s ease;
+    }
+    .glass-input:focus {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+      outline: none;
+    }
+
+    .glass-nav-pill {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    }
+    .tab-inactive {
+      background: rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+    }
+    .tab-inactive:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+
+    .fade-enter {
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+ </head>
+ <body class="h-full bg-[#070b14] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(37,99,235,0.22),rgba(255,255,255,0))] text-slate-100 flex flex-col overflow-hidden">
+  
+  <div id="app" class="h-full w-full flex flex-col overflow-hidden">
+   
+   <!-- TOP NAV / HEADER -->
+   <header class="glass-surface sticky top-0 z-40 px-4 md:px-8 py-3.5 flex items-center justify-between border-b border-white/[0.08]">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 p-[1px] shadow-lg shadow-blue-500/20 shrink-0">
+        <div class="w-full h-full bg-[#0a0f1d] rounded-2xl flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-5 h-5 text-sky-400"></i>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2">
+          <h1 id="appTitle" class="text-sm md:text-base font-bold text-white tracking-tight truncate">Galaxy Sales Hub</h1>
+          <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">PRO</span>
+        </div>
+        <p id="shopName" class="text-xs text-slate-400 truncate">SEP BOGOR TRADE MALL GTN</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats in Header -->
+    <div class="flex items-center gap-2">
+      <div class="hidden sm:flex items-center gap-4 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs">
+        <div>
+          <span class="text-slate-400 text-[10px] block leading-none">TOTAL REVENUE</span>
+          <span id="topRevenue" class="text-emerald-400 font-bold leading-tight font-mono">Rp 0</span>
+        </div>
+        <div class="h-6 w-px bg-white/10"></div>
+        <div>
+          <span class="text-slate-400 text-[10px] block leading-none">TERTEMBAK</span>
+          <span id="topSold" class="text-sky-400 font-bold leading-tight font-mono">0 / 0</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('modalManage')" class="px-3 py-1.5 rounded-xl text-xs font-semibold glass-surface hover:bg-white/10 transition-colors flex items-center gap-1.5 text-slate-200">
+          <i data-lucide="sliders" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span class="hidden md:inline">Master Data</span>
+        </button>
+        <button onclick="exportToCsv()" title="Export CSV" class="p-2 rounded-xl text-xs glass-surface hover:bg-white/10 transition-colors text-slate-300">
+          <i data-lucide="download" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+   </header>
+
+   <!-- MODERN TAB BAR -->
+   <div class="px-4 md:px-8 py-2.5 glass-surface border-b border-white/[0.06] flex items-center justify-between gap-2 overflow-x-auto shrink-0">
+    <nav class="flex gap-1.5 sm:gap-2">
+      <button onclick="switchTab('register')" id="tab-register" class="glass-nav-pill tab-active px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2">
+        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 
+        <span>Input Data</span>
+      </button> 
+      <button onclick="switchTab('products')" id="tab-products" class="glass-nav-pill tab-inactive px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2">
+        <i data-lucide="boxes" class="w-3.5 h-3.5"></i> 
+        <span>Inventaris & Stok</span>
+        <span id="badgeProductsCount" class="text-[10px] px-1.5 py-0.2 rounded-md bg-white/10 font-mono">0</span>
+      </button> 
+      <button onclick="switchTab('analytics')" id="tab-analytics" class="glass-nav-pill tab-inactive px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2">
+        <i data-lucide="line-chart" class="w-3.5 h-3.5"></i> 
+        <span>Analitik & KPI</span>
+      </button> 
+      <button onclick="switchTab('report')" id="tab-report" class="glass-nav-pill tab-inactive px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-2">
+        <i data-lucide="send" class="w-3.5 h-3.5"></i> 
+        <span>Laporan Harian (WA)</span>
+      </button>
+    </nav>
+    <div id="syncIndicator" class="text-[11px] text-emerald-400 font-mono flex items-center gap-1.5 shrink-0 px-2.5 py-1 rounded-lg bg-emerald-500/10">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="hidden md:inline">Tersinkron</span>
+    </div>
+   </div>
+
+   <!-- MAIN CONTENT CONTAINER -->
+   <main class="flex-1 overflow-y-auto relative p-3.5 md:p-6 lg:p-8">
+     
+    <!-- ==================== TAB 1: REGISTRASI PRODUK ==================== -->
+    <div id="view-register" class="max-w-2xl mx-auto fade-enter space-y-4">
+      <div class="glass-card rounded-3xl p-5 sm:p-7 relative overflow-hidden">
+        <div class="absolute -top-16 -right-16 w-48 h-48 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-5">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+              <i data-lucide="scan-barcode" class="w-5 h-5 text-sky-400"></i>
+              Registrasi Unit Handphone / Gadget
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Input data unit baru ke database penjualan toko</p>
+          </div>
+          <button type="button" onclick="generateDemoData()" class="text-[11px] font-medium text-sky-400 hover:text-sky-300 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20">
+            + Isi Demo
+          </button>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+          <!-- IMEI -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Unit (15 Karakter)</label>
+            <div class="relative">
+              <!-- Placeholder diubah untuk mencontohkan huruf -->
+              <input type="text" id="f-imei" maxlength="15" placeholder="Contoh: ABCDEFGHIJKLMNO" required
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono tracking-wider glass-input pl-10 uppercase">
+              <i data-lucide="smartphone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+              <span id="imeiLengthBadge" class="absolute right-3 top-3 text-[10px] text-slate-400 font-mono">0/15</span>
+            </div>
+            <p id="imeiValidationMsg" class="text-[11px] text-red-400 mt-1 hidden"></p>
+          </div>
+
+          <!-- Kategori & Model -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kategori Seri</label>
+              <select id="f-category" onchange="autoFilterModelByCategory(this.value)" required class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm glass-input">
+                <option value="">-- Pilih Kategori --</option>
+                <option>Galaxy Z Series</option>
+                <option>Galaxy S Series</option>
+                <option>Galaxy A High</option>
+                <option>Galaxy A Mid</option>
+                <option>Galaxy A Entry</option>
+                <option>Galaxy Tab</option>
+                <option>Galaxy Watch</option>
+                <option>Galaxy Buds</option>
+                <option>Galaxy Band</option>
+                <option>Galaxy Accessories</option>
+              </select>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-300">Model / Tipe Produk</label>
+                <button type="button" onclick="openModal('modalManage')" class="text-[10px] text-sky-400 hover:underline">+ Tambah Model</button>
+              </div>
+              <select id="f-model" required class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm glass-input">
+                <option value="">Pilih Kategori Terlebih Dahulu</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Qty & Value -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Jumlah Qty (Unit)</label>
+              <input type="number" id="f-qty" min="1" value="1" required class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-mono glass-input">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Harga Satuan / Value (Rp)</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-2.5 text-xs text-slate-400 font-mono">Rp</span>
+                <input type="number" id="f-value" placeholder="0" min="0" required class="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-mono glass-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tanggal & Sales PIC -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tanggal Registrasi</label>
+              <input type="date" id="f-register-date" required class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm glass-input font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Sales Person (Penjual)</label>
+              <select id="f-sales-person" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm glass-input">
+                <!-- Injected dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Status Langsung Tembak -->
+          <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <input type="checkbox" id="f-direct-shot" checked class="w-4 h-4 rounded text-sky-500 accent-sky-500 cursor-pointer">
+              <div>
+                <label for="f-direct-shot" class="text-xs font-semibold text-slate-200 cursor-pointer">Tandai Langsung Sudah Ditembak (Terjual)</label>
+                <p class="text-[11px] text-slate-400">Status unit langsung tercatat di pencapaian hari ini.</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">Direkomendasikan</span>
+          </div>
+
+          <button type="submit" id="btnSubmit" class="w-full py-3 rounded-2xl font-semibold text-xs sm:text-sm text-white bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-sky-500/25 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Simpan & Daftarkan Unit</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: INVENTARIS & DAFTAR PRODUK ==================== -->
+    <div id="view-products" class="hidden fade-enter space-y-4 max-w-6xl mx-auto">
+      
+      <!-- Filter Bar -->
+      <div class="glass-card rounded-2xl p-3.5 md:p-4 space-y-3">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5"></i>
+            <input type="text" id="searchFilter" oninput="renderProducts()" placeholder="Cari Kode Unit, Model, atau Sales..." class="w-full pl-10 pr-4 py-2 rounded-xl text-xs glass-input">
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="filterStatus" onchange="renderProducts()" class="px-3 py-2 rounded-xl text-xs glass-input">
+              <option value="all">Semua Status</option>
+              <option value="sudah">Sudah Ditembak</option>
+              <option value="belum">Belum Ditembak</option>
+            </select>
+            <select id="filterCategory" onchange="renderProducts()" class="px-3 py-2 rounded-xl text-xs glass-input">
+              <option value="">Semua Kategori</option>
+              <option value="Galaxy Z Series">Z Series</option>
+              <option value="Galaxy S Series">S Series</option>
+              <option value="Galaxy A High">A High</option>
+              <option value="Galaxy A Mid">A Mid</option>
+              <option value="Galaxy A Entry">A Entry</option>
+              <option value="Galaxy Tab">Galaxy Tab</option>
+              <option value="Galaxy Watch">Galaxy Watch</option>
+              <option value="Galaxy Buds">Galaxy Buds</option>
+              <option value="Galaxy Band">Galaxy Band</option>
+              <option value="Galaxy Accessories">Accessories</option>
+            </select>
+            <input type="date" id="filterDate" onchange="renderProducts()" class="px-3 py-2 rounded-xl text-xs glass-input font-mono">
+            <button onclick="resetFilters()" title="Reset Filter" class="p-2 rounded-xl glass-input hover:bg-white/10 text-slate-400 hover:text-white">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bulk Action Header -->
+        <div class="flex items-center justify-between pt-2 border-t border-white/[0.06] text-xs">
+          <label class="flex items-center gap-2 text-slate-300 font-medium cursor-pointer">
+            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)" class="w-4 h-4 rounded text-sky-500 accent-sky-500 cursor-pointer">
+            <span>Pilih Semua Data</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <span id="selectedCountBadge" class="text-slate-400 text-[11px] hidden">0 dipilih</span>
+            <button id="bulkShotBtn" onclick="bulkChangeShotStatus('sudah')" class="hidden px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-medium hover:bg-emerald-500/30">
+              Tembak Terpilih
+            </button>
+            <button id="bulkDeleteBtn" onclick="confirmBulkDelete()" class="hidden px-2.5 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-lg text-xs font-medium hover:bg-red-500/30">
+              Hapus Terpilih
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Unit List -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="smartphone" class="w-3.5 h-3.5 text-sky-400"></i> Unit Smartphone & Tablet
+          </h3>
+          <span id="mainProductsCount" class="text-xs font-mono text-slate-400">0 Unit</span>
+        </div>
+        <div id="productList" class="space-y-2"></div>
+        <div id="emptyProducts" class="text-center py-12 glass-card rounded-2xl hidden">
+          <i data-lucide="inbox" class="w-8 h-8 text-slate-500 mx-auto mb-2"></i>
+          <p class="text-xs text-slate-400">Belum ada unit yang terdaftar pada filter ini.</p>
+        </div>
+      </div>
+
+      <!-- Accessories List -->
+      <div class="pt-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="headphones" class="w-3.5 h-3.5 text-purple-400"></i> Wearables & Accessories
+          </h3>
+          <span id="accCount" class="text-xs font-mono text-slate-400">0 Item</span>
+        </div>
+        <div id="accessoriesList" class="space-y-2"></div>
+        <div id="emptyAccessories" class="text-center py-6 glass-card rounded-2xl hidden">
+          <p class="text-xs text-slate-500">Tidak ada item accessories.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: ANALITIK & KPI ==================== -->
+    <div id="view-analytics" class="hidden fade-enter space-y-6 max-w-6xl mx-auto">
+      
+      <!-- Top 4 KPI Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div class="glass-card rounded-2xl p-4 relative overflow-hidden">
+          <span class="text-slate-400 text-xs font-medium block">Total Stok Terdaftar</span>
+          <p id="s-total" class="text-xl sm:text-2xl font-bold font-mono text-white mt-1">0</p>
+          <span class="text-[11px] text-slate-400 mt-0.5 block">Seluruh unit terinput</span>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 relative overflow-hidden">
+          <span class="text-slate-400 text-xs font-medium block">Total Tertembak (Sold)</span>
+          <p id="s-shot" class="text-xl sm:text-2xl font-bold font-mono text-sky-400 mt-1">0</p>
+          <span id="s-conversion" class="text-[11px] text-emerald-400 font-semibold mt-0.5 block">0% Konversi</span>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 relative overflow-hidden">
+          <span class="text-slate-400 text-xs font-medium block">Total Omset / Revenue</span>
+          <p id="s-revenue" class="text-lg sm:text-2xl font-bold font-mono text-emerald-400 mt-1 truncate">Rp 0</p>
+          <span class="text-[11px] text-slate-400 mt-0.5 block">Nilai akumulasi terjual</span>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 relative overflow-hidden">
+          <span class="text-slate-400 text-xs font-medium block">Rata-rata Harga Unit</span>
+          <p id="s-avg" class="text-lg sm:text-2xl font-bold font-mono text-indigo-300 mt-1 truncate">Rp 0</p>
+          <span class="text-[11px] text-slate-400 mt-0.5 block">ASP (Average Selling Price)</span>
+        </div>
+      </div>
+
+      <!-- Quick Period Performance -->
+      <div class="glass-card rounded-3xl p-5">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="calendar" class="w-4 h-4 text-sky-400"></i>
+          Pencapaian Penjualan (Mingguan, Bulanan & Tahunan)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+            <span class="text-xs text-slate-400 font-medium">Minggu Ini</span>
+            <p id="rep-week-qty" class="text-lg font-bold text-white font-mono mt-1">0 Unit</p>
+            <p id="rep-week-val" class="text-xs font-semibold text-emerald-400 font-mono mt-0.5">Rp 0</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+            <span class="text-xs text-slate-400 font-medium">Bulan Ini</span>
+            <p id="rep-month-qty" class="text-lg font-bold text-white font-mono mt-1">0 Unit</p>
+            <p id="rep-month-val" class="text-xs font-semibold text-emerald-400 font-mono mt-0.5">Rp 0</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+            <span class="text-xs text-slate-400 font-medium">Tahun Ini</span>
+            <p id="rep-year-qty" class="text-lg font-bold text-white font-mono mt-1">0 Unit</p>
+            <p id="rep-year-val" class="text-xs font-semibold text-emerald-400 font-mono mt-0.5">Rp 0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Seller Models & Segment Breakdown -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Top Products -->
+        <div class="glass-card rounded-3xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+            5 Model Paling Laris (Top Performers)
+          </h3>
+          <div id="topProductsList" class="space-y-2 pt-1"></div>
+        </div>
+
+        <!-- Salesperson Leaderboard -->
+        <div class="glass-card rounded-3xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="trophy" class="w-4 h-4 text-yellow-400"></i>
+            Kontribusi Sales Person
+          </h3>
+          <div id="salesPersonAnalysis" class="space-y-2 pt-1"></div>
+        </div>
+      </div>
+
+      <!-- Model Inventory & Sold Breakdown -->
+      <div class="glass-card rounded-3xl p-5">
+        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4 text-sky-400"></i>
+          Performa Penjualan Per Model Produk
+        </h3>
+        <div id="versionChart" class="space-y-2.5 max-h-96 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: LAPORAN HARIAN (WA READY) ==================== -->
+    <div id="view-report" class="hidden fade-enter max-w-5xl mx-auto space-y-5">
+      
+      <!-- Report Configurator -->
+      <div class="glass-card rounded-3xl p-5 md:p-6 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+          <div>
+            <h2 class="text-base font-bold text-white">Generator Laporan Penjualan WhatsApp</h2>
+            <p class="text-xs text-slate-400">Format otomatis sesuai template standar management SEP / GTN</p>
+          </div>
+          <button onclick="copyReportToClipboard()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-emerald-500/20 flex items-center gap-1.5 transition-all">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span>Salin Format WA</span>
+          </button>
+        </div>
+
+        <!-- Target Parameters -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Toko / Store</label>
+            <input type="text" id="reportStoreName" value="SEP BOGOR TRADE MALL GTN" class="w-full px-3 py-2 rounded-xl text-xs glass-input">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Laporan</label>
+            <input type="date" id="reportDate" class="w-full px-3 py-2 rounded-xl text-xs glass-input font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Target MTD (Value Rp)</label>
+            <input type="number" id="reportTargetMTD" placeholder="0" class="w-full px-3 py-2 rounded-xl text-xs font-mono glass-input" onchange="saveTargetData()">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Target MTD (Qty)</label>
+            <input type="number" id="reportTargetQtyMTD" placeholder="0" class="w-full px-3 py-2 rounded-xl text-xs font-mono glass-input" onchange="saveTargetData()">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Target Harian (Value Rp)</label>
+            <input type="number" id="reportTargetDaily" placeholder="0" class="w-full px-3 py-2 rounded-xl text-xs font-mono glass-input" onchange="saveTargetData()">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Target Harian (Qty)</label>
+            <input type="number" id="reportTargetQtyDaily" placeholder="0" class="w-full px-3 py-2 rounded-xl text-xs font-mono glass-input" onchange="saveTargetData()">
+          </div>
+        </div>
+
+        <!-- Action Plan & Issues -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Issue / Kendala Hari Ini (Jika Tidak Achiev)</label>
+            <textarea id="reportActivity" rows="2" placeholder="Contoh: Traffic mall sepi akibat hujan deras sejak siang..." class="w-full px-3 py-2 rounded-xl text-xs glass-input"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Action Plan Esok Hari</label>
+            <textarea id="reportReason" rows="2" placeholder="Contoh: Follow up 5 database customer loyal untuk promo S26 Series..." class="w-full px-3 py-2 rounded-xl text-xs glass-input"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Card -->
+      <div class="glass-card rounded-3xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
+            Hasil Generator Teks Laporan
+          </h3>
+          <span class="text-[11px] text-slate-400 font-mono">Format Siap Copy Paste</span>
+        </div>
+        <pre id="reportPreview" class="p-4 rounded-2xl bg-black/50 border border-white/[0.08] text-xs font-mono text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre-wrap select-all"></pre>
+      </div>
+
+    </div>
+
+   </main>
+  </div>
+
+  <!-- ==================== MODAL MASTER DATA (MODEL & SALES) ==================== -->
+  <div id="modalManage" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-surface rounded-3xl p-5 md:p-7 w-full max-w-xl max-h-[90vh] overflow-y-auto space-y-5 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-4 h-4 text-sky-400"></i>
+          Kelola Master Model & Sales Person
+        </h3>
+        <button onclick="closeModal('modalManage')" class="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Sales Person Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-semibold text-slate-300">Daftar Sales Person</h4>
+        <div class="flex gap-2">
+          <input type="text" id="newSalesInput" placeholder="Nama sales baru..." class="flex-1 px-3 py-2 rounded-xl text-xs glass-input">
+          <button onclick="addSalesPerson()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold">Tambah</button>
+        </div>
+        <div id="salesListContainer" class="flex flex-wrap gap-2 pt-1 max-h-32 overflow-y-auto"></div>
+      </div>
+
+      <!-- Master Model Section -->
+      <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-semibold text-slate-300">Master Tipe / Model HP</h4>
+          <span id="masterModelCount" class="text-[11px] text-slate-400 font-mono">0 model</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="newModelInput" placeholder="Contoh: S26 ULTRA 12/256 GB..." class="flex-1 px-3 py-2 rounded-xl text-xs glass-input">
+          <button onclick="addMasterModel()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold">Tambah</button>
+        </div>
+        <input type="text" id="searchMasterModel" oninput="renderMasterModels()" placeholder="Cari model dalam master list..." class="w-full px-3 py-1.5 rounded-xl text-xs glass-input">
+        <div id="masterModelsContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="pt-3 border-t border-white/[0.08] flex justify-end">
+        <button onclick="closeModal('modalManage')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-semibold">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="modalDelete" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-surface rounded-3xl p-6 w-full max-w-sm space-y-4 border border-white/10 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center mx-auto">
+        <i data-lucide="trash-2" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-white">Hapus Data Produk?</h3>
+        <p class="text-xs text-slate-400 mt-1">Data IMEI terpilih akan dihapus secara permanen dari sistem.</p>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeModal('modalDelete')" class="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold">Batal</button>
+        <button id="confirmDelBtn" onclick="executeDelete()" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // ==================== DEFAULT MASTER MODELS ====================
+    const DEFAULT_MODELS = [
+      // Galaxy A Entry
+      'A07 4/64', 'A07 4/128', 'A07 6/128', 'A07 8/256', 'A07 5G', 'A08 4/64 GB', 'A08 4/128 GB', 'A18 4/128 GB', 'A18 8/128 GB',
+      // Galaxy A Mid
+      'A17', 'A17 8/128', 'A17 5G', 'A27 6/128 GB', 'A27 8/256 GB', 'A37 8/128 GB', 'A37 8/256 GB',
+      // Galaxy A High
+      'A57', 'A57 8/128 GB', 'A57 8/256 GB', 'A57 12/256 GB',
+      // Galaxy S Series
+      'S25', 'S25 FE', 'S25 ULTRA', 'S26', 'S26 FE', 'S26 5G 12/256 GB', 'S26 5G 12/512 GB', 
+      'S26+ 12/256 GB', 'S26+ 12/512 GB', 'S26 ULTRA 12/256 GB', 'S26 ULTRA 12/512 GB', 'S26 ULTRA 12/1TB',
+      // Galaxy Z Series
+      'Z FOLD 8 ULTRA 12/256 GB', 'Z FOLD 8 ULTRA 12/512 GB', 'Z FOLD 8 ULTRA 12/1TB', 'Z FOLD 8 12/256 GB', 'Z FOLD 8 12/512 GB', 
+      'Z FLIP 8 12/256 GB', 'Z FLIP 8 12/512 GB',
+      // Galaxy Tab & Wearables
+      'TAB A11', 'Tab A11 WiFi', 'TAB A11+ WiFi', 'TAB A11+ 5G', 'TAB S10 LITE', 'TAB S10 LITE 5G', 
+      'TAB S10 FE WiFi', 'TAB S10 FE 5G', 'TAB S10 FE+ WiFi', 'TAB S10 FE+ 5G', 'TAB S12+ WiFi', 'TAB S12+ 5G', 'TAB S12 ULTRA WiFi', 'TAB S12 ULTRA 5G',
+      'Galaxy Watch 7', 'Galaxy Watch Ultra', 'FIT 3', 'Buds Core', 'Buds 3 FE', 'Buds 3 Pro', 'Galaxy Accessories'
+    ];
+
+    const CATEGORY_MAP = {
+      'Galaxy Z Series': ['Z FOLD', 'Z FLIP'],
+      'Galaxy S Series': ['S25', 'S26'],
+      'Galaxy A High': ['A57'],
+      'Galaxy A Mid': ['A17', 'A27', 'A37'],
+      'Galaxy A Entry': ['A07', 'A08', 'A18'],
+      'Galaxy Tab': ['TAB'],
+      'Galaxy Watch': ['Watch'],
+      'Galaxy Band': ['FIT'],
+      'Galaxy Buds': ['Buds'],
+      'Galaxy Accessories': ['Accessories', 'Case', 'Charger', 'Adapter']
+    };
+
+    // ==================== STATE MANAGEMENT ====================
+    let allData = [];
+    let currentTab = 'register';
+    let targetDeleteId = null;
+    let isBulkDelete = false;
+    let isUsingDataSdk = false;
+
+    let salesList = JSON.parse(localStorage.getItem('galaxy_sales_list')) || ['Assad', 'Rian', 'Putri'];
+    let modelList = JSON.parse(localStorage.getItem('galaxy_model_list')) || DEFAULT_MODELS;
+
+    // Toast Notification helper
+    function showToast(message, type = 'info') {
+      const el = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-sky-600';
+      el.className = `fixed bottom-5 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-white text-xs font-medium shadow-2xl ${bg} backdrop-blur-md fade-enter`;
+      el.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4"></i> <span>${message}</span>`;
+      document.body.appendChild(el);
+      lucide.createIcons();
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => el.remove(), 300);
+      }, 3000);
+    }
+
+    // ==================== STORAGE ENGINE (SDK + LOCALSTORAGE FALLBACK) ====================
+    async function initStorage() {
+      if (window.dataSdk && typeof window.dataSdk.init === 'function') {
+        try {
+          const res = await window.dataSdk.init({
+            onDataChanged(data) {
+              allData = data || [];
+              onDataUpdated();
+            }
+          });
+          if (res && res.isOk) {
+            isUsingDataSdk = true;
+            document.getElementById('syncIndicator').innerHTML = `
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span class="hidden md:inline">Cloud Connected</span>`;
+            return;
+          }
+        } catch(e) {
+          console.warn('DataSdk fallback activated:', e);
+        }
+      }
+
+      // Standalone fallback: LocalStorage
+      const local = localStorage.getItem('galaxy_products_db');
+      allData = local ? JSON.parse(local) : [];
+      document.getElementById('syncIndicator').innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+        <span class="hidden md:inline">Local Storage</span>`;
+      onDataUpdated();
+    }
+
+    async function dbCreate(item) {
+      if (isUsingDataSdk && window.dataSdk) {
+        return await window.dataSdk.create(item);
+      } else {
+        item.__backendId = 'local-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+        allData.unshift(item);
+        localStorage.setItem('galaxy_products_db', JSON.stringify(allData));
+        onDataUpdated();
+        return { isOk: true };
+      }
+    }
+
+    async function dbUpdate(item) {
+      if (isUsingDataSdk && window.dataSdk) {
+        return await window.dataSdk.update(item);
+      } else {
+        const idx = allData.findIndex(d => d.__backendId === item.__backendId);
+        if (idx !== -1) {
+          allData[idx] = { ...item };
+          localStorage.setItem('galaxy_products_db', JSON.stringify(allData));
+          onDataUpdated();
+        }
+        return { isOk: true };
+      }
+    }
+
+    async function dbDelete(item) {
+      if (isUsingDataSdk && window.dataSdk) {
+        return await window.dataSdk.delete(item);
+      } else {
+        allData = allData.filter(d => d.__backendId !== item.__backendId);
+        localStorage.setItem('galaxy_products_db', JSON.stringify(allData));
+        onDataUpdated();
+        return { isOk: true };
+      }
+    }
+
+    function onDataUpdated() {
+      updateTopBarStats();
+      renderProducts();
+      renderAnalytics();
+      if (currentTab === 'report') generateReport();
+    }
+
+    // ==================== TOP BAR STATS ====================
+    function updateTopBarStats() {
+      const soldItems = allData.filter(d => d.shot_status === 'sudah');
+      const totalRev = soldItems.reduce((acc, d) => acc + ((d.value || 0) * (d.qty || 1)), 0);
+      const totalSoldQty = soldItems.reduce((acc, d) => acc + (d.qty || 1), 0);
+      const totalAllQty = allData.reduce((acc, d) => acc + (d.qty || 1), 0);
+
+      document.getElementById('topRevenue').textContent = formatRp(totalRev);
+      document.getElementById('topSold').textContent = `${totalSoldQty} / ${totalAllQty}`;
+      document.getElementById('badgeProductsCount').textContent = allData.length;
+    }
+
+    // ==================== NAVIGATION TABS ====================
+    function switchTab(tabId) {
+      currentTab = tabId;
+      ['register', 'products', 'analytics', 'report'].forEach(t => {
+        const view = document.getElementById('view-' + t);
+        const btn = document.getElementById('tab-' + t);
+        if (view) view.classList.toggle('hidden', t !== tabId);
+        if (btn) {
+          btn.classList.toggle('tab-active', t === tabId);
+          btn.classList.toggle('tab-inactive', t !== tabId);
+        }
+      });
+
+      if (tabId === 'report') {
+        loadTargetData();
+        generateReport();
+      }
+      lucide.createIcons();
+    }
+
+    // ==================== IMEI INPUT LIVE VALIDATION ====================
+    const imeiInput = document.getElementById('f-imei');
+    imeiInput.addEventListener('input', (e) => {
+      // Hanya izinkan huruf (tanpa angka)
+      e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '');
+      const len = e.target.value.length;
+      document.getElementById('imeiLengthBadge').textContent = `${len}/15`;
+      
+      const msg = document.getElementById('imeiValidationMsg');
+      if (len > 0 && len < 15) {
+        msg.textContent = 'Input harus tepat 15 karakter huruf.';
+        msg.classList.remove('hidden');
+      } else {
+        msg.classList.add('hidden');
+      }
+    });
+
+    // ==================== CATEGORY FILTER FOR MODEL DROPDOWN ====================
+    function autoFilterModelByCategory(category) {
+      const select = document.getElementById('f-model');
+      select.innerHTML = '';
+      if (!category) {
+        select.innerHTML = '<option value="">Pilih Kategori Terlebih Dahulu</option>';
+        return;
+      }
+
+      const matchPatterns = CATEGORY_MAP[category] || [];
+      const filtered = modelList.filter(m => {
+        if (matchPatterns.length === 0) return true;
+        return matchPatterns.some(pat => m.toUpperCase().includes(pat.toUpperCase()));
+      });
+
+      const listToUse = filtered.length > 0 ? filtered : modelList;
+      listToUse.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        select.appendChild(opt);
+      });
+    }
+
+    // ==================== REGISTER PRODUCT FORM ====================
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const imei = document.getElementById('f-imei').value.trim();
+      const category = document.getElementById('f-category').value;
+      const model = document.getElementById('f-model').value;
+      const qty = parseInt(document.getElementById('f-qty').value) || 1;
+      const value = parseFloat(document.getElementById('f-value').value) || 0;
+      const registerDate = document.getElementById('f-register-date').value;
+      const salesPerson = document.getElementById('f-sales-person').value;
+      const directShot = document.getElementById('f-direct-shot').checked;
+
+      if (imei.length !== 15) {
+        showToast('Input harus tepat 15 karakter!', 'error');
+        return;
+      }
+      if (allData.some(d => d.imei === imei)) {
+        showToast('Kode ini sudah pernah terdaftar!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+
+      const newItem = {
+        imei,
+        brand: 'Samsung',
+        category,
+        model,
+        qty,
+        value,
+        sales_person: salesPerson,
+        shot_status: directShot ? 'sudah' : 'belum',
+        sold_date: directShot ? new Date(registerDate + 'T12:00:00').toISOString() : '',
+        register_date: new Date(registerDate + 'T00:00:00').toISOString(),
+        created_at: new Date().toISOString()
+      };
+
+      const res = await dbCreate(newItem);
+      btn.disabled = false;
+
+      if (res && res.isOk) {
+        showToast(`Produk ${model} berhasil didaftarkan!`, 'success');
+        document.getElementById('f-imei').value = '';
+        document.getElementById('imeiLengthBadge').textContent = '0/15';
+        document.getElementById('f-value').value = '';
+      } else {
+        showToast('Gagal mendaftarkan unit.', 'error');
+      }
+    });
+
+    // ==================== PRODUCTS LIST RENDERING ====================
+    function renderProducts() {
+      const search = (document.getElementById('searchFilter')?.value || '').toLowerCase();
+      const filterStatus = document.getElementById('filterStatus')?.value || 'all';
+      const filterCategory = document.getElementById('filterCategory')?.value || '';
+      const filterDate = document.getElementById('filterDate')?.value || '';
+
+      let list = allData.slice();
+
+      if (search) {
+        list = list.filter(d => 
+          (d.imei && d.imei.toLowerCase().includes(search)) ||
+          (d.model && d.model.toLowerCase().includes(search)) ||
+          (d.sales_person && d.sales_person.toLowerCase().includes(search))
+        );
+      }
+
+      if (filterStatus !== 'all') {
+        list = list.filter(d => d.shot_status === filterStatus);
+      }
+
+      if (filterCategory) {
+        list = list.filter(d => d.category === filterCategory);
+      }
+
+      if (filterDate) {
+        list = list.filter(d => {
+          const dt = new Date(d.register_date || d.created_at).toISOString().split('T')[0];
+          return dt === filterDate;
+        });
+      }
+
+      const phones = list.filter(d => d.category !== 'Galaxy Accessories');
+      const accessories = list.filter(d => d.category === 'Galaxy Accessories');
+
+      const phoneContainer = document.getElementById('productList');
+      const emptyPhone = document.getElementById('emptyProducts');
+      phoneContainer.innerHTML = '';
+
+      if (phones.length === 0) {
+        emptyPhone.classList.remove('hidden');
+      } else {
+        emptyPhone.classList.add('hidden');
+        phones.forEach(item => phoneContainer.appendChild(createProductCard(item)));
+      }
+
+      const accContainer = document.getElementById('accessoriesList');
+      const emptyAcc = document.getElementById('emptyAccessories');
+      accContainer.innerHTML = '';
+
+      if (accessories.length === 0) {
+        emptyAcc.classList.remove('hidden');
+      } else {
+        emptyAcc.classList.add('hidden');
+        accessories.forEach(item => accContainer.appendChild(createProductCard(item)));
+      }
+
+      document.getElementById('mainProductsCount').textContent = `${phones.length} Unit`;
+      document.getElementById('accCount').textContent = `${accessories.length} Item`;
+      updateSelectAllCheckboxState();
+      lucide.createIcons();
+    }
+
+    function createProductCard(item) {
+      const card = document.createElement('div');
+      card.className = 'glass-card rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 fade-enter';
+      
+      const isShot = item.shot_status === 'sudah';
+      const regDate = item.register_date ? new Date(item.register_date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+
+      card.innerHTML = `
+        <div class="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+          <input type="checkbox" data-id="${item.__backendId}" class="item-checkbox mt-1 sm:mt-0 w-4 h-4 rounded text-sky-500 accent-sky-500 cursor-pointer" onchange="updateSelectAllCheckboxState()">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold text-white tracking-tight">${esc(item.model)}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300 font-medium">${esc(item.category)}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold ${isShot ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
+                ${isShot ? 'TERJUAL' : 'READY STOK'}
+              </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-slate-400">
+              <span class="font-mono text-slate-300 tracking-wider">Kode: ${esc(item.imei)}</span>
+              <span>&bull;</span>
+              <span>Reg: ${regDate}</span>
+              <span>&bull;</span>
+              <span class="text-emerald-400 font-mono font-semibold">${formatRp(item.value)}</span>
+              ${item.sales_person ? `<span class="text-sky-300">PIC: ${esc(item.sales_person)}</span>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-white/[0.06]">
+          <button onclick="toggleShotStatus('${item.__backendId}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${isShot ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30' : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md shadow-sky-500/20'}">
+            <i data-lucide="${isShot ? 'check' : 'zap'}" class="w-3.5 h-3.5"></i>
+            <span>${isShot ? 'Sudah Tembak' : 'Tembak Unit'}</span>
+          </button>
+          <button onclick="openDeleteDialog('${item.__backendId}')" class="p-1.5 rounded-xl bg-white/[0.04] hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    async function toggleShotStatus(id) {
+      const item = allData.find(d => d.__backendId === id);
+      if (!item) return;
+      const nextStatus = item.shot_status === 'sudah' ? 'belum' : 'sudah';
+      const updated = {
+        ...item,
+        shot_status: nextStatus,
+        sold_date: nextStatus === 'sudah' ? new Date().toISOString() : ''
+      };
+      await dbUpdate(updated);
+      showToast(`Status unit diubah menjadi: ${nextStatus === 'sudah' ? 'Tertembak' : 'Ready'}`, 'success');
+    }
+
+    function resetFilters() {
+      document.getElementById('searchFilter').value = '';
+      document.getElementById('filterStatus').value = 'all';
+      document.getElementById('filterCategory').value = '';
+      document.getElementById('filterDate').value = '';
+      renderProducts();
+    }
+
+    // ==================== BATCH / BULK SELECTION ====================
+    function toggleSelectAll(checked) {
+      document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = checked);
+      updateSelectAllCheckboxState();
+    }
+
+    function updateSelectAllCheckboxState() {
+      const allCheckboxes = document.querySelectorAll('.item-checkbox');
+      const selected = document.querySelectorAll('.item-checkbox:checked');
+      const selectAll = document.getElementById('selectAllCheckbox');
+      const countBadge = document.getElementById('selectedCountBadge');
+      const bulkShotBtn = document.getElementById('bulkShotBtn');
+      const bulkDelBtn = document.getElementById('bulkDeleteBtn');
+
+      if (selectAll) {
+        selectAll.checked = allCheckboxes.length > 0 && selected.length === allCheckboxes.length;
+      }
+
+      if (selected.length > 0) {
+        countBadge.classList.remove('hidden');
+        countBadge.textContent = `${selected.length} dipilih`;
+        bulkShotBtn.classList.remove('hidden');
+        bulkDelBtn.classList.remove('hidden');
+      } else {
+        countBadge.classList.add('hidden');
+        bulkShotBtn.classList.add('hidden');
+        bulkDelBtn.classList.add('hidden');
+      }
+    }
+
+    async function bulkChangeShotStatus(status) {
+      const selected = Array.from(document.querySelectorAll('.item-checkbox:checked')).map(cb => cb.dataset.id);
+      if (selected.length === 0) return;
+
+      for (const id of selected) {
+        const item = allData.find(d => d.__backendId === id);
+        if (item) {
+          await dbUpdate({
+            ...item,
+            shot_status: status,
+            sold_date: status === 'sudah' ? new Date().toISOString() : ''
+          });
+        }
+      }
+      showToast(`${selected.length} unit berhasil diperbarui!`, 'success');
+    }
+
+    function confirmBulkDelete() {
+      const selected = Array.from(document.querySelectorAll('.item-checkbox:checked')).map(cb => cb.dataset.id);
+      if (selected.length === 0) return;
+      isBulkDelete = true;
+      openModal('modalDelete');
+    }
+
+    function openDeleteDialog(id) {
+      isBulkDelete = false;
+      targetDeleteId = id;
+      openModal('modalDelete');
+    }
+
+    async function executeDelete() {
+      const btn = document.getElementById('confirmDelBtn');
+      btn.disabled = true;
+
+      if (isBulkDelete) {
+        const selected = Array.from(document.querySelectorAll('.item-checkbox:checked')).map(cb => cb.dataset.id);
+        for (const id of selected) {
+          const item = allData.find(d => d.__backendId === id);
+          if (item) await dbDelete(item);
+        }
+        showToast(`${selected.length} unit berhasil dihapus!`, 'info');
+      } else if (targetDeleteId) {
+        const item = allData.find(d => d.__backendId === targetDeleteId);
+        if (item) {
+          await dbDelete(item);
+          showToast('Data berhasil dihapus!', 'info');
+        }
+      }
+
+      btn.disabled = false;
+      closeModal('modalDelete');
+      targetDeleteId = null;
+      isBulkDelete = false;
+    }
+
+    // ==================== CSV EXPORT ====================
+    function exportToCsv() {
+      if (allData.length === 0) {
+        showToast('Tidak ada data untuk diekspor!', 'error');
+        return;
+      }
+      const headers = ['Kode', 'Kategori', 'Model', 'Qty', 'Value', 'Status', 'Sales', 'Tanggal Registrasi'];
+      const rows = allData.map(d => [
+        `="${d.imei}"`,
+        `"${d.category || ''}"`,
+        `"${d.model || ''}"`,
+        d.qty || 1,
+        d.value || 0,
+        d.shot_status || 'belum',
+        `"${d.sales_person || ''}"`,
+        `"${d.register_date || ''}"`
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `Samsung_Sales_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      showToast('Data berhasil diekspor ke CSV!', 'success');
+    }
+
+    // ==================== ANALYTICS & DASHBOARD ====================
+    function renderAnalytics() {
+      const soldItems = allData.filter(d => d.shot_status === 'sudah');
+      const totalAllQty = allData.reduce((s, d) => s + (d.qty || 1), 0);
+      const totalSoldQty = soldItems.reduce((s, d) => s + (d.qty || 1), 0);
+      const totalRev = soldItems.reduce((s, d) => s + ((d.value || 0) * (d.qty || 1)), 0);
+      const conversion = totalAllQty > 0 ? Math.round((totalSoldQty / totalAllQty) * 100) : 0;
+      const asp = totalSoldQty > 0 ? Math.round(totalRev / totalSoldQty) : 0;
+
+      document.getElementById('s-total').textContent = totalAllQty;
+      document.getElementById('s-shot').textContent = totalSoldQty;
+      document.getElementById('s-conversion').textContent = `${conversion}% Konversi Terjual`;
+      document.getElementById('s-revenue').textContent = formatRp(totalRev);
+      document.getElementById('s-avg').textContent = formatRp(asp);
+
+      // Weekly, Monthly, Yearly calc
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getTime() - 7 * 86400000);
+      const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const firstOfYear = new Date(now.getFullYear(), 0, 1);
+
+      const weekItems = soldItems.filter(d => new Date(d.sold_date || d.created_at) >= oneWeekAgo);
+      const monthItems = soldItems.filter(d => new Date(d.sold_date || d.created_at) >= firstOfMonth);
+      const yearItems = soldItems.filter(d => new Date(d.sold_date || d.created_at) >= firstOfYear);
+
+      const sumVal = (arr) => arr.reduce((acc, d) => acc + ((d.value || 0) * (d.qty || 1)), 0);
+      const sumQty = (arr) => arr.reduce((acc, d) => acc + (d.qty || 1), 0);
+
+      document.getElementById('rep-week-qty').textContent = `${sumQty(weekItems)} Unit`;
+      document.getElementById('rep-week-val').textContent = formatRp(sumVal(weekItems));
+      document.getElementById('rep-month-qty').textContent = `${sumQty(monthItems)} Unit`;
+      document.getElementById('rep-month-val').textContent = formatRp(sumVal(monthItems));
+      document.getElementById('rep-year-qty').textContent = `${sumQty(yearItems)} Unit`;
+      document.getElementById('rep-year-val').textContent = formatRp(sumVal(yearItems));
+
+      // Top 5 Products
+      renderTopProducts(soldItems);
+      // Salesperson Contribution
+      renderSalespersonContribution(soldItems);
+      // Model breakdown
+      renderModelChart();
+    }
+
+    function renderTopProducts(soldItems) {
+      const container = document.getElementById('topProductsList');
+      container.innerHTML = '';
+
+      const counts = {};
+      soldItems.forEach(d => {
+        const m = d.model || 'Unknown';
+        counts[m] = (counts[m] || 0) + (d.qty || 1);
+      });
+
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400">Belum ada unit yang terjual.</p>';
+        return;
+      }
+
+      const maxVal = sorted[0][1] || 1;
+      sorted.forEach(([model, count], idx) => {
+        const pct = Math.round((count / maxVal) * 100);
+        const row = document.createElement('div');
+        row.className = 'space-y-1';
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-white font-medium">${idx + 1}. ${esc(model)}</span>
+            <span class="font-mono text-sky-400 font-bold">${count} Unit</span>
+          </div>
+          <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-full rounded-full" style="width: ${pct}%"></div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderSalespersonContribution(soldItems) {
+      const container = document.getElementById('salesPersonAnalysis');
+      container.innerHTML = '';
+
+      if (salesList.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400">Belum ada sales person terdaftar.</p>';
+        return;
+      }
+
+      salesList.forEach(name => {
+        const pItems = soldItems.filter(d => d.sales_person === name);
+        const pQty = pItems.reduce((acc, d) => acc + (d.qty || 1), 0);
+        const pVal = pItems.reduce((acc, d) => acc + ((d.value || 0) * (d.qty || 1)), 0);
+
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between';
+        card.innerHTML = `
+          <div>
+            <span class="text-xs font-bold text-white block">${esc(name)}</span>
+            <span class="text-[11px] text-slate-400 font-mono">${formatRp(pVal)}</span>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl bg-sky-500/10 text-sky-300 border border-sky-500/20 text-xs font-mono font-bold">
+            ${pQty} Unit
+          </span>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderModelChart() {
+      const container = document.getElementById('versionChart');
+      container.innerHTML = '';
+
+      const modelsMap = {};
+      allData.forEach(d => {
+        const m = d.model || 'Unknown';
+        if (!modelsMap[m]) modelsMap[m] = { stock: 0, sold: 0, revenue: 0 };
+        modelsMap[m].stock += (d.qty || 1);
+        if (d.shot_status === 'sudah') {
+          modelsMap[m].sold += (d.qty || 1);
+          modelsMap[m].revenue += ((d.value || 0) * (d.qty || 1));
+        }
+      });
+
+      const entries = Object.entries(modelsMap).sort((a, b) => b[1].sold - a[1].sold);
+
+      if (entries.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400">Belum ada data stok model.</p>';
+        return;
+      }
+
+      entries.forEach(([model, stats]) => {
+        const pct = stats.stock > 0 ? Math.round((stats.sold / stats.stock) * 100) : 0;
+        const row = document.createElement('div');
+        row.className = 'p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] space-y-1.5';
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-white font-semibold">${esc(model)}</span>
+            <span class="text-slate-400 font-mono text-[11px]">Terjual: <b class="text-emerald-400">${stats.sold}</b> / Stok: ${stats.stock}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
+              <div class="bg-gradient-to-r from-emerald-500 to-sky-400 h-full rounded-full" style="width: ${pct}%"></div>
+            </div>
+            <span class="text-[11px] font-mono text-slate-300 w-8 text-right">${pct}%</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // ==================== DAILY REPORT GENERATOR (WA READY) ====================
+    function loadTargetData() {
+      document.getElementById('reportTargetMTD').value = localStorage.getItem('galaxy_target_mtd_val') || 150000000;
+      document.getElementById('reportTargetQtyMTD').value = localStorage.getItem('galaxy_target_mtd_qty') || 45;
+      document.getElementById('reportTargetDaily').value = localStorage.getItem('galaxy_target_daily_val') || 5000000;
+      document.getElementById('reportTargetQtyDaily').value = localStorage.getItem('galaxy_target_daily_qty') || 2;
+    }
+
+    function saveTargetData() {
+      localStorage.setItem('galaxy_target_mtd_val', document.getElementById('reportTargetMTD').value || 0);
+      localStorage.setItem('galaxy_target_mtd_qty', document.getElementById('reportTargetQtyMTD').value || 0);
+      localStorage.setItem('galaxy_target_daily_val', document.getElementById('reportTargetDaily').value || 0);
+      localStorage.setItem('galaxy_target_daily_qty', document.getElementById('reportTargetQtyDaily').value || 0);
+      generateReport();
+    }
+
+    function generateReport() {
+      const storeName = document.getElementById('reportStoreName').value || 'SEP BOGOR TRADE MALL GTN';
+      const repDateStr = document.getElementById('reportDate').value || new Date().toISOString().split('T')[0];
+      const targetMTDVal = parseFloat(document.getElementById('reportTargetMTD').value) || 0;
+      const targetMTDQty = parseInt(document.getElementById('reportTargetQtyMTD').value) || 0;
+      const targetDailyVal = parseFloat(document.getElementById('reportTargetDaily').value) || 0;
+      const targetDailyQty = parseInt(document.getElementById('reportTargetQtyDaily').value) || 0;
+      const issue = document.getElementById('reportActivity').value.trim() || 'Traffic toko stabil, tidak ada kendala sistem.';
+      const action = document.getElementById('reportReason').value.trim() || 'Fokus penawaran bundling dan follow up customer pre-order.';
+
+      const repDate = new Date(repDateStr + 'T12:00:00');
+      const startOfMonth = new Date(repDate.getFullYear(), repDate.getMonth(), 1);
+
+      // MTD sold
+      const mtdSold = allData.filter(d => {
+        if (d.shot_status !== 'sudah') return false;
+        const dt = new Date(d.sold_date || d.created_at);
+        return dt >= startOfMonth && dt <= repDate;
+      });
+
+      const mtdVal = mtdSold.reduce((acc, d) => acc + ((d.value || 0) * (d.qty || 1)), 0);
+      const mtdQty = mtdSold.reduce((acc, d) => acc + (d.qty || 1), 0);
+      const mtdPct = targetMTDVal > 0 ? Math.round((mtdVal / targetMTDVal) * 100) : 0;
+      const mtdQtyPct = targetMTDQty > 0 ? Math.round((mtdQty / targetMTDQty) * 100) : 0;
+
+      // Estimate MTD
+      const daysInMonth = new Date(repDate.getFullYear(), repDate.getMonth() + 1, 0).getDate();
+      const curDay = repDate.getDate();
+      const estVal = curDay > 0 ? Math.round((mtdVal / curDay) * daysInMonth) : 0;
+      const estQty = curDay > 0 ? Math.round((mtdQty / curDay) * daysInMonth) : 0;
+      const estValPct = targetMTDVal > 0 ? Math.round((estVal / targetMTDVal) * 100) : 0;
+      const estQtyPct = targetMTDQty > 0 ? Math.round((estQty / targetMTDQty) * 100) : 0;
+
+      // Daily Sold
+      const dailySold = allData.filter(d => {
+        if (d.shot_status !== 'sudah') return false;
+        const dt = new Date(d.sold_date || d.created_at).toISOString().split('T')[0];
+        return dt === repDateStr;
+      });
+
+      const dailyVal = dailySold.reduce((acc, d) => acc + ((d.value || 0) * (d.qty || 1)), 0);
+      const dailyQty = dailySold.reduce((acc, d) => acc + (d.qty || 1), 0);
+
+      const valDiff = targetDailyVal > 0 ? Math.round(((dailyVal - targetDailyVal) / targetDailyVal) * 100) : 0;
+      const qtyDiff = targetDailyQty > 0 ? Math.round(((dailyQty - targetDailyQty) / targetDailyQty) * 100) : 0;
+
+      // Segment breakdown
+      const categories = [
+        { label: 'S Series', key: 'Galaxy S Series' },
+        { label: 'Z Series', key: 'Galaxy Z Series' },
+        { label: 'High', key: 'Galaxy A High' },
+        { label: 'Mid', key: 'Galaxy A Mid' },
+        { label: 'Entry', key: 'Galaxy A Entry' },
+        { label: 'Tab', key: 'Galaxy Tab' },
+        { label: 'Watch', key: 'Galaxy Watch' },
+        { label: 'Buds', key: 'Galaxy Buds' }
+      ];
+
+      let segmentRows = '';
+      categories.forEach(c => {
+        const totalStock = allData.filter(d => d.category === c.key).reduce((acc, d) => acc + (d.qty || 1), 0);
+        const totalSold = mtdSold.filter(d => d.category === c.key).reduce((acc, d) => acc + (d.qty || 1), 0);
+        segmentRows += `${c.label} : ${totalStock}/${totalSold}\n`;
+      });
+
+      // Daily sold item list
+      let dailyUnits = '';
+      const dailyCounts = {};
+      dailySold.forEach(d => {
+        dailyCounts[d.model] = (dailyCounts[d.model] || 0) + (d.qty || 1);
+      });
+      Object.entries(dailyCounts).forEach(([m, q]) => {
+        dailyUnits += `${m} / ${q}\n`;
+      });
+      if (!dailyUnits) dailyUnits = '- (Belum ada penjualan)\n';
+
+      const dateDisplay = repDate.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      const text = `*Nama Toko* : ${storeName}
+${dateDisplay}
+*TG Value/TG Qty (+/-)* : (${valDiff >= 0 ? '+' : ''}${valDiff}% / ${qtyDiff >= 0 ? '+' : ''}${qtyDiff}%)
+*Target Amt/Ach Amt/%* : ${formatRpSimple(targetMTDVal)}/${formatRpSimple(mtdVal)}/${mtdPct}%
+*Target Qty/Ach Amt/%* : ${targetMTDQty}/${mtdQty}/${mtdQtyPct}%
+*Est Value/%* : ${formatRpSimple(estVal)}/${estValPct}%
+*Est Qty/%* : ${estQty}/${estQtyPct}%
+
+*Commitment Weekly*
+*Value* (30%) : ${formatRpSimple(targetMTDVal * 0.3)}
+*Qty* (30%) : ${Math.round(targetMTDQty * 0.3)} Unit
+
+*All Segment MTD (Stok/Terjual)*
+${segmentRows.trim()}
+
+*Target Samsung Value Daily* : ${formatRpSimple(targetDailyVal)}
+*Target Samsung QTY Daily* : ${targetDailyQty}
+*Pencapaian Samsung Value Daily* : ${formatRpSimple(dailyVal)}
+*Pencapaian Qty Daily* : ${dailyQty}
+
+*Update Penjualan Hari Ini*
+${dailyUnits.trim()}
+
+*Kendala / Issue Lapangan:*
+* ${issue}
+
+*Action Plan:*
+* ${action}`;
+
+      document.getElementById('reportPreview').textContent = text;
+    }
+
+    function copyReportToClipboard() {
+      const text = document.getElementById('reportPreview').textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Laporan berhasil disalin ke Clipboard!', 'success');
+      }).catch(() => {
+        showToast('Gagal menyalin, izinkan akses clipboard browser.', 'error');
+      });
+    }
+
+    // ==================== MASTER MODEL & SALESPERSON MODAL ====================
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'modalManage') {
+        renderSalesBadges();
+        renderMasterModels();
+      }
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function renderSalesBadges() {
+      const container = document.getElementById('salesListContainer');
+      const selectForm = document.getElementById('f-sales-person');
+      container.innerHTML = '';
+      selectForm.innerHTML = '<option value="">-- Pilih Sales PIC --</option>';
+
+      salesList.forEach((name, idx) => {
+        const badge = document.createElement('div');
+        badge.className = 'px-3 py-1 rounded-xl bg-white/10 text-xs text-white flex items-center gap-1.5 border border-white/10';
+        badge.innerHTML = `
+          <span>${esc(name)}</span>
+          <button onclick="removeSalesPerson(${idx})" class="text-slate-400 hover:text-red-400">
+            <i data-lucide="x" class="w-3 h-3"></i>
+          </button>
+        `;
+        container.appendChild(badge);
+
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        selectForm.appendChild(opt);
+      });
+      lucide.createIcons();
+    }
+
+    function addSalesPerson() {
+      const input = document.getElementById('newSalesInput');
+      const name = input.value.trim();
+      if (!name) return;
+      if (!salesList.includes(name)) {
+        salesList.push(name);
+        localStorage.setItem('galaxy_sales_list', JSON.stringify(salesList));
+        input.value = '';
+        renderSalesBadges();
+        showToast(`Sales ${name} berhasil ditambahkan!`, 'success');
+      }
+    }
+
+    function removeSalesPerson(idx) {
+      salesList.splice(idx, 1);
+      localStorage.setItem('galaxy_sales_list', JSON.stringify(salesList));
+      renderSalesBadges();
+    }
+
+    function renderMasterModels() {
+      const container = document.getElementById('masterModelsContainer');
+      const search = (document.getElementById('searchMasterModel')?.value || '').toLowerCase();
+      container.innerHTML = '';
+
+      const filtered = modelList.filter(m => m.toLowerCase().includes(search));
+      document.getElementById('masterModelCount').textContent = `${filtered.length} dari ${modelList.length} model`;
+
+      filtered.forEach((m) => {
+        const realIdx = modelList.indexOf(m);
+        const item = document.createElement('div');
+        item.className = 'p-2 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs text-slate-300';
+        item.innerHTML = `
+          <span class="font-mono text-white">${esc(m)}</span>
+          <button onclick="removeMasterModel(${realIdx})" class="p-1 text-slate-400 hover:text-red-400">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+      lucide.createIcons();
+    }
+
+    function addMasterModel() {
+      const input = document.getElementById('newModelInput');
+      const name = input.value.trim();
+      if (!name) return;
+      if (!modelList.includes(name)) {
+        modelList.unshift(name);
+        localStorage.setItem('galaxy_model_list', JSON.stringify(modelList));
+        input.value = '';
+        renderMasterModels();
+        showToast(`Model ${name} ditambahkan!`, 'success');
+      }
+    }
+
+    function removeMasterModel(idx) {
+      modelList.splice(idx, 1);
+      localStorage.setItem('galaxy_model_list', JSON.stringify(modelList));
+      renderMasterModels();
+    }
+
+    // ==================== DEMO DATA GENERATOR ====================
+    async function generateDemoData() {
+      const sample = [
+        { imei: 'ABCDEFGHIJKLMNO', category: 'Galaxy S Series', model: 'S26 ULTRA 12/256 GB', value: 21999000, shot: 'sudah' },
+        { imei: 'PQRSTUVWXYZABCD', category: 'Galaxy A High', model: 'A57 8/256 GB', value: 6499000, shot: 'sudah' },
+        { imei: 'EFGHIJKLMNOPQRS', category: 'Galaxy A Mid', model: 'A37 8/128 GB', value: 4599000, shot: 'sudah' }
+      ];
+
+      for (const item of sample) {
+        if (!allData.some(d => d.imei === item.imei)) {
+          await dbCreate({
+            imei: item.imei,
+            brand: 'Samsung',
+            category: item.category,
+            model: item.model,
+            qty: 1,
+            value: item.value,
+            sales_person: salesList[Math.floor(Math.random() * salesList.length)] || 'Assad',
+            shot_status: item.shot,
+            sold_date: item.shot === 'sudah' ? new Date().toISOString() : '',
+            register_date: new Date().toISOString(),
+            created_at: new Date().toISOString()
+          });
+        }
+      }
+      showToast('Data demo berhasil dimasukkan!', 'success');
+    }
+
+    // ==================== HELPER FORMATTERS ====================
+    function esc(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function formatRp(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0);
+    }
+    function formatRpSimple(num) {
+      return new Intl.NumberFormat('id-ID').format(Math.round(num || 0));
+    }
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('f-register-date').valueAsDate = new Date();
+      document.getElementById('reportDate').valueAsDate = new Date();
+
+      renderSalesBadges();
+      initStorage();
+
+      document.getElementById('reportStoreName').addEventListener('input', generateReport);
+      document.getElementById('reportDate').addEventListener('change', generateReport);
+      document.getElementById('reportActivity').addEventListener('input', generateReport);
+      document.getElementById('reportReason').addEventListener('input', generateReport);
+
+      lucide.createIcons();
+    });
+  </script>
+ </body>
+</html>
+
