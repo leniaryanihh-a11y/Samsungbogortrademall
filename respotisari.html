@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v2.8</p>
+<p class="text-[10px] text-slate-400">Sales Pro v3.1</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -39,22 +39,25 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 
 <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-<button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-sm shadow-blue-600/30">
+<button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-sm shadow-blue-600/30 cursor-pointer">
 <i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard Penjualan
 </button>
-<button onclick="switchTab('input')" id="btn-input" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<button onclick="switchTab('vas')" id="btn-vas" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
+<i class="fa-solid fa-handshake-angle w-5 text-center"></i> Dashboard VAS
+</button>
+<button onclick="switchTab('input')" id="btn-input" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-cart-plus w-5 text-center"></i> Input Transaksi
 </button>
-<button onclick="switchTab('tracking')" id="btn-tracking" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<button onclick="switchTab('tracking')" id="btn-tracking" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-bullseye w-5 text-center"></i> Tracking Produk (MCS/SL)
 </button>
-<button onclick="switchTab('report')" id="btn-report" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<button onclick="switchTab('report')" id="btn-report" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-brands fa-whatsapp w-5 text-center"></i> Format WA 1-Klik
 </button>
-<button onclick="switchTab('issues')" id="btn-issues" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<button onclick="switchTab('issues')" id="btn-issues" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> Form & Issue
 </button>
-<button onclick="switchTab('master')" id="btn-master" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<button onclick="switchTab('master')" id="btn-master" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-database w-5 text-center"></i> Data Master & Export
 </button>
 </nav>
@@ -85,7 +88,7 @@ body { font-family: 'Inter', sans-serif; }
 
 <main class="flex-1 p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
 
-<!-- ================= TAB 1: DASHBOARD ================= -->
+<!-- ================= TAB 1: DASHBOARD UTAMA ================= -->
 <div id="tab-dashboard" class="tab-content space-y-6">
 
 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
@@ -195,7 +198,98 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- ================= TAB 2: INPUT TRANSAKSI ================= -->
+<!-- ================= TAB 2: DASHBOARD VAS (VALUE ADDED SERVICES) ================= -->
+<div id="tab-vas" class="tab-content hidden space-y-6">
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
+<div>
+<h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-handshake-angle text-indigo-600 mr-2"></i> Dashboard VAS (Value Added Services)</h2>
+<p class="text-xs text-slate-500">Analisis pencapaian Trade-In, Asuransi (Insurance), dan Finance secara Tahunan, Bulanan, atau Harian.</p>
+</div>
+<div class="flex items-center gap-2">
+<button onclick="openVasTargetModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold px-4 py-2 rounded-xl transition cursor-pointer">
+<i class="fa-solid fa-sliders mr-1"></i> Atur Target VAS
+</button>
+</div>
+</div>
+
+<!-- Filter mode VAS -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+<div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+<button onclick="setVasFilterMode('yearly')" id="vas-mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Tahunan</button>
+<button onclick="setVasFilterMode('monthly')" id="vas-mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Bulanan</button>
+<button onclick="setVasFilterMode('daily')" id="vas-mode-daily" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 cursor-pointer">Harian (Pertanggal)</button>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto" id="vasFilterControlContainer"></div>
+</div>
+</div>
+
+<!-- 3 Kartu Utama VAS -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="vasCardsContainer"></div>
+
+<!-- Form & Tabel Input Transaksi VAS -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<h3 class="text-base font-bold text-slate-800 border-b pb-3"><i class="fa-solid fa-plus-circle text-blue-600 mr-2"></i> Input Transaksi VAS</h3>
+<form id="vasForm" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal</label>
+<input type="date" id="vasDate" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Kategori VAS</label>
+<select id="vasCategory" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white font-semibold text-indigo-700">
+<option value="" disabled selected>Pilih Layanan VAS</option>
+<option value="Trade-In">Trade-In</option>
+<option value="Asuransi">Asuransi / Insurance</option>
+<option value="Finance">Finance</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Keterangan / Nama Produk</label>
+<input type="text" id="vasDesc" placeholder="Contoh: Trade In S25 ke S26 / Samsung Care+" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Qty (Unit)</label>
+<input type="number" id="vasQty" min="1" value="1" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Value (Rp)</label>
+<input type="number" id="vasValue" min="0" placeholder="Nilai transaksi..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+</div>
+</div>
+<button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm cursor-pointer">
+<i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Transaksi VAS
+</button>
+</form>
+</div>
+
+<div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex justify-between items-center border-b pb-3">
+<h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-slate-700 mr-2"></i> Riwayat Transaksi VAS</h3>
+<span class="text-xs text-slate-500">Total Data: <strong id="totalVasCount">0</strong></span>
+</div>
+<div class="overflow-x-auto max-h-96 overflow-y-auto">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-slate-50 text-slate-600 border-b">
+<th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
+<th class="p-3 font-semibold">Kategori</th>
+<th class="p-3 font-semibold">Keterangan</th>
+<th class="p-3 font-semibold text-center">Qty</th>
+<th class="p-3 font-semibold">Value</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Aksi</th>
+</tr>
+</thead>
+<tbody id="vasTableBody" class="divide-y divide-slate-100"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 3: INPUT TRANSAKSI UTAMA ================= -->
 <div id="tab-input" class="tab-content hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
 <h2 class="text-lg font-semibold text-slate-800 border-b pb-3"><i class="fa-solid fa-cart-plus text-blue-600 mr-2"></i> Form Input Penjualan</h2>
@@ -271,18 +365,55 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- ================= TAB 3: TRACKING PRODUK ================= -->
+<!-- ================= TAB 4: TRACKING PRODUK ================= -->
 <div id="tab-tracking" class="tab-content hidden space-y-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-bullseye text-emerald-600 mr-2"></i> Tracking Produk (MCS & ShopLive)</h2>
-<p class="text-xs text-slate-500">Pantau unit penjualan harian. Anda dapat langsung mengedit segment pada tabel di bawah.</p>
+<p class="text-xs text-slate-500">Cari, filter, dan pantau unit penjualan harian. Anda dapat langsung mengedit segment.</p>
 </div>
 <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100">
-Total Unit: <strong id="trackingTotalUnit">0</strong>
+Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 </span>
 </div>
+
+<!-- Fitur Filter & Search Control Bar -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+<div>
+<label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Cari Produk / IMEI / SN</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-search text-xs"></i></span>
+<input type="text" id="trackingSearchInput" oninput="renderTrackingTable()" placeholder="Ketik nama produk atau IMEI..." class="w-full pl-9 pr-3 py-2 text-xs border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+</div>
+</div>
+
+<div>
+<label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Filter Segment</label>
+<select id="trackingFilterSegment" onchange="renderTrackingTable()" class="w-full px-3 py-2 text-xs border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+<option value="ALL">Semua Segment</option>
+<option value="Z">Z</option>
+<option value="S">S</option>
+<option value="High">High</option>
+<option value="Mid">Mid</option>
+<option value="Entry">Entry</option>
+<option value="Tab">Tab</option>
+<option value="Watch">Watch</option>
+<option value="Buds">Buds</option>
+<option value="Band">Band</option>
+<option value="TWS">TWS</option>
+</select>
+</div>
+
+<div>
+<label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Filter Tanggal Tertentu</label>
+<div class="flex gap-2">
+<input type="date" id="trackingFilterDate" onchange="renderTrackingTable()" class="flex-1 px-3 py-2 text-xs border rounded-xl bg-white font-medium">
+<button onclick="resetTrackingFilter()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer" title="Reset Filter"><i class="fa-solid fa-rotate-right"></i></button>
+</div>
+</div>
+</div>
+
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse text-sm">
 <thead>
@@ -301,7 +432,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
-<!-- ================= TAB 4: FORMAT WHATSAPP ================= -->
+<!-- ================= TAB 5: FORMAT WHATSAPP ================= -->
 <div id="tab-report" class="tab-content hidden space-y-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
@@ -367,7 +498,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
-<!-- ================= TAB 5: FORM & ISSUE ================= -->
+<!-- ================= TAB 6: FORM & ISSUE ================= -->
 <div id="tab-issues" class="tab-content hidden space-y-6">
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
@@ -421,7 +552,7 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
-<!-- ================= TAB 6: DATA MASTER & EXPORT ================= -->
+<!-- ================= TAB 7: DATA MASTER & EXPORT ================= -->
 <div id="tab-master" class="tab-content hidden space-y-6">
 <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl shadow-sm border border-emerald-200 flex flex-col md:flex-row justify-between items-center gap-4">
 <div class="space-y-1">
@@ -526,6 +657,34 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 </div>
 </div>
 
+<!-- Modal Setup Target VAS -->
+<div id="vasTargetModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+<div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
+<div class="flex justify-between items-center border-b pb-3">
+<h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-sliders text-indigo-600 mr-2"></i> Atur Target Qty VAS Bulanan</h3>
+<button onclick="closeVasTargetModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+</div>
+<div class="space-y-3">
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Target Qty Trade-In</label>
+<input type="number" id="targetVasTradeIn" class="w-full px-3 py-2 text-xs border rounded-xl bg-slate-50 font-bold">
+</div>
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Target Qty Asuransi / Insurance</label>
+<input type="number" id="targetVasInsurance" class="w-full px-3 py-2 text-xs border rounded-xl bg-slate-50 font-bold">
+</div>
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Target Qty Finance</label>
+<input type="number" id="targetVasFinance" class="w-full px-3 py-2 text-xs border rounded-xl bg-slate-50 font-bold">
+</div>
+</div>
+<div class="flex justify-end gap-2 pt-3 border-t">
+<button onclick="closeVasTargetModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer">Batal</button>
+<button onclick="saveVasTargets()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">Simpan Target VAS</button>
+</div>
+</div>
+</div>
+
 <!-- Notification Toast -->
 <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm">
 <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -539,6 +698,7 @@ const DEFAULT_PRODUCTS = ["FF8", "S26FE", "S26 ULTRA 256", "S26 256", "Z FLIP 8 
 let products = JSON.parse(localStorage.getItem('app_products')) || DEFAULT_PRODUCTS;
 let salesData = JSON.parse(localStorage.getItem('app_sales')) || [];
 let issuesData = JSON.parse(localStorage.getItem('app_issues')) || [];
+let vasData = JSON.parse(localStorage.getItem('app_vas')) || [];
 
 let storeConfig = JSON.parse(localStorage.getItem('app_config')) || {
 storeName: "SEP BOGOR TRADE MALL GTN"
@@ -556,6 +716,12 @@ let segmentTargets = JSON.parse(localStorage.getItem('app_segment_targets')) || 
 "Z": 9, "S": 23, "High": 14, "Mid": 18, "Entry": 50, "Tab": 17, "Watch": 1, "Buds": 5, "Band": 9, "TWS": 0
 };
 
+let vasTargets = JSON.parse(localStorage.getItem('app_vas_targets')) || {
+"Trade-In": 25,
+"Asuransi": 30,
+"Finance": 40
+};
+
 const segmentDisplayNames = {
 "S": "S Series",
 "Z": "Z Series",
@@ -571,10 +737,12 @@ const segmentDisplayNames = {
 
 const segmentsList = ["Z", "S", "High", "Mid", "Entry", "Tab", "Watch", "Buds", "Band", "TWS"];
 let currentFilterMode = 'monthly';
+let currentVasFilterMode = 'monthly';
 
 const todayStr = new Date().toISOString().split('T')[0];
 document.getElementById('tanggal').value = todayStr;
 document.getElementById('issueDate').value = todayStr;
+document.getElementById('vasDate').value = todayStr;
 document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -588,9 +756,11 @@ document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.sp
 
 renderProducts();
 setFilterMode('monthly');
+setVasFilterMode('monthly');
 renderTrackingTable();
 renderMasterTable();
 renderIssuesTable();
+renderVasTable();
 renderFocusProductCheckboxes();
 generateWAReport();
 }
@@ -691,6 +861,214 @@ container.innerHTML = `
 <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal</label>
 <input type="date" id="filterDailyDate" value="${todayStr}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
 </div>`;
+}
+}
+
+// --- Dashboard VAS Filter Controls ---
+function setVasFilterMode(mode) {
+currentVasFilterMode = mode;
+['yearly', 'monthly', 'daily'].forEach(m => {
+const btn = document.getElementById('vas-mode-' + m);
+if(m === mode) {
+btn.className = "px-3.5 py-1.5 rounded-lg transition bg-indigo-600 text-white shadow-xs cursor-pointer";
+} else {
+btn.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:bg-slate-200 cursor-pointer";
+}
+});
+
+renderVasFilterControls();
+renderVasDashboard();
+}
+
+function renderVasFilterControls() {
+const container = document.getElementById('vasFilterControlContainer');
+const now = new Date();
+const currentYear = now.getFullYear();
+
+if(currentVasFilterMode === 'yearly') {
+container.innerHTML = `
+<div class="w-full flex flex-col">
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tahun</label>
+<select id="vasFilterYear" onchange="renderVasDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
+<option value="${currentYear}">${currentYear}</option>
+<option value="${currentYear - 1}">${currentYear - 1}</option>
+<option value="${currentYear - 2}">${currentYear - 2}</option>
+</select>
+</div>`;
+} else if(currentVasFilterMode === 'monthly') {
+let monthOptions = '';
+const sortedKeys = Object.keys(monthlyTargets).sort();
+sortedKeys.forEach(k => {
+let parts = k.split('-');
+let dateObj = new Date(parts[0], parts[1] - 1, 1);
+let monthName = dateObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+let selected = (k === currentMonthKey) ? 'selected' : '';
+monthOptions += `<option value="${k}" ${selected}>${monthName}</option>`;
+});
+if(sortedKeys.length === 0) monthOptions = `<option value="${currentMonthKey}">Bulan Ini</option>`;
+
+container.innerHTML = `
+<div class="w-full flex flex-col">
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Bulan</label>
+<select id="vasFilterMonthKey" onchange="renderVasDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
+${monthOptions}
+</select>
+</div>`;
+} else if(currentVasFilterMode === 'daily') {
+container.innerHTML = `
+<div class="w-full flex flex-col">
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal</label>
+<input type="date" id="vasFilterDailyDate" value="${todayStr}" onchange="renderVasDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium">
+</div>`;
+}
+}
+
+function getFilteredVasData() {
+if(currentVasFilterMode === 'yearly') {
+const year = document.getElementById('vasFilterYear')?.value || new Date().getFullYear();
+return vasData.filter(item => item.tanggal.startsWith(year));
+} else if(currentVasFilterMode === 'monthly') {
+const monthKey = document.getElementById('vasFilterMonthKey')?.value || currentMonthKey;
+return vasData.filter(item => item.tanggal.startsWith(monthKey));
+} else if(currentVasFilterMode === 'daily') {
+const dateVal = document.getElementById('vasFilterDailyDate')?.value || todayStr;
+return vasData.filter(item => item.tanggal === dateVal);
+}
+return vasData;
+}
+
+function renderVasDashboard() {
+const filteredVas = getFilteredVasData();
+const container = document.getElementById('vasCardsContainer');
+container.innerHTML = '';
+
+const categories = [
+{ key: 'Trade-In', title: 'Trade-In', icon: 'fa-rotate', color: 'blue' },
+{ key: 'Asuransi', title: 'Asuransi / Insurance', icon: 'fa-shield-halved', color: 'emerald' },
+{ key: 'Finance', title: 'Finance', icon: 'fa-file-invoice-dollar', color: 'indigo' }
+];
+
+const mult = (currentVasFilterMode === 'daily') ? (1/30) : 1;
+
+categories.forEach(cat => {
+const catItems = filteredVas.filter(item => item.category === cat.key);
+const achQty = catItems.reduce((sum, item) => sum + item.qty, 0);
+const achVal = catItems.reduce((sum, item) => sum + item.value, 0);
+const targetQty = Math.round((vasTargets[cat.key] || 20) * mult);
+const pct = targetQty > 0 ? ((achQty / targetQty) * 100).toFixed(1) : 0;
+
+let card = document.createElement('div');
+card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4";
+card.innerHTML = `
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-3">
+<div class="bg-${cat.color}-50 text-${cat.color}-600 p-3 rounded-xl">
+<i class="fa-solid ${cat.icon} text-lg"></i>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-800">${cat.title}</h4>
+<span class="text-[11px] text-slate-400">Pencapaian Qty & Value</span>
+</div>
+</div>
+<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-${cat.color}-50 text-${cat.color}-600">${pct}%</span>
+</div>
+
+<div class="space-y-1 pt-2">
+<div class="text-2xl font-bold text-slate-900">${achQty} <span class="text-xs font-normal text-slate-500">/ Target: ${targetQty} Unit</span></div>
+<div class="text-xs font-semibold text-slate-600">Total Nilai: <strong class="text-slate-800">${formatRupiah(achVal)}</strong></div>
+</div>
+
+<div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+<div class="bg-${cat.color}-600 h-full rounded-full transition-all duration-500" style="width: ${Math.min(pct, 100)}%"></div>
+</div>`;
+container.appendChild(card);
+});
+}
+
+function openVasTargetModal() {
+document.getElementById('targetVasTradeIn').value = vasTargets["Trade-In"] || 25;
+document.getElementById('targetVasInsurance').value = vasTargets["Asuransi"] || 30;
+document.getElementById('targetVasFinance').value = vasTargets["Finance"] || 40;
+document.getElementById('vasTargetModal').classList.remove('hidden');
+}
+
+function closeVasTargetModal() {
+document.getElementById('vasTargetModal').classList.add('hidden');
+}
+
+function saveVasTargets() {
+vasTargets["Trade-In"] = parseInt(document.getElementById('targetVasTradeIn').value) || 0;
+vasTargets["Asuransi"] = parseInt(document.getElementById('targetVasInsurance').value) || 0;
+vasTargets["Finance"] = parseInt(document.getElementById('targetVasFinance').value) || 0;
+
+localStorage.setItem('app_vas_targets', JSON.stringify(vasTargets));
+closeVasTargetModal();
+renderVasDashboard();
+showToast('Target VAS berhasil diperbarui!');
+}
+
+// Input form VAS
+document.getElementById('vasForm').addEventListener('submit', (e) => {
+e.preventDefault();
+const newVas = {
+id: Date.now(),
+tanggal: document.getElementById('vasDate').value,
+category: document.getElementById('vasCategory').value,
+desc: document.getElementById('vasDesc').value.trim(),
+qty: parseInt(document.getElementById('vasQty').value) || 1,
+value: parseFloat(document.getElementById('vasValue').value) || 0
+};
+
+vasData.unshift(newVas);
+localStorage.setItem('app_vas', JSON.stringify(vasData));
+
+document.getElementById('vasDesc').value = '';
+document.getElementById('vasQty').value = 1;
+document.getElementById('vasValue').value = '';
+document.getElementById('vasCategory').selectedIndex = 0;
+
+renderVasDashboard();
+renderVasTable();
+showToast('Transaksi VAS berhasil disimpan!');
+});
+
+function renderVasTable() {
+const tbody = document.getElementById('vasTableBody');
+tbody.innerHTML = '';
+document.getElementById('totalVasCount').innerText = vasData.length;
+
+if(vasData.length === 0) {
+tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 text-xs">Belum ada riwayat transaksi VAS.</td></tr>`;
+return;
+}
+
+vasData.forEach(item => {
+let badgeColor = 'bg-blue-50 text-blue-700';
+if(item.category === 'Asuransi') badgeColor = 'bg-emerald-50 text-emerald-700';
+if(item.category === 'Finance') badgeColor = 'bg-indigo-50 text-indigo-700';
+
+let tr = document.createElement('tr');
+tr.className = "hover:bg-slate-50/80 transition";
+tr.innerHTML = `
+<td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
+<td class="p-3"><span class="px-2.5 py-1 rounded-md text-[11px] font-semibold ${badgeColor}">${item.category}</span></td>
+<td class="p-3 font-semibold text-slate-800 text-xs">${item.desc}</td>
+<td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
+<td class="p-3 text-xs font-semibold text-slate-700">${formatRupiah(item.value)}</td>
+<td class="p-3 text-center">
+<button onclick="deleteVasItem(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5 cursor-pointer"><i class="fa-solid fa-trash-can text-xs"></i></button>
+</td>`;
+tbody.appendChild(tr);
+});
+}
+
+function deleteVasItem(id) {
+if(confirm('Hapus riwayat transaksi VAS ini?')) {
+vasData = vasData.filter(item => item.id !== id);
+localStorage.setItem('app_vas', JSON.stringify(vasData));
+renderVasDashboard();
+renderVasTable();
+showToast('Transaksi VAS dihapus.');
 }
 }
 
@@ -1113,9 +1491,27 @@ showToast('Target segment berhasil diperbarui!');
 function renderTrackingTable() {
 const tbody = document.getElementById('trackingTableBody');
 tbody.innerHTML = '';
+
+const searchVal = (document.getElementById('trackingSearchInput')?.value || '').toLowerCase().trim();
+const filterSeg = document.getElementById('trackingFilterSegment')?.value || 'ALL';
+const filterDate = document.getElementById('trackingFilterDate')?.value || '';
+
+let filteredList = salesData.filter(item => {
+let matchSearch = (item.namaProduk.toLowerCase().includes(searchVal) || item.imei.toLowerCase().includes(searchVal));
+let matchSegment = (filterSeg === 'ALL' || item.segment === filterSeg);
+let matchDate = (!filterDate || item.tanggal === filterDate);
+return matchSearch && matchSegment && matchDate;
+});
+
 let totalUnit = 0;
 
-salesData.forEach(item => {
+if(filteredList.length === 0) {
+tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 text-xs">Tidak ada data transaksi yang sesuai dengan pencarian/filter.</td></tr>`;
+document.getElementById('trackingTotalUnit').innerText = 0;
+return;
+}
+
+filteredList.forEach(item => {
 let id = item.id;
 totalUnit += item.qty;
 let tr = document.createElement('tr');
@@ -1142,7 +1538,16 @@ ${segmentOptions}
 </td>`;
 tbody.appendChild(tr);
 });
+
 document.getElementById('trackingTotalUnit').innerText = totalUnit;
+}
+
+function resetTrackingFilter() {
+document.getElementById('trackingSearchInput').value = '';
+document.getElementById('trackingFilterSegment').value = 'ALL';
+document.getElementById('trackingFilterDate').value = '';
+renderTrackingTable();
+showToast('Filter tracking direset.');
 }
 
 function renderMasterTable() {
@@ -1341,12 +1746,15 @@ focusText += `${prodName} : ${tg}/${ac}/${pct}%\n`;
 }
 });
 
+const monthKey = document.getElementById('filterMonthKey')?.value || currentMonthKey;
+let monthlySalesData = salesData.filter(item => item.tanggal.startsWith(monthKey));
+
 let allSegmentText = "";
 const segmentOrder = ["S", "Z", "High", "Mid", "Entry", "Tab", "Watch", "Buds", "Band"];
 segmentOrder.forEach(seg => {
 let segLabel = segmentDisplayNames[seg] || seg;
 let segTarget = segmentTargets[seg] || 0;
-let segActual = filteredData.filter(item => item.segment === seg).reduce((sum, item) => sum + item.qty, 0);
+let segActual = monthlySalesData.filter(item => item.segment === seg).reduce((sum, item) => sum + item.qty, 0);
 allSegmentText += `${segLabel} : ${segTarget}/${segActual}\n`;
 });
 
@@ -1386,7 +1794,7 @@ Comitment Weekly
 Product Fokus Weekly
 ${focusText.trim()}
 
-*All Segment Week *
+*All Segment Bulanan*
 ${allSegmentText.trim()}
 
 *Target Samsung Value Daily* : ${formatAngkaTitik(samsungValTg)}
