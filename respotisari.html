@@ -262,14 +262,6 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<div>
-<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status Tembak</label>
-<select id="statusTembak" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-amber-600 bg-amber-50/50">
-<option value="Belum" selected>Belum</option>
-<option value="Sudah">Sudah</option>
-</select>
-</div>
-
 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-sm text-sm">
 <i class="fa-solid fa-plus mr-1"></i> Simpan Transaksi Penjualan
 </button>
@@ -308,7 +300,7 @@ Tersimpan otomatis di browser.
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 <div>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-bullseye text-emerald-600 mr-2"></i> Tracking Produk (MCS & ShopLive)</h2>
-<p class="text-xs text-slate-500">Pantau unit penjualan yang sudah tertembak melalui platform MCS dan ShopLive.</p>
+<p class="text-xs text-slate-500">Pantau unit penjualan harian. Anda dapat langsung mengedit segment pada tabel di bawah.</p>
 </div>
 <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100">
 Total Unit: <strong id="trackingTotalUnit">0</strong>
@@ -322,10 +314,9 @@ Total Unit: <strong id="trackingTotalUnit">0</strong>
 <th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
 <th class="p-3 font-semibold">Nama Produk</th>
 <th class="p-3 font-semibold">IMEI / SN</th>
-<th class="p-3 font-semibold">Segment</th>
+<th class="p-3 font-semibold">Segment (Bisa Diedit)</th>
 <th class="p-3 font-semibold text-center">Qty</th>
-<th class="p-3 font-semibold text-center">Status Tembak</th>
-<th class="p-3 font-semibold text-center rounded-r-xl">Aksi Tracking</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Aksi</th>
 </tr>
 </thead>
 <tbody id="trackingTableBody" class="divide-y divide-slate-100">
@@ -459,7 +450,7 @@ Perbarui Preview Laporan
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-database text-blue-600 mr-2"></i> Data Master Penjualan & Export</h2>
-<p class="text-xs text-slate-500">Unduh atau kelola data master lengkap (Tanggal, Nama Produk, IMEI, Qty, Value, Segment, Status Tembak).</p>
+<p class="text-xs text-slate-500">Unduh atau kelola data master lengkap. Anda juga dapat mengubah segment langsung dari tabel ini.</p>
 </div>
 <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
 <i class="fa-solid fa-file-excel"></i> Download Excel / CSV (.csv)
@@ -473,11 +464,10 @@ Perbarui Preview Laporan
 <th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
 <th class="p-3 font-semibold">Nama Produk</th>
 <th class="p-3 font-semibold">IMEI / SN</th>
-<th class="p-3 font-semibold">Segment</th>
+<th class="p-3 font-semibold">Segment (Bisa Diedit)</th>
 <th class="p-3 font-semibold text-center">Qty</th>
 <th class="p-3 font-semibold">Value</th>
-<th class="p-3 font-semibold text-center">Status Tembak</th>
-<th class="p-3 font-semibold text-center rounded-r-xl">Hapus</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Aksi</th>
 </tr>
 </thead>
 <tbody id="masterTableBody" class="divide-y divide-slate-100">
@@ -659,7 +649,7 @@ generateWAReport();
 showToast('Konfigurasi toko berhasil diperbarui!');
 }
 
-// --- Product Management (Termasuk Fitur Hapus Produk) ---
+// --- Product Management ---
 function renderProducts() {
 const select = document.getElementById('namaProduk');
 select.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
@@ -715,8 +705,7 @@ segment: document.getElementById('segment').value,
 namaProduk: document.getElementById('namaProduk').value,
 imei: document.getElementById('imeiInput').value.trim(),
 qty: parseInt(document.getElementById('qty').value) || 1,
-value: parseFloat(document.getElementById('value').value) || 0,
-statusTembak: document.getElementById('statusTembak').value
+value: parseFloat(document.getElementById('value').value) || 0
 };
 
 salesData.unshift(newSale);
@@ -728,7 +717,6 @@ document.getElementById('segment').selectedIndex = 0;
 document.getElementById('imeiInput').value = '';
 document.getElementById('qty').value = 1;
 document.getElementById('value').value = '';
-document.getElementById('statusTembak').value = 'Belum';
 
 renderDashboard();
 renderTrackingTable();
@@ -737,6 +725,20 @@ generateWAReport();
 showToast('Transaksi penjualan berhasil disimpan!');
 switchTab('dashboard');
 });
+
+// --- EDIT SEGMENT FUNCTION ---
+function updateSaleSegment(id, newSegment) {
+const idx = salesData.findIndex(s => s.id === Number(id));
+if(idx !== -1) {
+salesData[idx].segment = newSegment;
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+showToast('Segment berhasil diperbarui!');
+}
+}
 
 // --- IMPORT EXCEL / CSV FUNCTIONALITY (SheetJS) ---
 function handleExcelImport(event) {
@@ -767,8 +769,6 @@ if(!segmentsList.includes(segment)) segment = 'Entry';
 
 const qty = parseInt(row['Qty'] || row['qty'] || row['QTY'] || 1) || 1;
 const value = parseFloat(row['Value'] || row['value'] || row['VALUE'] || row['Harga'] || 0) || 0;
-let statusTembak = row['Status Tembak'] || row['statusTembak'] || row['Status'] || 'Belum';
-if(statusTembak !== 'Sudah' && statusTembak !== 'Belum') statusTembak = 'Belum';
 
 let formattedDate = todayStr;
 if(typeof tanggal === 'number') {
@@ -785,8 +785,7 @@ segment: segment,
 namaProduk: String(namaProduk).toUpperCase(),
 imei: String(imei),
 qty: qty,
-value: value,
-statusTembak: statusTembak
+value: value
 };
 
 if(!products.includes(newSale.namaProduk)) {
@@ -855,7 +854,6 @@ let totalAchQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
 let valPct = storeConfig.targetValue > 0 ? ((totalAchValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
 let qtyPct = storeConfig.targetQty > 0 ? ((totalAchQty / storeConfig.targetQty) * 100).toFixed(1) : 0;
 
-// Estimasi Run-rate sederhana
 let estValue = totalAchValue * 1.25;
 let estQty = Math.round(totalAchQty * 1.25);
 let estValPct = storeConfig.targetValue > 0 ? ((estValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
@@ -937,6 +935,16 @@ renderDashboard();
 showToast('Target segment berhasil diperbarui!');
 }
 
+// --- Helper generator option dropdown segment ---
+function generateSegmentDropdown(currentSegment) {
+let options = '';
+segmentsList.forEach(s => {
+let selected = (s === currentSegment) ? 'selected' : '';
+options += `<option value="${s}" ${selected}>${s}</option>`;
+});
+return `<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-white font-medium text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">${options}</select>`;
+}
+
 // --- Tracking Produk Table ---
 function renderTrackingTable() {
 const tbody = document.getElementById('trackingTableBody');
@@ -944,38 +952,35 @@ tbody.innerHTML = '';
 let totalUnit = 0;
 
 salesData.forEach(item => {
+let id = item.id;
 totalUnit += item.qty;
 let tr = document.createElement('tr');
 tr.className = "hover:bg-slate-50/80 transition";
+
+// Dropdown pilihan segment agar bisa langsung diedit
+let segmentOptions = '';
+segmentsList.forEach(s => {
+let selected = (s === item.segment) ? 'selected' : '';
+segmentOptions += `<option value="${s}" ${selected}>${s}</option>`;
+});
+
 tr.innerHTML = `
 <td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
 <td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
 <td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
-<td class="p-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[11px] font-semibold">${item.segment}</span></td>
+<td class="p-3">
+<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+${segmentOptions}
+</select>
+</td>
 <td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
 <td class="p-3 text-center">
-<button onclick="toggleStatusTembak(${item.id})" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${item.statusTembak === 'Sudah' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}">
-${item.statusTembak}
-</button>
-</td>
-<td class="p-3 text-center">
-<button onclick="deleteSale(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
 </td>`;
 tbody.appendChild(tr);
 });
 
 document.getElementById('trackingTotalUnit').innerText = totalUnit;
-}
-
-function toggleStatusTembak(id) {
-const idx = salesData.findIndex(s => s.id === id);
-if(idx !== -1) {
-salesData[idx].statusTembak = salesData[idx].statusTembak === 'Sudah' ? 'Belum' : 'Sudah';
-localStorage.setItem('app_sales', JSON.stringify(salesData));
-renderTrackingTable();
-renderMasterTable();
-showToast('Status tembak diperbarui.');
-}
 }
 
 // --- Master Table & Export ---
@@ -984,22 +989,29 @@ const tbody = document.getElementById('masterTableBody');
 tbody.innerHTML = '';
 
 salesData.forEach(item => {
+let id = item.id;
 let tr = document.createElement('tr');
 tr.className = "hover:bg-slate-50/80 transition";
+
+let segmentOptions = '';
+segmentsList.forEach(s => {
+let selected = (s === item.segment) ? 'selected' : '';
+segmentOptions += `<option value="${s}" ${selected}>${s}</option>`;
+});
+
 tr.innerHTML = `
 <td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
 <td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
 <td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
-<td class="p-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[11px] font-semibold">${item.segment}</span></td>
+<td class="p-3">
+<select onchange="updateSaleSegment(${id}, this.value)" class="px-2.5 py-1 text-xs border rounded-lg bg-indigo-50/50 font-semibold text-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+${segmentOptions}
+</select>
+</td>
 <td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
 <td class="p-3 text-xs font-semibold text-slate-700">${formatRupiah(item.value)}</td>
 <td class="p-3 text-center">
-<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${item.statusTembak === 'Sudah' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
-${item.statusTembak}
-</span>
-</td>
-<td class="p-3 text-center">
-<button onclick="deleteSale(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+<button onclick="deleteSale(${id})" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus Transaksi"><i class="fa-solid fa-trash-can text-xs"></i></button>
 </td>`;
 tbody.appendChild(tr);
 });
@@ -1023,9 +1035,9 @@ showToast('Belum ada data penjualan untuk diexport!', 'warning');
 return;
 }
 
-let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Status Tembak\r\n";
+let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value\r\n";
 salesData.forEach(row => {
-csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.statusTembak}"\r\n`;
+csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value}\r\n`;
 });
 
 const encodedUri = encodeURI(csvContent);
@@ -1086,7 +1098,7 @@ tbody.appendChild(tr);
 
 function deleteIssue(id) {
 if(confirm('Hapus catatan kendala ini?')) {
-issuesData = issuesData.items = issuesData.filter(i => i.id !== id);
+issuesData = issuesData.filter(i => i.id !== id);
 localStorage.setItem('app_issues', JSON.stringify(issuesData));
 renderIssuesTable();
 showToast('Kendala dihapus.');
@@ -1142,4 +1154,3 @@ return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maxi
 </script>
 </body>
 </html>
-
