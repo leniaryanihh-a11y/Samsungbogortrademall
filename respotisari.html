@@ -189,13 +189,12 @@
         <form id="registerForm" class="space-y-4">
           <!-- IMEI -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Unit (15 Karakter)</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Unit (Huruf & Angka Bebas)</label>
             <div class="relative">
-              <!-- Placeholder diubah untuk mencontohkan huruf -->
-              <input type="text" id="f-imei" maxlength="15" placeholder="Contoh: ABCDEFGHIJKLMNO" required
+              <input type="text" id="f-imei" placeholder="Contoh: SN12345ABC" required
                 class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono tracking-wider glass-input pl-10 uppercase">
               <i data-lucide="smartphone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-              <span id="imeiLengthBadge" class="absolute right-3 top-3 text-[10px] text-slate-400 font-mono">0/15</span>
+              <span id="imeiLengthBadge" class="absolute right-3 top-3 text-[10px] text-slate-400 font-mono">0</span>
             </div>
             <p id="imeiValidationMsg" class="text-[11px] text-red-400 mt-1 hidden"></p>
           </div>
@@ -755,18 +754,13 @@
     // ==================== IMEI INPUT LIVE VALIDATION ====================
     const imeiInput = document.getElementById('f-imei');
     imeiInput.addEventListener('input', (e) => {
-      // Hanya izinkan huruf (tanpa angka)
-      e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '');
+      // Izinkan huruf dan angka (bebas)
+      e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
       const len = e.target.value.length;
-      document.getElementById('imeiLengthBadge').textContent = `${len}/15`;
+      document.getElementById('imeiLengthBadge').textContent = len;
       
       const msg = document.getElementById('imeiValidationMsg');
-      if (len > 0 && len < 15) {
-        msg.textContent = 'Input harus tepat 15 karakter huruf.';
-        msg.classList.remove('hidden');
-      } else {
-        msg.classList.add('hidden');
-      }
+      msg.classList.add('hidden');
     });
 
     // ==================== CATEGORY FILTER FOR MODEL DROPDOWN ====================
@@ -805,8 +799,8 @@
       const salesPerson = document.getElementById('f-sales-person').value;
       const directShot = document.getElementById('f-direct-shot').checked;
 
-      if (imei.length !== 15) {
-        showToast('Input harus tepat 15 karakter!', 'error');
+      if (imei.length === 0) {
+        showToast('Kode unit tidak boleh kosong!', 'error');
         return;
       }
       if (allData.some(d => d.imei === imei)) {
@@ -837,7 +831,7 @@
       if (res && res.isOk) {
         showToast(`Produk ${model} berhasil didaftarkan!`, 'success');
         document.getElementById('f-imei').value = '';
-        document.getElementById('imeiLengthBadge').textContent = '0/15';
+        document.getElementById('imeiLengthBadge').textContent = '0';
         document.getElementById('f-value').value = '';
       } else {
         showToast('Gagal mendaftarkan unit.', 'error');
@@ -1526,4 +1520,3 @@ ${dailyUnits.trim()}
   </script>
  </body>
 </html>
-
