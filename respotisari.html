@@ -1,1214 +1,1145 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Dashboard & Form Penjualan</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS (XLSX) Library for Excel/CSV Parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .sidebar-transition { transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Dashboard & Form Penjualan</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- SheetJS (XLSX) Library for Excel/CSV Parsing -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; }
+.sidebar-transition { transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; }
+</style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex overflow-x-hidden">
 
-    <!-- Mobile Sidebar Backdrop -->
-    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+<!-- Mobile Sidebar Backdrop -->
+<div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
 
-    <!-- SIDEBAR NAVIGATION (Left, Collapsible & Professional) -->
-    <aside id="appSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 shadow-xl flex flex-col transform -translate-x-full md:translate-x-0 sidebar-transition">
-        <!-- Sidebar Header -->
-        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-500/30">
-                    <i class="fa-solid fa-chart-line text-lg"></i>
-                </div>
-                <div>
-                    <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-                    <p class="text-[10px] text-slate-400">Sales Pro v2.0</p>
-                </div>
-            </div>
-            <!-- Close Button for Mobile -->
-            <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
+<!-- SIDEBAR NAVIGATION (Left, Collapsible & Professional) -->
+<aside id="appSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 shadow-xl flex flex-col transform -translate-x-full md:translate-x-0 sidebar-transition">
+<!-- Sidebar Header -->
+<div class="p-4 border-b border-slate-800 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-500/30">
+<i class="fa-solid fa-chart-line text-lg"></i>
+</div>
+<div>
+<h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
+<p class="text-[10px] text-slate-400">Sales Pro v2.0</p>
+</div>
+</div>
+<!-- Close Button for Mobile -->
+<button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
+<i class="fa-solid fa-xmark text-lg"></i>
+</button>
+</div>
 
-        <!-- Sidebar Navigation Links -->
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-sm shadow-blue-600/30">
-                <i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard Penjualan
-            </button>
-            <button onclick="switchTab('input')" id="btn-input" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                <i class="fa-solid fa-cart-plus w-5 text-center"></i> Input Transaksi
-            </button>
-            <button onclick="switchTab('tracking')" id="btn-tracking" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                <i class="fa-solid fa-bullseye w-5 text-center"></i> Tracking Produk (MCS/SL)
-            </button>
-            <button onclick="switchTab('report')" id="btn-report" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                <i class="fa-brands fa-whatsapp w-5 text-center"></i> Format WA 1-Klik
-            </button>
-            <button onclick="switchTab('issues')" id="btn-issues" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> Form & Issue
-            </button>
-            <button onclick="switchTab('master')" id="btn-master" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
-                <i class="fa-solid fa-database w-5 text-center"></i> Data Master & Export
-            </button>
-        </nav>
+<!-- Sidebar Navigation Links -->
+<nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+<button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition bg-blue-600 text-white shadow-sm shadow-blue-600/30">
+<i class="fa-solid fa-gauge-high w-5 text-center"></i> Dashboard Penjualan
+</button>
+<button onclick="switchTab('input')" id="btn-input" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<i class="fa-solid fa-cart-plus w-5 text-center"></i> Input Transaksi
+</button>
+<button onclick="switchTab('tracking')" id="btn-tracking" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<i class="fa-solid fa-bullseye w-5 text-center"></i> Tracking Produk (MCS/SL)
+</button>
+<button onclick="switchTab('report')" id="btn-report" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<i class="fa-brands fa-whatsapp w-5 text-center"></i> Format WA 1-Klik
+</button>
+<button onclick="switchTab('issues')" id="btn-issues" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> Form & Issue
+</button>
+<button onclick="switchTab('master')" id="btn-master" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white">
+<i class="fa-solid fa-database w-5 text-center"></i> Data Master & Export
+</button>
+</nav>
 
-        <!-- Sidebar Footer Info -->
-        <div class="p-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
-            &copy; 2026 Sales Enterprise System
-        </div>
-    </aside>
+<!-- Sidebar Footer Info -->
+<div class="p-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
+© 2026 Sales Enterprise System
+</div>
+</aside>
 
-    <!-- MAIN CONTENT AREA -->
-    <div class="flex-1 flex flex-col min-w-0 md:ml-64">
-        
-        <!-- Top Navbar -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-3.5 flex justify-between items-center shadow-xs">
-            <div class="flex items-center space-x-3">
-                <!-- Hamburger Toggle Button -->
-                <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition md:hidden" title="Buka/Tutup Menu">
-                    <i class="fa-solid fa-bars text-base"></i>
-                </button>
-                <div>
-                    <h1 class="text-sm md:text-base font-bold text-slate-800 tracking-tight" id="headerStoreName">SEP BOGOR TRADE MALL GTN</h1>
-                    <p class="text-[11px] text-slate-500">Sistem Pencatatan & Monitoring Penjualan Harian</p>
-                </div>
-            </div>
+<!-- MAIN CONTENT AREA -->
+<div class="flex-1 flex flex-col min-w-0 md:ml-64">
 
-            <!-- Quick Date / Badge Status -->
-            <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-600">
-                <i class="fa-regular fa-calendar-days text-blue-600"></i>
-                <span id="currentDateDisplay"></span>
-            </div>
-        </header>
+<!-- Top Navbar -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-3.5 flex justify-between items-center shadow-xs">
+<div class="flex items-center space-x-3">
+<!-- Hamburger Toggle Button -->
+<button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition md:hidden" title="Buka/Tutup Menu">
+<i class="fa-solid fa-bars text-base"></i>
+</button>
+<div>
+<h1 class="text-sm md:text-base font-bold text-slate-800 tracking-tight" id="headerStoreName">SEP BOGOR TRADE MALL GTN</h1>
+<p class="text-[11px] text-slate-500">Sistem Pencatatan & Monitoring Penjualan Harian</p>
+</div>
+</div>
 
-        <!-- Dynamic Content Container -->
-        <main class="flex-1 p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+<!-- Quick Date / Badge Status -->
+<div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-600">
+<i class="fa-regular fa-calendar-days text-blue-600"></i>
+<span id="currentDateDisplay"></span>
+</div>
+</header>
 
-            <!-- ================= TAB 1: DASHBOARD ================= -->
-            <div id="tab-dashboard" class="tab-content space-y-6">
-                
-                <!-- Filter Periode & Konfigurasi Toko -->
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
-                        <div>
-                            <h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-filter text-blue-600 mr-2"></i> Filter Periode & Analisis</h2>
-                            <p class="text-xs text-slate-500">Pilih rentang waktu untuk melihat pencapaian Tahunan, Bulanan, atau Mingguan.</p>
-                        </div>
-                        
-                        <!-- Toggle Periode Buttons -->
-                        <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
-                            <button onclick="setFilterMode('yearly')" id="mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Tahunan</button>
-                            <button onclick="setFilterMode('monthly')" id="mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Bulanan</button>
-                            <button onclick="setFilterMode('weekly')" id="mode-weekly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Mingguan</button>
-                        </div>
-                    </div>
+<!-- Dynamic Content Container -->
+<main class="flex-1 p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
 
-                    <!-- Dynamic Selectors Based on Mode -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
-                        <div id="filterControlContainer">
-                            <!-- Render via JS -->
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Nama Toko</label>
-                            <input type="text" id="storeNameInput" value="SEP BOGOR TRADE MALL GTN" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Target Value (Rp)</label>
-                            <input type="number" id="targetValueInput" value="891647942" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Target Qty</label>
-                            <input type="number" id="targetQtyInput" value="147" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                        </div>
-                    </div>
-                </div>
+<!-- ================= TAB 1: DASHBOARD ================= -->
+<div id="tab-dashboard" class="tab-content space-y-6">
 
-                <!-- KPI Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Value Ach -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-semibold text-slate-500 uppercase">Pencapaian Value</span>
-                            <span id="badgeValuePct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">0%</span>
-                        </div>
-                        <div class="text-xl font-bold text-slate-800" id="dashAchValue">Rp 0</div>
-                        <div class="text-xs text-slate-400">Target: <strong id="dashTargetValue" class="text-slate-600">Rp 0</strong></div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <div id="barValue" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
+<!-- Filter Periode & Konfigurasi Toko -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
+<div>
+<h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-filter text-blue-600 mr-2"></i> Filter Periode & Analisis</h2>
+<p class="text-xs text-slate-500">Pilih rentang waktu untuk melihat pencapaian Tahunan, Bulanan, atau Mingguan.</p>
+</div>
 
-                    <!-- Qty Ach -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-semibold text-slate-500 uppercase">Pencapaian Qty</span>
-                            <span id="badgeQtyPct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">0%</span>
-                        </div>
-                        <div class="text-xl font-bold text-slate-800"><span id="dashAchQty">0</span> <span class="text-xs font-normal text-slate-500">Unit</span></div>
-                        <div class="text-xs text-slate-400">Target: <strong id="dashTargetQty" class="text-slate-600">0 Unit</strong></div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <div id="barQty" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
+<!-- Toggle Periode Buttons -->
+<div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+<button onclick="setFilterMode('yearly')" id="mode-yearly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Tahunan</button>
+<button onclick="setFilterMode('monthly')" id="mode-monthly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Bulanan</button>
+<button onclick="setFilterMode('weekly')" id="mode-weekly" class="px-3.5 py-1.5 rounded-lg transition text-slate-600">Mingguan</button>
+</div>
+</div>
 
-                    <!-- Est Value -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-semibold text-slate-500 uppercase">Estimasi Value</span>
-                            <span id="badgeEstValuePct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">0%</span>
-                        </div>
-                        <div class="text-xl font-bold text-slate-800" id="dashEstValue">Rp 0</div>
-                        <div class="text-xs text-slate-400">Proyeksi Run-Rate Periode Ini</div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <div id="barEstValue" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
+<!-- Dynamic Selectors Based on Mode -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
+<div id="filterControlContainer">
+<!-- Render via JS -->
+</div>
+<div>
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Nama Toko</label>
+<input type="text" id="storeNameInput" value="SEP BOGOR TRADE MALL GTN" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
+</div>
+<div>
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Target Value (Rp)</label>
+<input type="number" id="targetValueInput" value="891647942" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
+</div>
+<div>
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Target Qty</label>
+<input type="number" id="targetQtyInput" value="147" onchange="updateStoreConfig()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
+</div>
+</div>
+</div>
 
-                    <!-- Est Qty -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-semibold text-slate-500 uppercase">Estimasi Qty</span>
-                            <span id="badgeEstQtyPct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">0%</span>
-                        </div>
-                        <div class="text-xl font-bold text-slate-800"><span id="dashEstQty">0</span> <span class="text-xs font-normal text-slate-500">Unit</span></div>
-                        <div class="text-xs text-slate-400">Proyeksi Qty Periode Ini</div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <div id="barEstQty" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Value Ach -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-semibold text-slate-500 uppercase">Pencapaian Value</span>
+<span id="badgeValuePct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">0%</span>
+</div>
+<div class="text-xl font-bold text-slate-800" id="dashAchValue">Rp 0</div>
+<div class="text-xs text-slate-400">Target: <strong id="dashTargetValue" class="text-slate-600">Rp 0</strong></div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div id="barValue" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
 
-                <!-- Segment Target & Achievement -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <div>
-                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i> Performa & Target per Segment</h3>
-                            <p class="text-xs text-slate-500">Z, S, High, Mid, Entry, Tab, Watch, Buds, Band, TWS</p>
-                        </div>
-                        <button onclick="openSegmentModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl transition">
-                            <i class="fa-solid fa-pen-to-square mr-1"></i> Atur Target Segment
-                        </button>
-                    </div>
+<!-- Qty Ach -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-semibold text-slate-500 uppercase">Pencapaian Qty</span>
+<span id="badgeQtyPct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">0%</span>
+</div>
+<div class="text-xl font-bold text-slate-800"><span id="dashAchQty">0</span> <span class="text-xs font-normal text-slate-500">Unit</span></div>
+<div class="text-xs text-slate-400">Target: <strong id="dashTargetQty" class="text-slate-600">0 Unit</strong></div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div id="barQty" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" id="segmentPerformanceGrid">
-                        <!-- Render via JS -->
-                    </div>
-                </div>
-            </div>
+<!-- Est Value -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-semibold text-slate-500 uppercase">Estimasi Value</span>
+<span id="badgeEstValuePct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">0%</span>
+</div>
+<div class="text-xl font-bold text-slate-800" id="dashEstValue">Rp 0</div>
+<div class="text-xs text-slate-400">Proyeksi Run-Rate Periode Ini</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div id="barEstValue" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
 
-            <!-- ================= TAB 2: INPUT TRANSAKSI ================= -->
-            <div id="tab-input" class="tab-content hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form Input -->
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <h2 class="text-lg font-semibold text-slate-800 border-b pb-3"><i class="fa-solid fa-cart-plus text-blue-600 mr-2"></i> Form Input Penjualan</h2>
-                    
-                    <form id="salesForm" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal</label>
-                                <input type="date" id="tanggal" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Segment</label>
-                                <select id="segment" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
-                                    <option value="" disabled selected>Pilih Segment</option>
-                                    <option value="Z">Z</option>
-                                    <option value="S">S</option>
-                                    <option value="High">High</option>
-                                    <option value="Mid">Mid</option>
-                                    <option value="Entry">Entry</option>
-                                    <option value="Tab">Tab</option>
-                                    <option value="Watch">Watch</option>
-                                    <option value="Buds">Buds</option>
-                                    <option value="Band">Band</option>
-                                    <option value="TWS">TWS</option>
-                                </select>
-                            </div>
-                        </div>
+<!-- Est Qty -->
+<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
+<div class="flex justify-between items-center">
+<span class="text-xs font-semibold text-slate-500 uppercase">Estimasi Qty</span>
+<span id="badgeEstQtyPct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">0%</span>
+</div>
+<div class="text-xl font-bold text-slate-800"><span id="dashEstQty">0</span> <span class="text-xs font-normal text-slate-500">Unit</span></div>
+<div class="text-xs text-slate-400">Proyeksi Qty Periode Ini</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div id="barEstQty" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+</div>
+</div>
 
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="block text-xs font-bold text-slate-600 uppercase">Nama Produk</label>
-                                <span class="text-[11px] text-slate-400">Atur produk di panel samping</span>
-                            </div>
-                            <select id="namaProduk" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
-                                <!-- Options -->
-                            </select>
-                        </div>
+<!-- Segment Target & Achievement -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+<div>
+<h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i> Performa & Target per Segment</h3>
+<p class="text-xs text-slate-500">Z, S, High, Mid, Entry, Tab, Watch, Buds, Band, TWS</p>
+</div>
+<button onclick="openSegmentModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl transition">
+<i class="fa-solid fa-pen-to-square mr-1"></i> Atur Target Segment
+</button>
+</div>
 
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nomor IMEI / Serial Number</label>
-                            <input type="text" id="imeiInput" placeholder="Masukkan 15 digit IMEI atau SN..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                        </div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" id="segmentPerformanceGrid">
+<!-- Render via JS -->
+</div>
+</div>
+</div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Qty</label>
-                                <input type="number" id="qty" min="1" value="1" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Value (Rp)</label>
-                                <input type="number" id="value" min="0" placeholder="Contoh: 3500000" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            </div>
-                        </div>
+<!-- ================= TAB 2: INPUT TRANSAKSI ================= -->
+<div id="tab-input" class="tab-content hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Form Input -->
+<div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<h2 class="text-lg font-semibold text-slate-800 border-b pb-3"><i class="fa-solid fa-cart-plus text-blue-600 mr-2"></i> Form Input Penjualan</h2>
 
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status Tembak</label>
-                            <select id="statusTembak" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-amber-600 bg-amber-50/50">
-                                <option value="Belum" selected>Belum</option>
-                                <option value="Sudah">Sudah</option>
-                            </select>
-                        </div>
+<form id="salesForm" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal</label>
+<input type="date" id="tanggal" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-slate-50">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Segment</label>
+<select id="segment" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+<option value="" disabled selected>Pilih Segment</option>
+<option value="Z">Z</option>
+<option value="S">S</option>
+<option value="High">High</option>
+<option value="Mid">Mid</option>
+<option value="Entry">Entry</option>
+<option value="Tab">Tab</option>
+<option value="Watch">Watch</option>
+<option value="Buds">Buds</option>
+<option value="Band">Band</option>
+<option value="TWS">TWS</option>
+</select>
+</div>
+</div>
 
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-sm text-sm">
-                            <i class="fa-solid fa-plus mr-1"></i> Simpan Transaksi Penjualan
-                        </button>
-                    </form>
-                </div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<label class="block text-xs font-bold text-slate-600 uppercase">Nama Produk</label>
+<span class="text-[11px] text-slate-400">Atur produk di panel samping</span>
+</div>
+<select id="namaProduk" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+<!-- Options -->
+</select>
+</div>
 
-                <!-- Panel Kelola Produk -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-800 border-b pb-3 mb-4"><i class="fa-solid fa-boxes-stacked text-indigo-600 mr-2"></i> Manajemen Produk</h2>
-                        
-                        <div class="space-y-2 mb-4">
-                            <label class="block text-xs font-semibold text-slate-500 uppercase">Tambah Nama Produk</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="newProductInput" placeholder="Contoh: S26 ULTRA 256" class="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <button type="button" id="addProductBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm transition">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nomor IMEI / Serial Number</label>
+<input type="text" id="imeiInput" placeholder="Masukkan 15 digit IMEI atau SN..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+</div>
 
-                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Daftar Produk Aktif</label>
-                        <div id="productListContainer" class="max-h-72 overflow-y-auto space-y-1.5 pr-1">
-                            <!-- Render via JS -->
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t text-center text-xs text-slate-400">
-                        Tersimpan otomatis di browser.
-                    </div>
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Qty</label>
+<input type="number" id="qty" min="1" value="1" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Value (Rp)</label>
+<input type="number" id="value" min="0" placeholder="Contoh: 3500000" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+</div>
+</div>
 
-            <!-- ================= TAB 3: TRACKING PRODUK ================= -->
-            <div id="tab-tracking" class="tab-content hidden space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-bullseye text-emerald-600 mr-2"></i> Tracking Produk (MCS & ShopLive)</h2>
-                            <p class="text-xs text-slate-500">Pantau unit penjualan yang sudah tertembak melalui platform MCS dan ShopLive.</p>
-                        </div>
-                        <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100">
-                            Total Unit: <strong id="trackingTotalUnit">0</strong>
-                        </span>
-                    </div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status Tembak</label>
+<select id="statusTembak" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-amber-600 bg-amber-50/50">
+<option value="Belum" selected>Belum</option>
+<option value="Sudah">Sudah</option>
+</select>
+</div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-600 border-b">
-                                    <th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
-                                    <th class="p-3 font-semibold">Nama Produk</th>
-                                    <th class="p-3 font-semibold">IMEI / SN</th>
-                                    <th class="p-3 font-semibold">Segment</th>
-                                    <th class="p-3 font-semibold text-center">Qty</th>
-                                    <th class="p-3 font-semibold text-center">Status Tembak</th>
-                                    <th class="p-3 font-semibold text-center rounded-r-xl">Aksi Tracking</th>
-                                </tr>
-                            </thead>
-                            <tbody id="trackingTableBody" class="divide-y divide-slate-100">
-                                <!-- Render via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-sm text-sm">
+<i class="fa-solid fa-plus mr-1"></i> Simpan Transaksi Penjualan
+</button>
+</form>
+</div>
 
-            <!-- ================= TAB 4: FORMAT WHATSAPP ================= -->
-            <div id="tab-report" class="tab-content hidden space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-800"><i class="fa-brands fa-whatsapp text-emerald-600 mr-2"></i> Generator Laporan WhatsApp (1-Klik Salin)</h2>
-                            <p class="text-xs text-slate-500">Format teks laporan harian otomatis sesuai standar perusahaan.</p>
-                        </div>
-                        <button onclick="copyWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
-                            <i class="fa-regular fa-copy"></i> Salin Teks WhatsApp
-                        </button>
-                    </div>
+<!-- Panel Kelola Produk -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+<div>
+<h2 class="text-base font-bold text-slate-800 border-b pb-3 mb-4"><i class="fa-solid fa-boxes-stacked text-indigo-600 mr-2"></i> Manajemen Produk</h2>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-xs font-bold text-slate-600 uppercase">Preview Teks WhatsApp</label>
-                            <textarea id="waReportOutput" readonly class="w-full h-96 p-4 rounded-xl border border-slate-200 bg-slate-900 text-emerald-400 font-mono text-xs leading-relaxed focus:outline-none"></textarea>
-                        </div>
-                        <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            <h3 class="text-sm font-bold text-slate-700"><i class="fa-solid fa-list-check text-blue-600 mr-1"></i> Parameter Laporan Tambahan</h3>
-                            
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Commitment Weekly (Value & Qty Note)</label>
-                                <input type="text" id="reportCommitment" value="Value (60%) : 534.988.765/4=445.765.000 | Qty (60%) : 88/4 =35 Unit" class="w-full px-3 py-2 text-xs border rounded-lg bg-white">
-                            </div>
+<div class="space-y-2 mb-4">
+<label class="block text-xs font-semibold text-slate-500 uppercase">Tambah Nama Produk</label>
+<div class="flex gap-2">
+<input type="text" id="newProductInput" placeholder="Contoh: S26 ULTRA 256" class="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+<button type="button" id="addProductBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm transition">
+<i class="fa-solid fa-plus"></i>
+</button>
+</div>
+</div>
 
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Product Fokus Weekly</label>
-                                <textarea id="reportFocusProduct" class="w-full h-20 px-3 py-2 text-xs border rounded-lg bg-white">FF8 : 1/2/200%
+<label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Daftar Produk Aktif</label>
+<div id="productListContainer" class="max-h-72 overflow-y-auto space-y-1.5 pr-1">
+<!-- Render via JS -->
+</div>
+</div>
+<div class="mt-4 pt-3 border-t text-center text-xs text-slate-400">
+Tersimpan otomatis di browser.
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 3: TRACKING PRODUK ================= -->
+<div id="tab-tracking" class="tab-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-bullseye text-emerald-600 mr-2"></i> Tracking Produk (MCS & ShopLive)</h2>
+<p class="text-xs text-slate-500">Pantau unit penjualan yang sudah tertembak melalui platform MCS dan ShopLive.</p>
+</div>
+<span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100">
+Total Unit: <strong id="trackingTotalUnit">0</strong>
+</span>
+</div>
+
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-slate-50 text-slate-600 border-b">
+<th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
+<th class="p-3 font-semibold">Nama Produk</th>
+<th class="p-3 font-semibold">IMEI / SN</th>
+<th class="p-3 font-semibold">Segment</th>
+<th class="p-3 font-semibold text-center">Qty</th>
+<th class="p-3 font-semibold text-center">Status Tembak</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Aksi Tracking</th>
+</tr>
+</thead>
+<tbody id="trackingTableBody" class="divide-y divide-slate-100">
+<!-- Render via JS -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 4: FORMAT WHATSAPP ================= -->
+<div id="tab-report" class="tab-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
+<div>
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-brands fa-whatsapp text-emerald-600 mr-2"></i> Generator Laporan WhatsApp (1-Klik Salin)</h2>
+<p class="text-xs text-slate-500">Format teks laporan harian otomatis sesuai standar perusahaan.</p>
+</div>
+<button onclick="copyWhatsAppReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
+<i class="fa-regular fa-copy"></i> Salin Teks WhatsApp
+</button>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-xs font-bold text-slate-600 uppercase">Preview Teks WhatsApp</label>
+<textarea id="waReportOutput" readonly class="w-full h-96 p-4 rounded-xl border border-slate-200 bg-slate-900 text-emerald-400 font-mono text-xs leading-relaxed focus:outline-none"></textarea>
+</div>
+<div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+<h3 class="text-sm font-bold text-slate-700"><i class="fa-solid fa-list-check text-blue-600 mr-1"></i> Parameter Laporan Tambahan</h3>
+
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Commitment Weekly (Value & Qty Note)</label>
+<input type="text" id="reportCommitment" value="Value (60%) : 534.988.765/4=445.765.000 | Qty (60%) : 88/4 =35 Unit" class="w-full px-3 py-2 text-xs border rounded-lg bg-white">
+</div>
+
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Product Fokus Weekly</label>
+<textarea id="reportFocusProduct" class="w-full h-20 px-3 py-2 text-xs border rounded-lg bg-white">FF8 : 1/2/200%
 S26FE : 2/1/50%</textarea>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1">Action Plan</label>
-                                <input type="text" id="reportActionPlan" value="Fokus penjualan produk high segment dan live streaming." class="w-full px-3 py-2 text-xs border rounded-lg bg-white">
-                            </div>
-                            <button onclick="generateWAReport()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-lg text-xs font-semibold transition">
-                                Perbarui Preview Laporan
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= TAB 5: FORM & ISSUE ================= -->
-            <div id="tab-issues" class="tab-content hidden space-y-6">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                        <h2 class="text-base font-bold text-slate-800 border-b pb-3"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i> Catat Issue / Kendala</h2>
-                        
-                        <form id="issueForm" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal Kendala</label>
-                                <input type="date" id="issueDate" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Kategori / Judul Issue</label>
-                                <input type="text" id="issueTitle" placeholder="Contoh: Stok S26 Ultra Kosong" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Deskripsi & Dampak</label>
-                                <textarea id="issueDesc" rows="3" placeholder="Jelaskan detail kendala..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status Issue</label>
-                                <select id="issueStatus" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium">
-                                    <option value="Open">Open (Belum Selesai)</option>
-                                    <option value="In Progress">In Progress (Sedang Ditangani)</option>
-                                    <option value="Resolved">Resolved (Selesai)</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm">
-                                <i class="fa-solid fa-paper-plane mr-1"></i> Simpan Data Issue
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list text-slate-700 mr-2"></i> Daftar Kendala & Action Plan</h2>
-                            <span class="text-xs text-slate-500">Total Issue: <strong id="totalIssuesCount">0</strong></span>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-sm">
-                                <thead>
-                                    <tr class="bg-slate-50 text-slate-600 border-b">
-                                        <th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
-                                        <th class="p-3 font-semibold">Issue / Kendala</th>
-                                        <th class="p-3 font-semibold">Deskripsi</th>
-                                        <th class="p-3 font-semibold text-center">Status</th>
-                                        <th class="p-3 font-semibold text-center rounded-r-xl">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="issuesTableBody" class="divide-y divide-slate-100">
-                                    <!-- Render via JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= TAB 6: DATA MASTER & EXPORT ================= -->
-            <div id="tab-master" class="tab-content hidden space-y-6">
-                <!-- Box Upload / Import Excel & CSV -->
-                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl shadow-sm border border-emerald-200 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="space-y-1">
-                        <h3 class="text-base font-bold text-emerald-900"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Import Data Excel / CSV</h3>
-                        <p class="text-xs text-emerald-700">Unggah file rekap penjualan (.xlsx, .xls, .csv). Pastikan kolom sesuai format.</p>
-                    </div>
-                    <div class="flex items-center gap-3 w-full md:w-auto">
-                        <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleExcelImport(event)">
-                        <button onclick="document.getElementById('excelFileInput').click()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm cursor-pointer">
-                            <i class="fa-solid fa-upload"></i> Pilih & Import File Excel
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-database text-blue-600 mr-2"></i> Data Master Penjualan & Export</h2>
-                            <p class="text-xs text-slate-500">Unduh atau kelola data master lengkap (Tanggal, Nama Produk, IMEI, Qty, Value, Segment, Status Tembak).</p>
-                        </div>
-                        <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
-                            <i class="fa-solid fa-file-excel"></i> Download Excel / CSV (.csv)
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 text-slate-600 border-b">
-                                    <th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
-                                    <th class="p-3 font-semibold">Nama Produk</th>
-                                    <th class="p-3 font-semibold">IMEI / SN</th>
-                                    <th class="p-3 font-semibold">Segment</th>
-                                    <th class="p-3 font-semibold text-center">Qty</th>
-                                    <th class="p-3 font-semibold">Value</th>
-                                    <th class="p-3 font-semibold text-center">Status Tembak</th>
-                                    <th class="p-3 font-semibold text-center rounded-r-xl">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody id="masterTableBody" class="divide-y divide-slate-100">
-                                <!-- Render via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- Modal Atur Target Segment -->
-    <div id="segmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-base font-bold text-slate-800">Atur Target Qty per Segment</h3>
-                <button onclick="closeSegmentModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto p-1" id="segmentModalInputs">
-                <!-- Segment inputs rendered via JS -->
-            </div>
-            <div class="flex justify-end gap-2 pt-3 border-t">
-                <button onclick="closeSegmentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveSegmentTargets()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold">Simpan Target</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toastMessage">Berhasil menyimpan data!</span>
-    </div>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        // --- State Management & LocalStorage ---
-        const DEFAULT_PRODUCTS = ["S26 ULTRA 256", "S26 256", "S26FE", "Z FLIP 8 512", "A08 4/128", "Watch Pro", "Buds Pro"];
-        let products = JSON.parse(localStorage.getItem('app_products')) || DEFAULT_PRODUCTS;
-        let salesData = JSON.parse(localStorage.getItem('app_sales')) || [];
-        let issuesData = JSON.parse(localStorage.getItem('app_issues')) || [];
-        
-        let storeConfig = JSON.parse(localStorage.getItem('app_config')) || {
-            storeName: "SEP BOGOR TRADE MALL GTN",
-            targetValue: 891647942,
-            targetQty: 147
-        };
-
-        let segmentTargets = JSON.parse(localStorage.getItem('app_segment_targets')) || {
-            "Z": 10, "S": 25, "High": 18, "Mid": 20, "Entry": 50, "Tab": 10, "Watch": 5, "Buds": 5, "Band": 4, "TWS": 0
-        };
-
-        const segmentsList = ["Z", "S", "High", "Mid", "Entry", "Tab", "Watch", "Buds", "Band", "TWS"];
-
-        // Filter Mode State ('yearly', 'monthly', 'weekly')
-        let currentFilterMode = 'monthly';
-
-        // Set Default Date
-        const todayStr = new Date().toISOString().split('T')[0];
-        document.getElementById('tanggal').value = todayStr;
-        document.getElementById('issueDate').value = todayStr;
-        document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-        // Initialize App
-        function initApp() {
-            document.getElementById('storeNameInput').value = storeConfig.storeName;
-            document.getElementById('targetValueInput').value = storeConfig.targetValue;
-            document.getElementById('targetQtyInput').value = storeConfig.targetQty;
-            document.getElementById('headerStoreName').innerText = storeConfig.storeName;
-            document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.split(' ')[0] + ' ' + (storeConfig.storeName.split(' ')[1] || '');
-
-            renderProducts();
-            setFilterMode('monthly');
-            renderTrackingTable();
-            renderMasterTable();
-            renderIssuesTable();
-            generateWAReport();
-        }
-
-        // --- Sidebar Toggle Function ---
-        function toggleSidebar() {
-            const sidebar = document.getElementById('appSidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            sidebar.classList.toggle('-translate-x-full');
-            backdrop.classList.toggle('hidden');
-        }
-
-        // --- Navigation Tabs ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-                btn.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
-            });
-
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-            activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
-
-            if (window.innerWidth < 768) {
-                toggleSidebar();
-            }
-        }
-
-        // --- Toast Notification ---
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toastNotification');
-            const msg = document.getElementById('toastMessage');
-            const icon = document.getElementById('toastIcon');
-            
-            msg.innerText = message;
-            icon.className = type === 'success' ? 'fa-solid fa-circle-check text-emerald-400' : 'fa-solid fa-triangle-exclamation text-amber-400';
-            
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // --- Filter Mode Handler (Tahunan, Bulanan, Mingguan) ---
-        function setFilterMode(mode) {
-            currentFilterMode = mode;
-            ['yearly', 'monthly', 'weekly'].forEach(m => {
-                const btn = document.getElementById(`mode-${m}`);
-                if(m === mode) {
-                    btn.className = "px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-xs";
-                } else {
-                    btn.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:bg-slate-200";
-                }
-            });
-
-            renderFilterControls();
-            renderDashboard();
-        }
-
-        function renderFilterControls() {
-            const container = document.getElementById('filterControlContainer');
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
-
-            if(currentFilterMode === 'yearly') {
-                container.innerHTML = `
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tahun</label>
-                    <select id="filterYear" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                        <option value="${currentYear}">${currentYear}</option>
-                        <option value="${currentYear - 1}">${currentYear - 1}</option>
-                        <option value="${currentYear - 2}">${currentYear - 2}</option>
-                    </select>
-                `;
-            } else if(currentFilterMode === 'monthly') {
-                container.innerHTML = `
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Bulan</label>
-                    <input type="month" id="filterMonth" value="${currentYear}-${currentMonth}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                `;
-            } else if(currentFilterMode === 'weekly') {
-                container.innerHTML = `
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal dalam Minggu</label>
-                    <input type="date" id="filterWeeklyDate" value="${todayStr}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
-                `;
-            }
-        }
-
-        // --- Store Config Update ---
-        function updateStoreConfig() {
-            storeConfig.storeName = document.getElementById('storeNameInput').value;
-            storeConfig.targetValue = parseFloat(document.getElementById('targetValueInput').value) || 0;
-            storeConfig.targetQty = parseInt(document.getElementById('targetQtyInput').value) || 0;
-            
-            localStorage.setItem('app_config', JSON.stringify(storeConfig));
-            document.getElementById('headerStoreName').innerText = storeConfig.storeName;
-            document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.split(' ')[0] + ' ' + (storeConfig.storeName.split(' ')[1] || '');
-            renderDashboard();
-            generateWAReport();
-            showToast('Konfigurasi toko berhasil diperbarui!');
-        }
-
-        // --- Product Management ---
-        function renderProducts() {
-            const select = document.getElementById('namaProduk');
-            select.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
-            products.forEach(p => {
-                let opt = document.createElement('option');
-                opt.value = p;
-                opt.textContent = p;
-                select.appendChild(opt);
-            });
-
-            const container = document.getElementById('productListContainer');
-            container.innerHTML = '';
-            products.forEach((p, idx) => {
-                let div = document.createElement('div');
-                div.className = "flex justify-between items-center bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-xl text-sm border border-slate-100 transition";
-                div.innerHTML = `
-                    <span class="font-medium text-slate-700 truncate mr-2">${p}</span>
-                    <button onclick="deleteProduct(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        document.getElementById('addProductBtn').addEventListener('click', () => {
-            const input = document.getElementById('newProductInput');
-            const val = input.value.trim().toUpperCase();
-            if(val && !products.includes(val)) {
-                products.push(val);
-                localStorage.setItem('app_products', JSON.stringify(products));
-                input.value = '';
-                renderProducts();
-                showToast('Produk baru berhasil ditambahkan!');
-            } else if(products.includes(val)) {
-                showToast('Produk sudah terdaftar dalam list!', 'warning');
-            }
-        });
-
-        function deleteProduct(idx) {
-            if(confirm(`Hapus produk ${products[idx]} dari daftar?`)) {
-                products.splice(idx, 1);
-                localStorage.setItem('app_products', JSON.stringify(products));
-                renderProducts();
-                showToast('Produk berhasil dihapus.');
-            }
-        }
-
-        // --- Sales Form Submit ---
-        document.getElementById('salesForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newSale = {
-                id: Date.now(),
-                tanggal: document.getElementById('tanggal').value,
-                segment: document.getElementById('segment').value,
-                namaProduk: document.getElementById('namaProduk').value,
-                imei: document.getElementById('imeiInput').value.trim(),
-                qty: parseInt(document.getElementById('qty').value) || 1,
-                value: parseFloat(document.getElementById('value').value) || 0,
-                statusTembak: document.getElementById('statusTembak').value
-            };
-
-            salesData.unshift(newSale);
-            localStorage.setItem('app_sales', JSON.stringify(salesData));
-
-            // Reset Form
-            document.getElementById('namaProduk').selectedIndex = 0;
-            document.getElementById('segment').selectedIndex = 0;
-            document.getElementById('imeiInput').value = '';
-            document.getElementById('qty').value = 1;
-            document.getElementById('value').value = '';
-            document.getElementById('statusTembak').value = 'Belum';
-
-            renderDashboard();
-            renderTrackingTable();
-            renderMasterTable();
-            generateWAReport();
-            showToast('Transaksi penjualan berhasil disimpan!');
-            switchTab('dashboard');
-        });
-
-        // --- IMPORT EXCEL / CSV FUNCTIONALITY (SheetJS) ---
-        function handleExcelImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    // Ambil sheet pertama
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    
-                    // Konversi sheet ke JSON (array of objects)
-                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-                    
-                    if (jsonRows.length === 0) {
-                        showToast('File Excel kosong atau format tidak valid!', 'warning');
-                        return;
-                    }
-
-                    let importedCount = 0;
-                    jsonRows.forEach(row => {
-                        // Fleksibel mendeteksi nama kolom (Case insensitive / berbagai variasi nama header)
-                        const tanggal = row['Tanggal'] || row['tanggal'] || row['Date'] || row['date'] || todayStr;
-                        const namaProduk = row['Nama Produk'] || row['namaProduk'] || row['Produk'] || row['produk'] || row['Product'] || 'PRODUK IMPORT';
-                        const imei = row['IMEI'] || row['imei'] || row['Serial Number'] || row['SN'] || '-';
-                        let segment = row['Segment'] || row['segment'] || row['SEGMENT'] || 'Entry';
-                        // Pastikan segment valid sesuai list
-                        if(!segmentsList.includes(segment)) segment = 'Entry';
-
-                        const qty = parseInt(row['Qty'] || row['qty'] || row['QTY'] || 1) || 1;
-                        const value = parseFloat(row['Value'] || row['value'] || row['VALUE'] || row['Harga'] || 0) || 0;
-                        let statusTembak = row['Status Tembak'] || row['statusTembak'] || row['Status'] || 'Belum';
-                        if(statusTembak !== 'Sudah' && statusTembak !== 'Belum') statusTembak = 'Belum';
-
-                        // Format tanggal jika dari Excel serial number atau string lain
-                        let formattedDate = todayStr;
-                        if(typeof tanggal === 'number') {
-                            // Excel serial date to JS Date
-                            const excelDate = new Date((tanggal - (25567 + 2))*86400*1000);
-                            formattedDate = excelDate.toISOString().split('T')[0];
-                        } else if(typeof tanggal === 'string' && tanggal.trim() !== '') {
-                            formattedDate = tanggal.trim();
-                        }
-
-                        const newSale = {
-                            id: Date.now() + Math.floor(Math.random() * 1000),
-                            tanggal: formattedDate,
-                            segment: segment,
-                            namaProduk: String(namaProduk).toUpperCase(),
-                            imei: String(imei),
-                            qty: qty,
-                            value: value,
-                            statusTembak: statusTembak
-                        };
-
-                        // Tambahkan ke produk master jika produk baru
-                        if(!products.includes(newSale.namaProduk)) {
-                            products.push(newSale.namaProduk);
-                        }
-
-                        salesData.unshift(newSale);
-                        importedCount++;
-                    });
-
-                    // Simpan ke localStorage
-                    localStorage.setItem('app_sales', JSON.stringify(salesData));
-                    localStorage.setItem('app_products', JSON.stringify(products));
-
-                    // Refresh Tampilan
-                    renderProducts();
-                    renderDashboard();
-                    renderTrackingTable();
-                    renderMasterTable();
-                    generateWAReport();
-
-                    showToast(`Berhasil mengimport ${importedCount} data penjualan!`);
-                } catch (error) {
-                    console.error(error);
-                    showToast('Gagal memproses file Excel/CSV. Pastikan format benar.', 'warning');
-                } finally {
-                    // Reset input file agar bisa upload file yang sama kembali jika diperlukan
-                    event.target.value = '';
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        // --- Get Filtered Data Based on Mode ---
-        function getFilteredSalesData() {
-            if(currentFilterMode === 'yearly') {
-                const year = document.getElementById('filterYear')?.value || new Date().getFullYear();
-                return salesData.filter(item => item.tanggal.startsWith(year));
-            } else if(currentFilterMode === 'monthly') {
-                const monthVal = document.getElementById('filterMonth')?.value; // Format: YYYY-MM
-                if(!monthVal) return salesData;
-                return salesData.filter(item => item.tanggal.startsWith(monthVal));
-            } else if(currentFilterMode === 'weekly') {
-                const dateVal = document.getElementById('filterWeeklyDate')?.value || todayStr;
-                const targetDate = new Date(dateVal);
-                const day = targetDate.getDay();
-                const diffToMonday = targetDate.getDate() - day + (day === 0 ? -6 : 1);
-                const monday = new Date(targetDate.setDate(diffToMonday));
-                monday.setHours(0,0,0,0);
-                
-                const sunday = new Date(monday);
-                sunday.setDate(monday.getDate() + 6);
-                sunday.setHours(23,59,59,999);
-
-                return salesData.filter(item => {
-                    const itemDate = new Date(item.tanggal);
-                    return itemDate >= monday && itemDate <= sunday;
-                });
-            }
-            return salesData;
-        }
-
-        // --- Dashboard Calculations & Rendering ---
-        function renderDashboard() {
-            const filteredData = getFilteredSalesData();
-            let totalAchValue = filteredData.reduce((sum, item) => sum + item.value, 0);
-            let totalAchQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
-
-            let valPct = storeConfig.targetValue > 0 ? ((totalAchValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
-            let qtyPct = storeConfig.targetQty > 0 ? ((totalAchQty / storeConfig.targetQty) * 100).toFixed(1) : 0;
-
-            let estValue = totalAchValue * 1.25;
-            let estQty = Math.round(totalAchQty * 1.25);
-            let estValPct = storeConfig.targetValue > 0 ? ((estValue / storeConfig.targetValue) * 100).toFixed(0) : 0;
-            let estQtyPct = storeConfig.targetQty > 0 ? ((estQty / storeConfig.targetQty) * 100).toFixed(0) : 0;
-
-            document.getElementById('dashAchValue').innerText = formatRupiah(totalAchValue);
-            document.getElementById('dashTargetValue').innerText = formatRupiah(storeConfig.targetValue);
-            document.getElementById('badgeValuePct').innerText = valPct + '%';
-            document.getElementById('barValue').style.width = Math.min(valPct, 100) + '%';
-
-            document.getElementById('dashAchQty').innerText = totalAchQty;
-            document.getElementById('dashTargetQty').innerText = storeConfig.targetQty + ' Unit';
-            document.getElementById('badgeQtyPct').innerText = qtyPct + '%';
-            document.getElementById('barQty').style.width = Math.min(qtyPct, 100) + '%';
-
-            document.getElementById('dashEstValue').innerText = formatRupiah(estValue);
-            document.getElementById('badgeEstValuePct').innerText = estValPct + '%';
-            document.getElementById('barEstValue').style.width = Math.min(estValPct, 100) + '%';
-
-            document.getElementById('dashEstQty').innerText = estQty;
-            document.getElementById('badgeEstQtyPct').innerText = estQtyPct + '%';
-            document.getElementById('barEstQty').style.width = Math.min(estQtyPct, 100) + '%';
-
-            // Render Segment Grid
-            const grid = document.getElementById('segmentPerformanceGrid');
-            grid.innerHTML = '';
-            segmentsList.forEach(seg => {
-                let segSold = filteredData.filter(s => s.segment === seg).reduce((sum, i) => sum + i.qty, 0);
-                let segTarget = segmentTargets[seg] || 10;
-                let pct = segTarget > 0 ? Math.round((segSold / segTarget) * 100) : 0;
-
-                let card = document.createElement('div');
-                card.className = "bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2";
-                card.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase text-slate-700">${seg}</span>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${pct >= 100 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}">${pct}%</span>
-                    </div>
-                    <div class="text-lg font-bold text-slate-800">${segSold} <span class="text-xs font-normal text-slate-500">/ ${segTarget}</span></div>
-                    <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                        <div class="bg-indigo-600 h-full rounded-full" style="width: ${Math.min(pct, 100)}%"></div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- Segment Target Modal ---
-        function openSegmentModal() {
-            const container = document.getElementById('segmentModalInputs');
-            container.innerHTML = '';
-            segmentsList.forEach(seg => {
-                let div = document.createElement('div');
-                div.className = "space-y-1";
-                div.innerHTML = `
-                    <label class="block text-xs font-bold text-slate-600">Target Qty Segment ${seg}</label>
-                    <input type="number" id="segTarget_${seg}" value="${segmentTargets[seg] || 10}" class="w-full px-3 py-2 border rounded-xl text-sm bg-slate-50">
-                `;
-                container.appendChild(div);
-            });
-            document.getElementById('segmentModal').classList.remove('hidden');
-        }
-
-        function closeSegmentModal() {
-            document.getElementById('segmentModal').classList.add('hidden');
-        }
-
-        function saveSegmentTargets() {
-            segmentsList.forEach(seg => {
-                let val = parseInt(document.getElementById(`segTarget_${seg}`).value);
-                if(!isNaN(val)) segmentTargets[seg] = val;
-            });
-            localStorage.setItem('app_segment_targets', JSON.stringify(segmentTargets));
-            closeSegmentModal();
-            renderDashboard();
-            generateWAReport();
-            showToast('Target segment berhasil diperbarui!');
-        }
-
-        // --- Tracking Produk (MCS & ShopLive) ---
-        function renderTrackingTable() {
-            const tbody = document.getElementById('trackingTableBody');
-            tbody.innerHTML = '';
-            document.getElementById('trackingTotalUnit').innerText = salesData.reduce((sum, i) => sum + i.qty, 0);
-
-            if(salesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 italic">Belum ada data unit untuk ditacking.</td></tr>`;
-                return;
-            }
-
-            salesData.forEach(item => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b";
-                let statusBadge = item.statusTembak === 'Sudah' 
-                    ? '<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 font-semibold rounded-md text-xs border border-emerald-200">Sudah</span>' 
-                    : '<span class="px-2.5 py-1 bg-amber-50 text-amber-700 font-semibold rounded-md text-xs border border-amber-200">Belum</span>';
-
-                tr.innerHTML = `
-                    <td class="p-3 text-slate-600 whitespace-nowrap">${item.tanggal}</td>
-                    <td class="p-3 font-semibold text-slate-800">${item.namaProduk}</td>
-                    <td class="p-3 font-mono text-xs text-slate-600">${item.imei || '-'}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">${item.segment}</span></td>
-                    <td class="p-3 text-center font-medium">${item.qty}</td>
-                    <td class="p-3 text-center">${statusBadge}</td>
-                    <td class="p-3 text-center space-x-1">
-                        <button onclick="toggleStatusTembak(${item.id})" class="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-lg text-xs transition">
-                            Ubah Status (${item.statusTembak === 'Sudah' ? 'Belum' : 'Sudah'})
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function toggleStatusTembak(id) {
-            let item = salesData.find(s => s.id === id);
-            if(item) {
-                item.statusTembak = item.statusTembak === 'Sudah' ? 'Belum' : 'Sudah';
-                localStorage.setItem('app_sales', JSON.stringify(salesData));
-                renderTrackingTable();
-                renderMasterTable();
-                renderDashboard();
-                generateWAReport();
-                showToast('Status tembak diperbarui!');
-            }
-        }
-
-        // --- WhatsApp Report Generator ---
-        function generateWAReport() {
-            let totalVal = salesData.reduce((sum, i) => sum + i.value, 0);
-            let totalQty = salesData.reduce((sum, i) => sum + i.qty, 0);
-
-            let valPct = storeConfig.targetValue > 0 ? Math.round((totalVal / storeConfig.targetValue) * 100) : 0;
-            let qtyPct = storeConfig.targetQty > 0 ? Math.round((totalQty / storeConfig.targetQty) * 100) : 0;
-
-            let estVal = totalVal * 1.25;
-            let estQty = Math.round(totalQty * 1.25);
-            let estValPct = storeConfig.targetValue > 0 ? Math.round((estVal / storeConfig.targetValue) * 100) : 0;
-            let estQtyPct = storeConfig.targetQty > 0 ? Math.round((estQty / storeConfig.targetQty) * 100) : 0;
-
-            let commitment = document.getElementById('reportCommitment').value;
-            let focusProd = document.getElementById('reportFocusProduct').value;
-            let actionPlan = document.getElementById('reportActionPlan').value;
-
-            let segmentLines = segmentsList.map(seg => {
-                let sold = salesData.filter(s => s.segment === seg).reduce((sum, i) => sum + i.qty, 0);
-                let tgt = segmentTargets[seg] || 10;
-                return `${seg} Series : ${sold}/${tgt}`;
-            }).join('\n');
-
-            let dailyUpdateLines = salesData.slice(0, 10).map(s => `${s.namaProduk} / ${s.qty}`).join('\n') || '-';
-
-            let issueLines = "-";
-            if (issuesData && issuesData.length > 0) {
-                issueLines = issuesData.map(iss => `• [${iss.status}] ${iss.title}: ${iss.desc} (${iss.date})`).join('\n');
-            }
-
-            let reportText = `*Nama Toko* :${storeConfig.storeName}
-${new Date().toLocaleDateString('id-ID', {day: '2-digit', month: '2-digit', year: 'numeric'})}
-*TG Value/TG Qty (+/-)* : (+13%/-13%)
-*Target Amt/Ach Amt/%* : ${formatNumber(storeConfig.targetValue)}/${formatNumber(totalVal)}/${valPct}%
-*Target Qty/Ach Amt/%* : ${storeConfig.targetQty}/${totalQty}/${qtyPct}%
-*Est Value/%* : ${formatNumber(estVal)}/${estValPct}%
-*Est Qty/%* : ${estQty}/${estQtyPct}%
-
-Comitment Weekly
-*Value* (60%) : ${commitment.split('|')[0] || ''}
-*Qty* (60%) : ${commitment.split('|')[1] || ''}
-
-Product Fokus Weekly
+</div>
+
+<div>
+<label class="block text-xs font-semibold text-slate-600 mb-1">Action Plan</label>
+<input type="text" id="reportActionPlan" value="Fokus penjualan produk high segment dan live streaming." class="w-full px-3 py-2 text-xs border rounded-lg bg-white">
+</div>
+<button onclick="generateWAReport()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-lg text-xs font-semibold transition">
+Perbarui Preview Laporan
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 5: FORM & ISSUE ================= -->
+<div id="tab-issues" class="tab-content hidden space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<h2 class="text-base font-bold text-slate-800 border-b pb-3"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i> Catat Issue / Kendala</h2>
+
+<form id="issueForm" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal Kendala</label>
+<input type="date" id="issueDate" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-slate-50">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Kategori / Judul Issue</label>
+<input type="text" id="issueTitle" placeholder="Contoh: Stok S26 Ultra Kosong" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Deskripsi & Dampak</label>
+<textarea id="issueDesc" rows="3" placeholder="Jelaskan detail kendala..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm"></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status Issue</label>
+<select id="issueStatus" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium">
+<option value="Open">Open (Belum Selesai)</option>
+<option value="In Progress">In Progress (Sedang Ditangani)</option>
+<option value="Resolved">Resolved (Selesai)</option>
+</select>
+</div>
+<button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm">
+<i class="fa-solid fa-paper-plane mr-1"></i> Simpan Data Issue
+</button>
+</form>
+</div>
+
+<div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex justify-between items-center border-b pb-3">
+<h2 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list text-slate-700 mr-2"></i> Daftar Kendala & Action Plan</h2>
+<span class="text-xs text-slate-500">Total Issue: <strong id="totalIssuesCount">0</strong></span>
+</div>
+
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-slate-50 text-slate-600 border-b">
+<th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
+<th class="p-3 font-semibold">Issue / Kendala</th>
+<th class="p-3 font-semibold">Deskripsi</th>
+<th class="p-3 font-semibold text-center">Status</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Aksi</th>
+</tr>
+</thead>
+<tbody id="issuesTableBody" class="divide-y divide-slate-100">
+<!-- Render via JS -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 6: DATA MASTER & EXPORT ================= -->
+<div id="tab-master" class="tab-content hidden space-y-6">
+<!-- Box Upload / Import Excel & CSV -->
+<div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl shadow-sm border border-emerald-200 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="space-y-1">
+<h3 class="text-base font-bold text-emerald-900"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Import Data Excel / CSV</h3>
+<p class="text-xs text-emerald-700">Unggah file rekap penjualan (.xlsx, .xls, .csv). Pastikan kolom sesuai format.</p>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleExcelImport(event)">
+<button onclick="document.getElementById('excelFileInput').click()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+<i class="fa-solid fa-upload"></i> Pilih & Import File Excel
+</button>
+</div>
+</div>
+
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
+<div>
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-database text-blue-600 mr-2"></i> Data Master Penjualan & Export</h2>
+<p class="text-xs text-slate-500">Unduh atau kelola data master lengkap (Tanggal, Nama Produk, IMEI, Qty, Value, Segment, Status Tembak).</p>
+</div>
+<button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex items-center gap-2 shadow-sm">
+<i class="fa-solid fa-file-excel"></i> Download Excel / CSV (.csv)
+</button>
+</div>
+
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-slate-50 text-slate-600 border-b">
+<th class="p-3 font-semibold rounded-l-xl">Tanggal</th>
+<th class="p-3 font-semibold">Nama Produk</th>
+<th class="p-3 font-semibold">IMEI / SN</th>
+<th class="p-3 font-semibold">Segment</th>
+<th class="p-3 font-semibold text-center">Qty</th>
+<th class="p-3 font-semibold">Value</th>
+<th class="p-3 font-semibold text-center">Status Tembak</th>
+<th class="p-3 font-semibold text-center rounded-r-xl">Hapus</th>
+</tr>
+</thead>
+<tbody id="masterTableBody" class="divide-y divide-slate-100">
+<!-- Render via JS -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+</main>
+</div>
+
+<!-- Modal Atur Target Segment -->
+<div id="segmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+<div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden p-6 space-y-4">
+<div class="flex justify-between items-center border-b pb-3">
+<h3 class="text-base font-bold text-slate-800">Atur Target Qty per Segment</h3>
+<button onclick="closeSegmentModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+</div>
+<div class="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto p-1" id="segmentModalInputs">
+<!-- Segment inputs rendered via JS -->
+</div>
+<div class="flex justify-end gap-2 pt-3 border-t">
+<button onclick="closeSegmentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Batal</button>
+<button onclick="saveSegmentTargets()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold">Simpan Target</button>
+</div>
+</div>
+</div>
+
+<!-- Notification Toast -->
+<div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm">
+<i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+<span id="toastMessage">Berhasil menyimpan data!</span>
+</div>
+
+<!-- JavaScript Application Logic -->
+<script>
+// --- State Management & LocalStorage ---
+const DEFAULT_PRODUCTS = ["S26 ULTRA 256", "S26 256", "S26FE", "Z FLIP 8 512", "A08 4/128", "Watch Pro", "Buds Pro"];
+let products = JSON.parse(localStorage.getItem('app_products')) || DEFAULT_PRODUCTS;
+let salesData = JSON.parse(localStorage.getItem('app_sales')) || [];
+let issuesData = JSON.parse(localStorage.getItem('app_issues')) || [];
+
+let storeConfig = JSON.parse(localStorage.getItem('app_config')) || {
+storeName: "SEP BOGOR TRADE MALL GTN",
+targetValue: 891647942,
+targetQty: 147
+};
+
+let segmentTargets = JSON.parse(localStorage.getItem('app_segment_targets')) || {
+"Z": 10, "S": 25, "High": 18, "Mid": 20, "Entry": 50, "Tab": 10, "Watch": 5, "Buds": 5, "Band": 4, "TWS": 0
+};
+
+const segmentsList = ["Z", "S", "High", "Mid", "Entry", "Tab", "Watch", "Buds", "Band", "TWS"];
+
+// Filter Mode State ('yearly', 'monthly', 'weekly')
+let currentFilterMode = 'monthly';
+
+// Set Default Date
+const todayStr = new Date().toISOString().split('T')[0];
+document.getElementById('tanggal').value = todayStr;
+document.getElementById('issueDate').value = todayStr;
+document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+// Initialize App
+window.addEventListener('DOMContentLoaded', () => {
+initApp();
+});
+
+function initApp() {
+document.getElementById('storeNameInput').value = storeConfig.storeName;
+document.getElementById('targetValueInput').value = storeConfig.targetValue;
+document.getElementById('targetQtyInput').value = storeConfig.targetQty;
+document.getElementById('headerStoreName').innerText = storeConfig.storeName;
+document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.split(' ')[0] + ' ' + (storeConfig.storeName.split(' ')[1] || '');
+
+renderProducts();
+setFilterMode('monthly');
+renderTrackingTable();
+renderMasterTable();
+renderIssuesTable();
+generateWAReport();
+}
+
+// --- Sidebar Toggle Function ---
+function toggleSidebar() {
+const sidebar = document.getElementById('appSidebar');
+const backdrop = document.getElementById('sidebarBackdrop');
+sidebar.classList.toggle('-translate-x-full');
+backdrop.classList.toggle('hidden');
+}
+
+// --- Navigation Tabs ---
+function switchTab(tabId) {
+document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+document.querySelectorAll('.tab-btn').forEach(btn => {
+btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+btn.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+});
+
+document.getElementById('tab-' + tabId).classList.remove('hidden');
+const activeBtn = document.getElementById('btn-' + tabId);
+activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+
+if (window.innerWidth < 768) {
+toggleSidebar();
+}
+}
+
+// --- Toast Notification ---
+function showToast(message, type = 'success') {
+const toast = document.getElementById('toastNotification');
+const msg = document.getElementById('toastMessage');
+const icon = document.getElementById('toastIcon');
+
+msg.innerText = message;
+icon.className = type === 'success' ? 'fa-solid fa-circle-check text-emerald-400' : 'fa-solid fa-triangle-exclamation text-amber-400';
+
+toast.classList.remove('translate-y-20', 'opacity-0');
+setTimeout(() => {
+toast.classList.add('translate-y-20', 'opacity-0');
+}, 3000);
+}
+
+// --- Filter Mode Handler (Tahunan, Bulanan, Mingguan) ---
+function setFilterMode(mode) {
+currentFilterMode = mode;
+['yearly', 'monthly', 'weekly'].forEach(m => {
+const btn = document.getElementById('mode-' + m);
+if(m === mode) {
+btn.className = "px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-xs";
+} else {
+btn.className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:bg-slate-200";
+}
+});
+
+renderFilterControls();
+renderDashboard();
+}
+
+function renderFilterControls() {
+const container = document.getElementById('filterControlContainer');
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+
+if(currentFilterMode === 'yearly') {
+container.innerHTML = `
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tahun</label>
+<select id="filterYear" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">
+<option value="${currentYear}">${currentYear}</option>
+<option value="${currentYear - 1}">${currentYear - 1}</option>
+<option value="${currentYear - 2}">${currentYear - 2}</option>
+</select>`;
+} else if(currentFilterMode === 'monthly') {
+container.innerHTML = `
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Bulan</label>
+<input type="month" id="filterMonth" value="${currentYear}-${currentMonth}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">`;
+} else if(currentFilterMode === 'weekly') {
+container.innerHTML = `
+<label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pilih Tanggal dalam Minggu</label>
+<input type="date" id="filterWeeklyDate" value="${todayStr}" onchange="renderDashboard()" class="px-3 py-2 text-xs border rounded-xl bg-slate-50 font-medium w-full">`;
+}
+}
+
+// --- Store Config Update ---
+function updateStoreConfig() {
+storeConfig.storeName = document.getElementById('storeNameInput').value;
+storeConfig.targetValue = parseFloat(document.getElementById('targetValueInput').value) || 0;
+storeConfig.targetQty = parseInt(document.getElementById('targetQtyInput').value) || 0;
+
+localStorage.setItem('app_config', JSON.stringify(storeConfig));
+document.getElementById('headerStoreName').innerText = storeConfig.storeName;
+document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.split(' ')[0] + ' ' + (storeConfig.storeName.split(' ')[1] || '');
+renderDashboard();
+generateWAReport();
+showToast('Konfigurasi toko berhasil diperbarui!');
+}
+
+// --- Product Management (Termasuk Fitur Hapus Produk) ---
+function renderProducts() {
+const select = document.getElementById('namaProduk');
+select.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
+products.forEach(p => {
+let opt = document.createElement('option');
+opt.value = p;
+opt.textContent = p;
+select.appendChild(opt);
+});
+
+const container = document.getElementById('productListContainer');
+container.innerHTML = '';
+products.forEach((p, idx) => {
+let div = document.createElement('div');
+div.className = "flex justify-between items-center bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-xl text-sm border border-slate-100 transition";
+div.innerHTML = `
+<span class="font-medium text-slate-700 truncate mr-2">${p}</span>
+<button onclick="deleteProduct(${idx})" class="text-rose-500 hover:text-rose-700 px-1.5 py-1 rounded-lg hover:bg-rose-50 transition" title="Hapus Produk"><i class="fa-solid fa-trash-can text-xs"></i></button>`;
+container.appendChild(div);
+});
+}
+
+document.getElementById('addProductBtn').addEventListener('click', () => {
+const input = document.getElementById('newProductInput');
+const val = input.value.trim().toUpperCase();
+if(val && !products.includes(val)) {
+products.push(val);
+localStorage.setItem('app_products', JSON.stringify(products));
+input.value = '';
+renderProducts();
+showToast('Produk baru berhasil ditambahkan!');
+} else if(products.includes(val)) {
+showToast('Produk sudah terdaftar dalam list!', 'warning');
+}
+});
+
+function deleteProduct(idx) {
+if(confirm(`Hapus produk "${products[idx]}" dari daftar?`)) {
+products.splice(idx, 1);
+localStorage.setItem('app_products', JSON.stringify(products));
+renderProducts();
+showToast('Produk berhasil dihapus.');
+}
+}
+
+// --- Sales Form Submit ---
+document.getElementById('salesForm').addEventListener('submit', (e) => {
+e.preventDefault();
+const newSale = {
+id: Date.now(),
+tanggal: document.getElementById('tanggal').value,
+segment: document.getElementById('segment').value,
+namaProduk: document.getElementById('namaProduk').value,
+imei: document.getElementById('imeiInput').value.trim(),
+qty: parseInt(document.getElementById('qty').value) || 1,
+value: parseFloat(document.getElementById('value').value) || 0,
+statusTembak: document.getElementById('statusTembak').value
+};
+
+salesData.unshift(newSale);
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+
+// Reset Form
+document.getElementById('namaProduk').selectedIndex = 0;
+document.getElementById('segment').selectedIndex = 0;
+document.getElementById('imeiInput').value = '';
+document.getElementById('qty').value = 1;
+document.getElementById('value').value = '';
+document.getElementById('statusTembak').value = 'Belum';
+
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+showToast('Transaksi penjualan berhasil disimpan!');
+switchTab('dashboard');
+});
+
+// --- IMPORT EXCEL / CSV FUNCTIONALITY (SheetJS) ---
+function handleExcelImport(event) {
+const file = event.target.files[0];
+if (!file) return;
+
+const reader = new FileReader();
+reader.onload = function(e) {
+try {
+const data = new Uint8Array(e.target.result);
+const workbook = XLSX.read(data, { type: 'array' });
+const firstSheetName = workbook.SheetNames[0];
+const worksheet = workbook.Sheets[firstSheetName];
+const jsonRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+if (jsonRows.length === 0) {
+showToast('File Excel kosong atau format tidak valid!', 'warning');
+return;
+}
+
+let importedCount = 0;
+jsonRows.forEach(row => {
+const tanggal = row['Tanggal'] || row['tanggal'] || row['Date'] || row['date'] || todayStr;
+const namaProduk = row['Nama Produk'] || row['namaProduk'] || row['Produk'] || row['produk'] || row['Product'] || 'PRODUK IMPORT';
+const imei = row['IMEI'] || row['imei'] || row['Serial Number'] || row['SN'] || '-';
+let segment = row['Segment'] || row['segment'] || row['SEGMENT'] || 'Entry';
+if(!segmentsList.includes(segment)) segment = 'Entry';
+
+const qty = parseInt(row['Qty'] || row['qty'] || row['QTY'] || 1) || 1;
+const value = parseFloat(row['Value'] || row['value'] || row['VALUE'] || row['Harga'] || 0) || 0;
+let statusTembak = row['Status Tembak'] || row['statusTembak'] || row['Status'] || 'Belum';
+if(statusTembak !== 'Sudah' && statusTembak !== 'Belum') statusTembak = 'Belum';
+
+let formattedDate = todayStr;
+if(typeof tanggal === 'number') {
+const excelDate = new Date((tanggal - (25567 + 2)) * 86400 * 1000);
+formattedDate = excelDate.toISOString().split('T')[0];
+} else if(typeof tanggal === 'string' && tanggal.trim() !== '') {
+formattedDate = tanggal.trim();
+}
+
+const newSale = {
+id: Date.now() + Math.floor(Math.random() * 1000),
+tanggal: formattedDate,
+segment: segment,
+namaProduk: String(namaProduk).toUpperCase(),
+imei: String(imei),
+qty: qty,
+value: value,
+statusTembak: statusTembak
+};
+
+if(!products.includes(newSale.namaProduk)) {
+products.push(newSale.namaProduk);
+}
+
+salesData.unshift(newSale);
+importedCount++;
+});
+
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+localStorage.setItem('app_products', JSON.stringify(products));
+
+renderProducts();
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+
+showToast(`Berhasil mengimport ${importedCount} data penjualan!`);
+} catch (error) {
+console.error(error);
+showToast('Gagal memproses file Excel/CSV. Pastikan format benar.', 'warning');
+} finally {
+event.target.value = '';
+}
+};
+reader.readAsArrayBuffer(file);
+}
+
+// --- Get Filtered Data Based on Mode ---
+function getFilteredSalesData() {
+if(currentFilterMode === 'yearly') {
+const year = document.getElementById('filterYear')?.value || new Date().getFullYear();
+return salesData.filter(item => item.tanggal.startsWith(year));
+} else if(currentFilterMode === 'monthly') {
+const monthVal = document.getElementById('filterMonth')?.value;
+if(!monthVal) return salesData;
+return salesData.filter(item => item.tanggal.startsWith(monthVal));
+} else if(currentFilterMode === 'weekly') {
+const dateVal = document.getElementById('filterWeeklyDate')?.value || todayStr;
+const targetDate = new Date(dateVal);
+const day = targetDate.getDay();
+const diffToMonday = targetDate.getDate() - day + (day === 0 ? -6 : 1);
+const monday = new Date(targetDate.setDate(diffToMonday));
+monday.setHours(0,0,0,0);
+
+const sunday = new Date(monday);
+sunday.setDate(monday.getDate() + 6);
+sunday.setHours(23,59,59,999);
+
+return salesData.filter(item => {
+const itemDate = new Date(item.tanggal);
+return itemDate >= monday && itemDate <= sunday;
+});
+}
+return salesData;
+}
+
+// --- Dashboard Calculations & Rendering ---
+function renderDashboard() {
+const filteredData = getFilteredSalesData();
+let totalAchValue = filteredData.reduce((sum, item) => sum + item.value, 0);
+let totalAchQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
+
+let valPct = storeConfig.targetValue > 0 ? ((totalAchValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
+let qtyPct = storeConfig.targetQty > 0 ? ((totalAchQty / storeConfig.targetQty) * 100).toFixed(1) : 0;
+
+// Estimasi Run-rate sederhana
+let estValue = totalAchValue * 1.25;
+let estQty = Math.round(totalAchQty * 1.25);
+let estValPct = storeConfig.targetValue > 0 ? ((estValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
+let estQtyPct = storeConfig.targetQty > 0 ? ((estQty / storeConfig.targetQty) * 100).toFixed(1) : 0;
+
+document.getElementById('dashAchValue').innerText = formatRupiah(totalAchValue);
+document.getElementById('dashTargetValue').innerText = formatRupiah(storeConfig.targetValue);
+document.getElementById('badgeValuePct').innerText = valPct + '%';
+document.getElementById('barValue').style.width = Math.min(valPct, 100) + '%';
+
+document.getElementById('dashAchQty').innerText = totalAchQty;
+document.getElementById('dashTargetQty').innerText = storeConfig.targetQty + ' Unit';
+document.getElementById('badgeQtyPct').innerText = qtyPct + '%';
+document.getElementById('barQty').style.width = Math.min(qtyPct, 100) + '%';
+
+document.getElementById('dashEstValue').innerText = formatRupiah(estValue);
+document.getElementById('badgeEstValuePct').innerText = estValPct + '%';
+document.getElementById('barEstValue').style.width = Math.min(estValPct, 100) + '%';
+
+document.getElementById('dashEstQty').innerText = estQty;
+document.getElementById('badgeEstQtyPct').innerText = estQtyPct + '%';
+document.getElementById('barEstQty').style.width = Math.min(estQtyPct, 100) + '%';
+
+renderSegmentPerformance(filteredData);
+}
+
+function renderSegmentPerformance(filteredData) {
+const grid = document.getElementById('segmentPerformanceGrid');
+grid.innerHTML = '';
+
+segmentsList.forEach(seg => {
+let segSales = filteredData.filter(item => item.segment === seg);
+let segQty = segSales.reduce((sum, item) => sum + item.qty, 0);
+let segTarget = segmentTargets[seg] || 0;
+let pct = segTarget > 0 ? ((segQty / segTarget) * 100).toFixed(0) : 0;
+
+let card = document.createElement('div');
+card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2";
+card.innerHTML = `
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-700">${seg}</span>
+<span class="text-[10px] font-semibold px-2 py-0.5 bg-white border rounded-full text-slate-600">${pct}%</span>
+</div>
+<div class="text-sm font-bold text-slate-900">${segQty} <span class="text-[11px] font-normal text-slate-500">/ Target: ${segTarget}</span></div>
+<div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+<div class="bg-indigo-600 h-full rounded-full" style="width: ${Math.min(pct, 100)}%"></div>
+</div>`;
+grid.appendChild(card);
+});
+}
+
+// --- Segment Targets Modal ---
+function openSegmentModal() {
+const container = document.getElementById('segmentModalInputs');
+container.innerHTML = '';
+segmentsList.forEach(seg => {
+let div = document.createElement('div');
+div.className = "flex flex-col gap-1";
+div.innerHTML = `
+<label class="text-xs font-semibold text-slate-600">Segment ${seg}</label>
+<input type="number" id="seg-target-${seg}" value="${segmentTargets[seg] || 0}" class="px-3 py-2 text-xs border rounded-xl bg-slate-50">`;
+container.appendChild(div);
+});
+document.getElementById('segmentModal').classList.remove('hidden');
+}
+
+function closeSegmentModal() {
+document.getElementById('segmentModal').classList.add('hidden');
+}
+
+function saveSegmentTargets() {
+segmentsList.forEach(seg => {
+let val = parseInt(document.getElementById(`seg-target-${seg}`).value) || 0;
+segmentTargets[seg] = val;
+});
+localStorage.setItem('app_segment_targets', JSON.stringify(segmentTargets));
+closeSegmentModal();
+renderDashboard();
+showToast('Target segment berhasil diperbarui!');
+}
+
+// --- Tracking Produk Table ---
+function renderTrackingTable() {
+const tbody = document.getElementById('trackingTableBody');
+tbody.innerHTML = '';
+let totalUnit = 0;
+
+salesData.forEach(item => {
+totalUnit += item.qty;
+let tr = document.createElement('tr');
+tr.className = "hover:bg-slate-50/80 transition";
+tr.innerHTML = `
+<td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
+<td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
+<td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
+<td class="p-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[11px] font-semibold">${item.segment}</span></td>
+<td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
+<td class="p-3 text-center">
+<button onclick="toggleStatusTembak(${item.id})" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition ${item.statusTembak === 'Sudah' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}">
+${item.statusTembak}
+</button>
+</td>
+<td class="p-3 text-center">
+<button onclick="deleteSale(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+</td>`;
+tbody.appendChild(tr);
+});
+
+document.getElementById('trackingTotalUnit').innerText = totalUnit;
+}
+
+function toggleStatusTembak(id) {
+const idx = salesData.findIndex(s => s.id === id);
+if(idx !== -1) {
+salesData[idx].statusTembak = salesData[idx].statusTembak === 'Sudah' ? 'Belum' : 'Sudah';
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+renderTrackingTable();
+renderMasterTable();
+showToast('Status tembak diperbarui.');
+}
+}
+
+// --- Master Table & Export ---
+function renderMasterTable() {
+const tbody = document.getElementById('masterTableBody');
+tbody.innerHTML = '';
+
+salesData.forEach(item => {
+let tr = document.createElement('tr');
+tr.className = "hover:bg-slate-50/80 transition";
+tr.innerHTML = `
+<td class="p-3 text-slate-600 text-xs">${item.tanggal}</td>
+<td class="p-3 font-semibold text-slate-800 text-xs">${item.namaProduk}</td>
+<td class="p-3 font-mono text-xs text-slate-600">${item.imei}</td>
+<td class="p-3"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[11px] font-semibold">${item.segment}</span></td>
+<td class="p-3 text-center text-xs font-semibold">${item.qty}</td>
+<td class="p-3 text-xs font-semibold text-slate-700">${formatRupiah(item.value)}</td>
+<td class="p-3 text-center">
+<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${item.statusTembak === 'Sudah' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+${item.statusTembak}
+</span>
+</td>
+<td class="p-3 text-center">
+<button onclick="deleteSale(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+</td>`;
+tbody.appendChild(tr);
+});
+}
+
+function deleteSale(id) {
+if(confirm('Hapus data transaksi ini?')) {
+salesData = salesData.filter(item => item.id !== id);
+localStorage.setItem('app_sales', JSON.stringify(salesData));
+renderDashboard();
+renderTrackingTable();
+renderMasterTable();
+generateWAReport();
+showToast('Transaksi berhasil dihapus.');
+}
+}
+
+function exportToCSV() {
+if(salesData.length === 0) {
+showToast('Belum ada data penjualan untuk diexport!', 'warning');
+return;
+}
+
+let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Status Tembak\r\n";
+salesData.forEach(row => {
+csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.statusTembak}"\r\n`;
+});
+
+const encodedUri = encodeURI(csvContent);
+const link = document.createElement("a");
+link.setAttribute("href", encodedUri);
+link.setAttribute("download", `Rekap_Penjualan_${storeConfig.storeName.replace(/\s+/g, '_')}_${todayStr}.csv`);
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+showToast('File CSV berhasil diunduh!');
+}
+
+// --- Issue Form & Table ---
+document.getElementById('issueForm').addEventListener('submit', (e) => {
+e.preventDefault();
+const newIssue = {
+id: Date.now(),
+date: document.getElementById('issueDate').value,
+title: document.getElementById('issueTitle').value,
+desc: document.getElementById('issueDesc').value,
+status: document.getElementById('issueStatus').value
+};
+
+issuesData.unshift(newIssue);
+localStorage.setItem('app_issues', JSON.stringify(issuesData));
+
+document.getElementById('issueTitle').value = '';
+document.getElementById('issueDesc').value = '';
+document.getElementById('issueStatus').value = 'Open';
+
+renderIssuesTable();
+showToast('Kendala berhasil dicatat!');
+});
+
+function renderIssuesTable() {
+const tbody = document.getElementById('issuesTableBody');
+tbody.innerHTML = '';
+document.getElementById('totalIssuesCount').innerText = issuesData.length;
+
+issuesData.forEach(item => {
+let badgeColor = 'bg-amber-100 text-amber-700';
+if(item.status === 'Resolved') badgeColor = 'bg-emerald-100 text-emerald-700';
+if(item.status === 'In Progress') badgeColor = 'bg-blue-100 text-blue-700';
+
+let tr = document.createElement('tr');
+tr.className = "hover:bg-slate-50/80 transition";
+tr.innerHTML = `
+<td class="p-3 text-slate-600 text-xs">${item.date}</td>
+<td class="p-3 font-semibold text-slate-800 text-xs">${item.title}</td>
+<td class="p-3 text-slate-600 text-xs">${item.desc}</td>
+<td class="p-3 text-center"><span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${badgeColor}">${item.status}</span></td>
+<td class="p-3 text-center">
+<button onclick="deleteIssue(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
+</td>`;
+tbody.appendChild(tr);
+});
+}
+
+function deleteIssue(id) {
+if(confirm('Hapus catatan kendala ini?')) {
+issuesData = issuesData.items = issuesData.filter(i => i.id !== id);
+localStorage.setItem('app_issues', JSON.stringify(issuesData));
+renderIssuesTable();
+showToast('Kendala dihapus.');
+}
+}
+
+// --- WhatsApp Report Generator ---
+function generateWAReport() {
+const filteredData = getFilteredSalesData();
+let totalValue = filteredData.reduce((sum, item) => sum + item.value, 0);
+let totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
+
+let valPct = storeConfig.targetValue > 0 ? ((totalValue / storeConfig.targetValue) * 100).toFixed(1) : 0;
+let qtyPct = storeConfig.targetQty > 0 ? ((totalQty / storeConfig.targetQty) * 100).toFixed(1) : 0;
+
+let commitment = document.getElementById('reportCommitment').value;
+let focusProd = document.getElementById('reportFocusProduct').value;
+let actionPlan = document.getElementById('reportActionPlan').value;
+
+let report = `📊 *LAPORAN PENJUALAN HARIAN*
+🏪 *Store:* ${storeConfig.storeName}
+📅 *Tanggal:* ${new Date().toLocaleDateString('id-ID')}
+
+🎯 *PENCAPAIAN PERIODE INI*
+• Value : ${formatRupiah(totalValue)} / ${formatRupiah(storeConfig.targetValue)} (${valPct}%)
+• Qty : ${totalQty} Unit / Target ${storeConfig.targetQty} Unit (${qtyPct}%)
+
+📌 *COMMITMENT & TARGET*
+${commitment}
+
+⭐ *PRODUK FOKUS*
 ${focusProd}
 
-*All Segment Week *
-${segmentLines}
+🚀 *ACTION PLAN*
+${actionPlan}
 
-*Target Samsung Value Daily* : ${formatNumber(Math.round(storeConfig.targetValue / 30))}
-*Target Samsung QTY Daily* : ${Math.round(storeConfig.targetQty / 30)}
-*Pencapaian Samsung Value Daily* : ${formatNumber(totalVal)}
-*Pencapaian Qty Daily* : ${totalQty}
+Terima kasih 🙏`;
 
-Update Qty Daily
-${dailyUpdateLines}
+document.getElementById('waReportOutput').value = report;
+}
 
-Action Plan
-* ${actionPlan}
+function copyWhatsAppReport() {
+const textarea = document.getElementById('waReportOutput');
+textarea.select();
+navigator.clipboard.writeText(textarea.value);
+showToast('Format WhatsApp berhasil disalin ke clipboard!');
+}
 
-( issue today )
-${issueLines}`;
-
-            document.getElementById('waReportOutput').value = reportText;
-        }
-
-        function copyWhatsAppReport() {
-            const textarea = document.getElementById('waReportOutput');
-            textarea.select();
-            document.execCommand('copy');
-            showToast('Teks laporan WhatsApp berhasil disalin ke clipboard!');
-        }
-
-        // --- Issue Management ---
-        document.getElementById('issueForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newIssue = {
-                id: Date.now(),
-                date: document.getElementById('issueDate').value,
-                title: document.getElementById('issueTitle').value,
-                desc: document.getElementById('issueDesc').value,
-                status: document.getElementById('issueStatus').value
-            };
-
-            issuesData.unshift(newIssue);
-            localStorage.setItem('app_issues', JSON.stringify(issuesData));
-
-            document.getElementById('issueTitle').value = '';
-            document.getElementById('issueDesc').value = '';
-            document.getElementById('issueStatus').value = 'Open';
-
-            renderIssuesTable();
-            generateWAReport();
-            showToast('Data issue berhasil dicatat!');
-        });
-
-        function renderIssuesTable() {
-            const tbody = document.getElementById('issuesTableBody');
-            tbody.innerHTML = '';
-            document.getElementById('totalIssuesCount').innerText = issuesData.length;
-
-            if(issuesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 italic">Belum ada kendala atau issue yang dicatat.</td></tr>`;
-                return;
-            }
-
-            issuesData.forEach(iss => {
-                let badgeClass = iss.status === 'Resolved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : (iss.status === 'In Progress' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-amber-50 text-amber-700 border-amber-200');
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b";
-                tr.innerHTML = `
-                    <td class="p-3 text-slate-600 whitespace-nowrap">${iss.date}</td>
-                    <td class="p-3 font-semibold text-slate-800">${iss.title}</td>
-                    <td class="p-3 text-slate-600">${iss.desc}</td>
-                    <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-md text-xs font-semibold border ${badgeClass}">${iss.status}</span></td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteIssue(${iss.id})" class="text-slate-400 hover:text-rose-600 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function deleteIssue(id) {
-            if(confirm('Hapus data issue ini?')) {
-                issuesData = issuesData.filter(i => i.id !== id);
-                localStorage.setItem('app_issues', JSON.stringify(issuesData));
-                renderIssuesTable();
-                generateWAReport();
-                showToast('Issue dihapus.');
-            }
-        }
-
-        // --- Data Master & CSV Export ---
-        function renderMasterTable() {
-            const tbody = document.getElementById('masterTableBody');
-            tbody.innerHTML = '';
-
-            if(salesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400 italic">Belum ada data master transaksi.</td></tr>`;
-                return;
-            }
-
-            salesData.forEach(item => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b";
-                tr.innerHTML = `
-                    <td class="p-3 text-slate-600 whitespace-nowrap">${item.tanggal}</td>
-                    <td class="p-3 font-semibold text-slate-800">${item.namaProduk}</td>
-                    <td class="p-3 font-mono text-xs text-slate-600">${item.imei || '-'}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">${item.segment}</span></td>
-                    <td class="p-3 text-center font-medium">${item.qty}</td>
-                    <td class="p-3 font-medium text-slate-700">${formatRupiah(item.value)}</td>
-                    <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded text-xs font-semibold ${item.statusTembak === 'Sudah' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}">${item.statusTembak}</span></td>
-                    <td class="p-3 text-center">
-                        <button onclick="parserDeleteSale(${item.id})" class="text-slate-400 hover:text-rose-600 p-1.5"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function parserDeleteSale(id) {
-            if(confirm('Hapus transaksi penjualan ini dari master data?')) {
-                salesData = salesData.filter(s => s.id !== id);
-                localStorage.setItem('app_sales', JSON.stringify(salesData));
-                renderMasterTable();
-                renderTrackingTable();
-                renderDashboard();
-                generateWAReport();
-                showToast('Data transaksi berhasil dihapus.');
-            }
-        }
-
-        function exportToCSV() {
-            if(salesData.length === 0) {
-                showToast('Tidak ada data untuk diexport!', 'warning');
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Tanggal,Nama Produk,IMEI,Segment,Qty,Value,Status Tembak\r\n";
-
-            salesData.forEach(row => {
-                let rowData = [
-                    row.tanggal,
-                    `"${row.namaProduk}"`,
-                    `"${row.imei || ''}"`,
-                    row.segment,
-                    row.qty,
-                    row.value,
-                    row.statusTembak
-                ];
-                csvContent += rowData.join(",") + "\r\n";
-            });
-
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Data_Master_Penjualan_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('File CSV berhasil diunduh!');
-        }
-
-        // --- Helpers ---
-        function formatRupiah(num) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
-        }
-
-        function formatNumber(num) {
-            return new Intl.NumberFormat('id-ID').format(num);
-        }
-
-        window.onload = initApp;
-    </script>
+// --- Helper Rupiah ---
+function formatRupiah(number) {
+return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+}
+</script>
 </body>
 </html>
+
