@@ -79,6 +79,9 @@ Buka Kunci Aplikasi
 <button onclick="switchTab('issues')" id="btn-issues" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> Form & Issue
 </button>
+<button onclick="switchTab('promo')" id="btn-promo" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
+<i class="fa-solid fa-tags w-5 text-center"></i> Promo & Katalog
+</button>
 <button onclick="switchTab('master')" id="btn-master" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-database w-5 text-center"></i> Data Master & Export
 </button>
@@ -567,6 +570,46 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 </thead>
 <tbody id="issuesTableBody" class="divide-y divide-slate-100"></tbody>
 </table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB 8: PROMO & KATALOG ================= -->
+<div id="tab-promo" class="tab-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+<div class="border-b pb-4">
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-tags text-blue-600 mr-2"></i> Promo Samsung GTN & Katalog Terbaru</h2>
+<p class="text-xs text-slate-500">Akses cepat ke spreadsheet promo aktif dan katalog produk terbaru.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card Promo -->
+<div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
+<i class="fa-solid fa-file-excel"></i>
+</div>
+<h3 class="text-base font-bold text-slate-900">Promo Samsung GTN</h3>
+<p class="text-xs text-slate-600">Dokumen Google Sheets resmi yang berisi daftar promo, program bundling, dan penawaran spesial toko.</p>
+</div>
+<a href="https://docs.google.com/spreadsheets/d/1FAHy9lfP86Pmv0C7bSvuj8bDe-BZCu0lHZRqsDAPM60/edit?usp=sharing" target="_blank" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm">
+<i class="fa-solid fa-external-link-alt"></i> Buka Spreadsheet Promo
+</a>
+</div>
+
+<!-- Card Katalog -->
+<div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
+<i class="fa-solid fa-book-open"></i>
+</div>
+<h3 class="text-base font-bold text-slate-900">Katalog Terbaru</h3>
+<p class="text-xs text-slate-600">Katalog produk dan spesifikasi terbaru yang dapat diakses langsung melalui web.</p>
+</div>
+<a href="https://samsungcatalog.my.canva.site/" target="_blank" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm">
+<i class="fa-solid fa-external-link-alt"></i> Buka Katalog Canva
+</a>
 </div>
 </div>
 </div>
