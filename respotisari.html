@@ -388,13 +388,13 @@ Buka Kunci Aplikasi
 </div>
 </div>
 
-<!-- ================= TAB 4: TRACKING PRODUK (MCS & SHOPLIVE DENGAN 2 CEKLISAN STATUS) ================= -->
+<!-- ================= TAB 4: TRACKING PRODUK (MCS & SHOPLIVE - DEFAULT BELUM) ================= -->
 <div id="tab-tracking" class="tab-content hidden space-y-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b pb-4">
 <div>
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-bullseye text-emerald-600 mr-2"></i> Tracking Produk (Mcs & Shoplive)</h2>
-<p class="text-xs text-slate-500">Pantau dan centang status pengerjaan/penjualan untuk channel **Mcs** dan **Shoplive** secara real-time.</p>
+<p class="text-xs text-slate-500">Produk baru otomatis berstatus <strong>Belum</strong>. Centang kotak untuk mengubah status menjadi <strong>Sudah</strong>.</p>
 </div>
 <div class="flex items-center gap-2">
 <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100">
@@ -1338,7 +1338,7 @@ renderDashboard();
 renderTrackingTable();
 renderMasterTable();
 generateWAReport();
-showToast('Transaksi penjualan berhasil disimpan!');
+showToast('Transaksi penjualan berhasil disimpan (Status MCS & Shoplive: Belum)!');
 switchTab('dashboard');
 });
 
@@ -1444,7 +1444,7 @@ renderDashboard();
 renderTrackingTable();
 renderMasterTable();
 generateWAReport();
-showToast(`Berhasil mengimport ${importedCount} data penjualan! IMEI terbaca sempurna.`);
+showToast(`Berhasil mengimport ${importedCount} data penjualan! Status baru: Belum.`);
 } catch (error) {
 console.error(error);
 showToast('Gagal memproses file Excel/CSV. Pastikan format benar.', 'warning');
@@ -1620,7 +1620,7 @@ totalUnit += item.qty;
 let tr = document.createElement('tr');
 tr.className = "hover:bg-slate-50/80 transition";
 
-// Status checklist HTML generator (Sudah/Belum)
+// Status checklist HTML generator (Sudah/Belum) - Default Baru = Belem (false)
 let mcsChecked = item.mcsChecked ? 'checked' : '';
 let mcsBadgeClass = item.mcsChecked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200';
 
@@ -1743,9 +1743,11 @@ if(salesData.length === 0) {
 showToast('Belum ada data penjualan untuk diexport!', 'warning');
 return;
 }
-let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Mcs,Shoplive\r\n";
+let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Mcs,Shoplive
+";
 salesData.forEach(row => {
-csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.mcsChecked ? 'Sudah' : 'Belum'}","${row.shopliveChecked ? 'Sudah' : 'Belum'}"\r\n`;
+csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.mcsChecked ? 'Sudah' : 'Belum'}","${row.shopliveChecked ? 'Sudah' : 'Belum'}"
+`;
 });
 const encodedUri = encodeURI(csvContent);
 const link = document.createElement("a");
@@ -1842,7 +1844,8 @@ let prodName = cb.value;
 let tg = document.getElementById(`foc-tg-${prodName}`)?.value || 1;
 let ac = document.getElementById(`foc-ac-${prodName}`)?.value || 0;
 let pct = tg > 0 ? Math.round((ac / tg) * 100) : 0;
-focusText += `${prodName} : ${tg}/${ac}/${pct}%\n`;
+focusText += `${prodName} : ${tg}/${ac}/${pct}%
+`;
 }
 });
 
@@ -1855,7 +1858,8 @@ segmentOrder.forEach(seg => {
 let segLabel = segmentDisplayNames[seg] || seg;
 let segTarget = segmentTargets[seg] || 0;
 let segActual = monthlySalesData.filter(item => item.segment === seg).reduce((sum, item) => sum + item.qty, 0);
-allSegmentText += `${segLabel} : ${segTarget}/${segActual}\n`;
+allSegmentText += `${segLabel} : ${segTarget}/${segActual}
+`;
 });
 
 let samsungValTg = parseFloat(document.getElementById('reportSamsungVal')?.value) || 17931191;
@@ -1870,10 +1874,12 @@ todaySales.forEach(item => {
 prodQtyMap[item.namaProduk] = (prodQtyMap[item.namaProduk] || 0) + item.qty;
 });
 Object.keys(prodQtyMap).forEach(pName => {
-dailyProductSummary += `${pName} / ${prodQtyMap[pName]}\n`;
+dailyProductSummary += `${pName} / ${prodQtyMap[pName]}
+`;
 });
 if(dailyProductSummary === "") {
-dailyProductSummary = "S26 256 / 1\n";
+dailyProductSummary = "S26 256 / 1
+";
 }
 
 let issueText = document.getElementById('reportIssueText')?.value || "WIC SKALA 1";
@@ -1909,7 +1915,7 @@ No Aciev daily buat issuenya
 * ${issueText}
 
 Action Plan
-* ${actionPlanText}`;
+* ${actionPlanTest}`;
 
 const waOutput = document.getElementById('waReportOutput');
 if(waOutput) waOutput.value = report;
