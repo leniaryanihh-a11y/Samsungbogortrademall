@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v3.7</p>
+<p class="text-[10px] text-slate-400">Sales Pro v3.8</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -1568,26 +1568,27 @@ return salesData.filter(item => item.tanggal.startsWith(monthKey));
 return salesData;
 }
 
-// Kalkulasi Time Gone (Hari berjalan / Total hari bulan aktif)
+// Kalkulasi Time Gone yang robust & akurat
 function calculateTimeGone() {
 const now = new Date();
 let year = now.getFullYear();
 let month = now.getMonth() + 1;
 let currentDay = now.getDate();
 
-if(currentFilterMode === 'monthly') {
+if (currentFilterMode === 'monthly') {
 const monthKey = document.getElementById('filterMonthKey')?.value || currentMonthKey;
 const parts = monthKey.split('-');
-if(parts.length === 2) {
+if (parts.length === 2) {
 year = parseInt(parts[0]);
 month = parseInt(parts[1]);
-if(year === now.getFullYear() && month === (now.getMonth() + 1)) {
+if (year === now.getFullYear() && month === (now.getMonth() + 1)) {
 currentDay = now.getDate();
 } else {
+// Jika bukan bulan berjalan (misal melihat bulan lalu), hitung sampai akhir bulan tersebut
 currentDay = new Date(year, month, 0).getDate();
 }
 }
-} else if(currentFilterMode === 'yearly') {
+} else if (currentFilterMode === 'yearly') {
 currentDay = now.getDate();
 }
 
