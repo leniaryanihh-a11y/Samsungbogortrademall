@@ -30,7 +30,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 <div>
 <h2 class="text-sm font-bold text-white tracking-wide truncate max-w-[130px]" id="sidebarStoreName">SEP BOGOR</h2>
-<p class="text-[10px] text-slate-400">Sales Pro v3.6</p>
+<p class="text-[10px] text-slate-400">Sales Pro v3.7</p>
 </div>
 </div>
 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
@@ -137,7 +137,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- KPI Cards + Time Gone Card -->
+<!-- KPI Cards + Time Gone & Gap Card -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-2">
 <div class="flex justify-between items-center">
@@ -187,15 +187,16 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- Kartu Time Gone -->
+<!-- Kartu Time Gone & Gap -->
 <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-5 rounded-2xl shadow-md border border-slate-800 space-y-2 flex flex-col justify-between">
 <div class="flex justify-between items-center">
-<span class="text-xs font-semibold text-indigo-300 uppercase"><i class="fa-solid fa-clock mr-1"></i> Time Gone</span>
+<span class="text-xs font-semibold text-indigo-300 uppercase"><i class="fa-solid fa-clock mr-1"></i> Time Gone & Gap</span>
 <span id="badgeTimeGonePct" class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">0%</span>
 </div>
 <div>
-<div class="text-2xl font-bold" id="dashTimeGoneText">0 / 0 Hari</div>
-<div class="text-[11px] text-slate-400 mt-0.5">Hari Berjalan / Total Hari Bulan Ini</div>
+<div class="text-lg font-bold" id="dashTimeGoneText">0 / 0 Hari</div>
+<div class="text-xs text-indigo-300 font-semibold mt-0.5" id="dashGapValueText">Gap Val: 0%</div>
+<div class="text-xs text-indigo-300 font-semibold" id="dashGapQtyText">Gap Qty: 0%</div>
 </div>
 <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
 <div id="barTimeGone" class="bg-indigo-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -1583,17 +1584,15 @@ month = parseInt(parts[1]);
 if(year === now.getFullYear() && month === (now.getMonth() + 1)) {
 currentDay = now.getDate();
 } else {
-// Jika bulan lalu/depan, anggap full atau 0
 currentDay = new Date(year, month, 0).getDate();
 }
 }
 } else if(currentFilterMode === 'yearly') {
-// Untuk tahunan, time gone bisa dihitung proporsi hari dari awal tahun atau tetap bulan berjalan
 currentDay = now.getDate();
 }
 
 const totalDaysInMonth = new Date(year, month, 0).getDate();
-const timeGonePct = ((currentDay / totalDaysInMonth) * 100).toFixed(1);
+const timeGonePct = parseFloat(((currentDay / totalDaysInMonth) * 100).toFixed(1));
 
 return { currentDay, totalDaysInMonth, timeGonePct };
 }
@@ -1608,8 +1607,8 @@ let { targetVal, targetQty } = getActiveTarget();
 document.getElementById('displayTargetValue').value = formatRupiah(targetVal);
 document.getElementById('displayTargetQty').value = Math.round(targetQty) + ' Unit';
 
-let valPct = targetVal > 0 ? ((totalAchValue / targetVal) * 100).toFixed(1) : 0;
-let qtyPct = targetQty > 0 ? ((totalAchQty / targetQty) * 100).toFixed(1) : 0;
+let valPct = targetVal > 0 ? parseFloat(((totalAchValue / targetVal) * 100).toFixed(1)) : 0;
+let qtyPct = targetQty > 0 ? parseFloat(((totalAchQty / targetQty) * 100).toFixed(1)) : 0;
 
 const now = new Date();
 const currentDay = now.getDate() || 1;
@@ -1624,11 +1623,17 @@ let estQty = Math.round(dailyRunRateQty * totalDaysInMonth);
 let estValPct = targetVal > 0 ? ((estValue / targetVal) * 100).toFixed(1) : 0;
 let estQtyPct = targetQty > 0 ? ((estQty / targetQty) * 100).toFixed(1) : 0;
 
-// Render Time Gone Card
+// Kalkulasi Time Gone & Gap (Actual % - Time Gone %)
 const tgInfo = calculateTimeGone();
-document.getElementById('dashTimeGoneText').innerText = `${tgInfo.currentDay} / ${tgInfo.totalDaysInMonth} Hari`;
+const gapVal = parseFloat((valPct - tgInfo.timeGonePct).toFixed(1));
+const gapQty = parseFloat((qtyPct - tgInfo.timeGonePct).toFixed(1));
+
+document.getElementById('dashTimeGoneText').innerText = `${tgInfo.currentDay} / ${tgInfo.totalDaysInMonth} Hari (${tgInfo.timeGonePct}%)`;
 document.getElementById('badgeTimeGonePct').innerText = tgInfo.timeGonePct + '%';
 document.getElementById('barTimeGone').style.width = Math.min(tgInfo.timeGonePct, 100) + '%';
+
+document.getElementById('dashGapValueText').innerText = `Gap Val: ${gapVal >= 0 ? '+' + gapVal : gapVal}%`;
+document.getElementById('dashGapQtyText').innerText = `Gap Qty: ${gapQty >= 0 ? '+' + gapQty : gapQty}%`;
 
 document.getElementById('dashAchValue').innerText = formatRupiah(totalAchValue);
 document.getElementById('dashTargetValue').innerText = formatRupiah(targetVal);
@@ -1938,19 +1943,21 @@ let totalValue = filteredData.reduce((sum, item) => sum + item.value, 0);
 let totalQty = filteredData.reduce((sum, item) => sum + item.qty, 0);
 let { targetVal, targetQty } = getActiveTarget();
 
-let valPct = targetVal > 0 ? Math.round((totalValue / targetVal) * 100) : 0;
-let qtyPct = targetQty > 0 ? Math.round((totalQty / targetQty) * 100) : 0;
-
-let diffValuePct = valPct - 100;
-let diffQtyPct = qtyPct - 100;
-let tgDiffStr = `(${diffValuePct >= 0 ? '+' + diffValuePct : diffValuePct}%/${diffQtyPct >= 0 ? '+' + diffQtyPct : diffQtyPct}%)`;
+let valPct = targetVal > 0 ? parseFloat(((totalValue / targetVal) * 100).toFixed(1)) : 0;
+let qtyPct = targetQty > 0 ? parseFloat(((totalQty / targetQty) * 100).toFixed(1)) : 0;
 
 const todayObj = new Date();
 const formattedDateWA = String(todayObj.getDate()).padStart(2, '0') + '/' + String(todayObj.getMonth() + 1).padStart(2, '0') + '/' + todayObj.getFullYear();
 
-// Kalkulasi Time Gone untuk laporan WA
+// Kalkulasi Time Gone & Gap (Actual % - Time Gone %)
 const tgInfo = calculateTimeGone();
+const gapVal = parseFloat((valPct - tgInfo.timeGonePct).toFixed(1));
+const gapQty = parseFloat((qtyPct - tgInfo.timeGonePct).toFixed(1));
+
 const timeGoneLine = `*Time Gone* : ${tgInfo.currentDay}/${tgInfo.totalDaysInMonth} (${tgInfo.timeGonePct}%)`;
+const gapValStr = `${gapVal >= 0 ? '+' + gapVal : gapVal}%`;
+const gapQtyStr = `${gapQty >= 0 ? '+' + gapQty : gapQty}%`;
+const tgDiffStr = `(${gapValStr}/${gapQtyStr})`;
 
 const currentDay = todayObj.getDate() || 1;
 const totalDaysInMonth = new Date(todayObj.getFullYear(), todayObj.getMonth() + 1, 0).getDate();
