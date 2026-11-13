@@ -18,28 +18,6 @@ body { font-family: 'Inter', sans-serif; }
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex overflow-x-hidden">
 
-<!-- LOCK SCREEN MODAL -->
-<div id="lockScreen" class="fixed inset-0 bg-slate-950 z-[9999] flex items-center justify-center p-4">
-<div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-6 text-center border border-slate-100">
-<div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto text-white text-2xl shadow-lg shadow-blue-500/30">
-<i class="fa-solid fa-lock"></i>
-</div>
-<div class="space-y-1">
-<h2 class="text-xl font-bold text-slate-900 tracking-tight">Aplikasi Dikunci</h2>
-<p class="text-xs text-slate-500">Masukkan Sandi Akses untuk membuka aplikasi.</p>
-</div>
-<form onsubmit="handleUnlock(event)" class="space-y-4">
-<div>
-<input type="password" id="sandiInput" placeholder="Masukkan Sandi..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-center text-sm font-semibold tracking-widest bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-</div>
-<button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-md shadow-blue-600/30 cursor-pointer">
-Buka Kunci Aplikasi
-</button>
-<p id="lockError" class="text-xs text-rose-500 font-semibold hidden">Sandi salah! Silakan coba lagi.</p>
-</form>
-</div>
-</div>
-
 <!-- Mobile Sidebar Backdrop -->
 <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
 
@@ -781,34 +759,7 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 
 <!-- JavaScript Application Logic -->
 <script>
-// --- LOCK SCREEN LOGIC ---
-const CORRECT_PASSWORD = "C070041351";
-
-function handleUnlock(e) {
-e.preventDefault();
-const inputVal = document.getElementById('sandiInput').value.trim();
-const errorEl = document.getElementById('lockError');
-
-if(inputVal === CORRECT_PASSWORD) {
-document.getElementById('lockScreen').classList.add('hidden');
-sessionStorage.setItem('is_unlocked', 'true');
-showToast('Aplikasi berhasil dibuka!');
-} else {
-errorEl.classList.remove('hidden');
-document.getElementById('sandiInput').value = '';
-document.getElementById('sandiInput').focus();
-}
-}
-
 window.addEventListener('DOMContentLoaded', () => {
-if(sessionStorage.getItem('is_unlocked') === 'true') {
-document.getElementById('lockScreen').classList.add('hidden');
-} else {
-setTimeout(() => {
-const input = document.getElementById('sandiInput');
-if(input) input.focus();
-}, 100);
-}
 initApp();
 });
 
