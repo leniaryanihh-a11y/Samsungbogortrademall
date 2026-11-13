@@ -582,10 +582,10 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
 <div class="border-b pb-4">
 <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-tags text-blue-600 mr-2"></i> Promo Samsung GTN & Katalog Terbaru</h2>
-<p class="text-xs text-slate-500">Akses cepat ke spreadsheet promo aktif dan katalog produk terbaru.</p>
+<p class="text-xs text-slate-500">Akses cepat ke spreadsheet promo aktif, media WhatsApp, dan katalog produk terbaru.</p>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 <!-- Card Promo -->
 <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200 flex flex-col justify-between space-y-4">
 <div class="space-y-2">
@@ -600,16 +600,30 @@ Total Unit (Filter): <strong id="trackingTotalUnit">0</strong>
 </a>
 </div>
 
-<!-- Card Katalog -->
+<!-- Card Media WhatsApp -->
 <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 flex flex-col justify-between space-y-4">
 <div class="space-y-2">
 <div class="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
+<i class="fa-brands fa-whatsapp"></i>
+</div>
+<h3 class="text-base font-bold text-slate-900">Media Promo WhatsApp</h3>
+<p class="text-xs text-slate-600">Akses file/media promosi WhatsApp Business untuk dibagikan ke pelanggan.</p>
+</div>
+<a href="content://com.whatsapp.w4b.provider.media/item/5d26854e-14de-414c-a89d-3b5e3f56a922" target="_blank" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm">
+<i class="fa-solid fa-external-link-alt"></i> Buka Media WhatsApp
+</a>
+</div>
+
+<!-- Card Katalog -->
+<div class="bg-gradient-to-br from-teal-50 to-cyan-50 p-6 rounded-2xl border border-teal-200 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md">
 <i class="fa-solid fa-book-open"></i>
 </div>
 <h3 class="text-base font-bold text-slate-900">Katalog Terbaru</h3>
 <p class="text-xs text-slate-600">Katalog produk dan spesifikasi terbaru yang dapat diakses langsung melalui web.</p>
 </div>
-<a href="https://samsungcatalog.my.canva.site/" target="_blank" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm">
+<a href="https://samsungcatalog.my.canva.site/" target="_blank" class="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm">
 <i class="fa-solid fa-external-link-alt"></i> Buka Katalog Canva
 </a>
 </div>
@@ -1743,11 +1757,9 @@ if(salesData.length === 0) {
 showToast('Belum ada data penjualan untuk diexport!', 'warning');
 return;
 }
-let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Mcs,Shoplive
-";
+let csvContent = "data:text/csv;charset=utf-8,Tanggal,Nama Produk,IMEI/SN,Segment,Qty,Value,Mcs,Shoplive\n";
 salesData.forEach(row => {
-csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.mcsChecked ? 'Sudah' : 'Belum'}","${row.shopliveChecked ? 'Sudah' : 'Belum'}"
-`;
+csvContent += `"${row.tanggal}","${row.namaProduk}","${row.imei}","${row.segment}",${row.qty},${row.value},"${row.mcsChecked ? 'Sudah' : 'Belum'}","${row.shopliveChecked ? 'Sudah' : 'Belum'}"\n`;
 });
 const encodedUri = encodeURI(csvContent);
 const link = document.createElement("a");
@@ -1844,8 +1856,7 @@ let prodName = cb.value;
 let tg = document.getElementById(`foc-tg-${prodName}`)?.value || 1;
 let ac = document.getElementById(`foc-ac-${prodName}`)?.value || 0;
 let pct = tg > 0 ? Math.round((ac / tg) * 100) : 0;
-focusText += `${prodName} : ${tg}/${ac}/${pct}%
-`;
+focusText += `${prodName} : ${tg}/${ac}/${pct}%\n`;
 }
 });
 
@@ -1858,8 +1869,7 @@ segmentOrder.forEach(seg => {
 let segLabel = segmentDisplayNames[seg] || seg;
 let segTarget = segmentTargets[seg] || 0;
 let segActual = monthlySalesData.filter(item => item.segment === seg).reduce((sum, item) => sum + item.qty, 0);
-allSegmentText += `${segLabel} : ${segTarget}/${segActual}
-`;
+allSegmentText += `${segLabel} : ${segTarget}/${segActual}\n`;
 });
 
 let samsungValTg = parseFloat(document.getElementById('reportSamsungVal')?.value) || 17931191;
@@ -1874,12 +1884,10 @@ todaySales.forEach(item => {
 prodQtyMap[item.namaProduk] = (prodQtyMap[item.namaProduk] || 0) + item.qty;
 });
 Object.keys(prodQtyMap).forEach(pName => {
-dailyProductSummary += `${pName} / ${prodQtyMap[pName]}
-`;
+dailyProductSummary += `${pName} / ${prodQtyMap[pName]}\n`;
 });
 if(dailyProductSummary === "") {
-dailyProductSummary = "S26 256 / 1
-";
+dailyProductSummary = "S26 256 / 1\n";
 }
 
 let issueText = document.getElementById('reportIssueText')?.value || "WIC SKALA 1";
@@ -1915,7 +1923,7 @@ No Aciev daily buat issuenya
 * ${issueText}
 
 Action Plan
-* ${actionPlanTest}`;
+* ${actionPlanText}`;
 
 const waOutput = document.getElementById('waReportOutput');
 if(waOutput) waOutput.value = report;
