@@ -45,7 +45,6 @@ body { font-family: 'Inter', sans-serif; }
 <button onclick="switchTab('vas')" id="btn-vas" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-handshake-angle w-5 text-center"></i> Dashboard VAS
 </button>
-<!-- MENU INSENTIF BARU -->
 <button onclick="switchTab('incentive')" id="btn-incentive" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-wallet w-5 text-center"></i> Menu Insentif
 </button>
@@ -294,7 +293,7 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- ================= TAB: MENU INSENTIF (BARU) ================= -->
+<!-- ================= TAB: MENU INSENTIF ================= -->
 <div id="tab-incentive" class="tab-content hidden space-y-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
 <div class="border-b pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -416,7 +415,18 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Daftar Produk Aktif</label>
-<div id="productListContainer" class="max-h-72 overflow-y-auto space-y-1.5 pr-1"></div>
+<div id="productListContainer" class="max-h-60 overflow-y-auto space-y-1.5 pr-1 mb-4"></div>
+
+<!-- Tombol Backup & Restore Produk Aman -->
+<div class="grid grid-cols-2 gap-2 pt-3 border-t">
+<button onclick="exportProductsJSON()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+<i class="fa-solid fa-download"></i> Backup Produk
+</button>
+<input type="file" id="importProductsInput" accept=".json" class="hidden" onchange="importProductsJSON(event)">
+<button onclick="document.getElementById('importProductsInput').click()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5">
+<i class="fa-solid fa-upload"></i> Restore Produk
+</button>
+</div>
 </div>
 <div class="mt-4 pt-3 border-t text-center text-xs text-slate-400">Tersimpan otomatis di browser.</div>
 </div>
@@ -1296,6 +1306,48 @@ localStorage.setItem('app_products', JSON.stringify(products));
 renderProducts();
 showToast('Produk berhasil dihapus.');
 }
+}
+
+// Fungsi Backup Produk JSON
+function exportProductsJSON() {
+    if (products.length === 0) {
+        showToast('Tidak ada data produk untuk di-backup!', 'warning');
+        return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `Backup_Manajemen_Produk_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast('File backup produk berhasil diunduh!');
+}
+
+// Fungsi Restore Produk JSON
+function importProductsJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedProducts = JSON.parse(e.target.result);
+            if (Array.isArray(importedProducts)) {
+                products = importedProducts;
+                localStorage.setItem('app_products', JSON.stringify(products));
+                renderProducts();
+                showToast('Manajemen produk berhasil dipulihkan (restore)!');
+            } else {
+                showToast('Format file backup tidak valid!', 'warning');
+            }
+        } catch (error) {
+            showToast('Gagal membaca file backup.', 'warning');
+        } finally {
+            event.target.value = '';
+        }
+    };
+    reader.readAsText(file);
 }
 
 function renderFocusProductCheckboxes() {
