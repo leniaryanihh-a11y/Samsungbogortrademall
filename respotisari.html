@@ -45,6 +45,10 @@ body { font-family: 'Inter', sans-serif; }
 <button onclick="switchTab('vas')" id="btn-vas" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-handshake-angle w-5 text-center"></i> Dashboard VAS
 </button>
+<!-- MENU INSENTIF BARU -->
+<button onclick="switchTab('incentive')" id="btn-incentive" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
+<i class="fa-solid fa-wallet w-5 text-center"></i> Menu Insentif
+</button>
 <button onclick="switchTab('input')" id="btn-input" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer">
 <i class="fa-solid fa-cart-plus w-5 text-center"></i> Input Transaksi
 </button>
@@ -286,6 +290,58 @@ body { font-family: 'Inter', sans-serif; }
 <tbody id="vasTableBody" class="divide-y divide-slate-100"></tbody>
 </table>
 </div>
+</div>
+</div>
+</div>
+
+<!-- ================= TAB: MENU INSENTIF (BARU) ================= -->
+<div id="tab-incentive" class="tab-content hidden space-y-6">
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+<div class="border-b pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-wallet text-blue-600 mr-2"></i> Estimasi & Kalkulasi Insentif</h2>
+<p class="text-xs text-slate-500">Pusat informasi dan estimasi perhitungan insentif penjualan toko dan promotor.</p>
+</div>
+<a href="https://leniaryanihh-a11y.github.io/INSENTIF/Estimate_Incentive_2026-11-11_VIEWER.html" target="_blank" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm cursor-pointer">
+<i class="fa-solid fa-external-link-alt"></i> Buka Viewer Insentif Lengkap
+</a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200 space-y-3">
+<div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-calculator"></i>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Estimasi Insentif Bulanan</h3>
+<p class="text-xs text-slate-600">Perhitungan proyeksi bonus berdasarkan pencapaian target value dan kuantitas unit produk yang terjual.</p>
+</div>
+
+<div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 space-y-3">
+<div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-file-invoice-dollar"></i>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Rekap Insentif VAS</h3>
+<p class="text-xs text-slate-600">Komisi tambahan dari pencapaian layanan Trade-In, Asuransi, serta program pembiayaan/finance.</p>
+</div>
+
+<div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-200 space-y-3">
+<div class="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-award"></i>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Insentif Produk Fokus</h3>
+<p class="text-xs text-slate-600">Bonus khusus untuk penjualan lini produk prioritas (Flagship, Fold/Flip, dan produk fokus mingguan lainnya).</p>
+</div>
+</div>
+
+<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="space-y-1 text-center sm:text-left">
+<h4 class="text-sm font-bold text-slate-800">Akses Viewer Eksternal Insentif</h4>
+<p class="text-xs text-slate-500">Anda dapat melihat tabel dan rincian lengkap estimasi insentif melalui tautan web viewer khusus di tab baru.</p>
+</div>
+<a href="https://leniaryanihh-a11y.github.io/INSENTIF/Estimate_Incentive_2026-11-11_VIEWER.html" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 px-5 rounded-xl text-xs transition shadow-sm inline-flex items-center gap-2 cursor-pointer">
+<span>Kunjungi Halaman Viewer</span>
+<i class="fa-solid fa-arrow-right text-[10px]"></i>
+</a>
 </div>
 </div>
 </div>
@@ -796,7 +852,6 @@ let currentFilterMode = 'monthly';
 let currentVasFilterMode = 'monthly';
 
 const todayStr = new Date().toISOString().split('T')[0];
-// Menghitung tanggal kemarin secara dinamis
 const dYesterday = new Date();
 dYesterday.setDate(dYesterday.getDate() - 1);
 const yesterdayStr = dYesterday.toISOString().split('T')[0];
@@ -915,7 +970,6 @@ ${monthOptions}
 }
 }
 
-// --- Dashboard VAS Filter Controls ---
 function setVasFilterMode(mode) {
 currentVasFilterMode = mode;
 ['yearly', 'monthly'].forEach(m => {
@@ -1047,7 +1101,6 @@ renderVasDashboard();
 showToast('Target VAS berhasil diperbarui!');
 }
 
-// Input form VAS
 document.getElementById('vasForm').addEventListener('submit', (e) => {
 e.preventDefault();
 const newVas = {
@@ -1270,7 +1323,6 @@ container.appendChild(div);
 document.getElementById('salesForm').addEventListener('submit', (e) => {
 e.preventDefault();
 const saleDate = document.getElementById('tanggal').value;
-// Jika transaksi baru untuk hari ini atau kemarin, status otomatis Belum (false). Jika sebelum kemarin, otomatis Sudah (true).
 const isTodayOrYesterday = (saleDate === todayStr || saleDate === yesterdayStr);
 
 const newSale = {
@@ -1313,7 +1365,6 @@ showToast('Status tracking diperbarui!');
 }
 }
 
-// --- ROBUST EXCEL IMPORT (GUARANTEED IMEI/SN READING) ---
 function handleExcelImport(event) {
 const file = event.target.files[0];
 if (!file) return;
@@ -1376,7 +1427,6 @@ formattedDate = excelDate.toISOString().split('T')[0];
 formattedDate = tanggalRaw.trim();
 }
 
-// Sesuai permintaan: Hari ini & kemarin berstatus Belum (false), selain itu Sudah (true)
 const isTodayOrYesterday = (formattedDate === todayStr || formattedDate === yesterdayStr);
 
 const newSale = {
@@ -1581,7 +1631,6 @@ filteredList.forEach(item => {
 let id = item.id;
 totalUnit += item.qty;
 
-// Logika otomatis: Jika tanggal transaksi adalah hari ini atau kemarin, default Belum (false). Selain itu otomatis Sudah (true) kecuali pernah diubah manual.
 const isTodayOrYesterday = (item.tanggal === todayStr || item.tanggal === yesterdayStr);
 if (item.mcsChecked === undefined) item.mcsChecked = !isTodayOrYesterday;
 if (item.shopliveChecked === undefined) item.shopliveChecked = !isTodayOrYesterday;
