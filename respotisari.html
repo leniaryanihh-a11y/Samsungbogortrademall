@@ -309,153 +309,54 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </div>
 
-<!-- ================= TAB: MENU INSENTIF (DIPERBARUI) ================= -->
+<!-- ================= TAB: MENU INSENTIF ================= -->
 <div id="tab-incentive" class="tab-content hidden space-y-6">
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-<div class="border-b pb-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+<div class="border-b pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 <div>
-<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-wallet text-blue-600 mr-2"></i> Kalkulator & Rekap Estimasi Insentif</h2>
-<p class="text-xs text-slate-500">Perhitungan otomatis dari data penjualan aktif, pencapaian VAS, dan parameter insentif toko.</p>
+<h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-wallet text-blue-600 mr-2"></i> Estimasi & Kalkulasi Insentif</h2>
+<p class="text-xs text-slate-500">Pusat informasi dan estimasi perhitungan insentif penjualan toko dan promotor.</p>
 </div>
-<div class="flex flex-wrap items-center gap-2">
-<select id="incentiveMonthFilter" onchange="renderIncentiveMenu()" class="px-3 py-2 text-xs border border-slate-200 rounded-xl bg-slate-50 font-semibold text-slate-700"></select>
-<button onclick="resetIncentiveParams()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-3.5 rounded-xl text-xs transition cursor-pointer">
-<i class="fa-solid fa-rotate-left mr-1"></i> Reset Parameter
-</button>
-<a href="https://leniaryanihh-a11y.github.io/INSENTIF/Estimate_Incentive_2026-11-11_VIEWER.html" target="_blank" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-xs transition shadow-sm cursor-pointer">
-<i class="fa-solid fa-external-link-alt"></i> Viewer Insentif Lengkap
+<a href="https://whatsapp.provider.media/item/eb13bec1-127a-4c32-8b8c-7b3f4609827f" target="_blank" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm cursor-pointer">
+<i class="fa-solid fa-external-link-alt"></i> Buka Viewer Insentif Lengkap
 </a>
 </div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200 space-y-3">
+<div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-calculator"></i>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Estimasi Insentif Bulanan</h3>
+<p class="text-xs text-slate-600">Perhitungan proyeksi bonus berdasarkan pencapaian target value dan kuantitas unit produk yang terjual.</p>
 </div>
 
-<!-- Ringkasan KPI Insentif -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-<div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 rounded-2xl shadow-sm space-y-1.5">
-<div class="flex justify-between items-center text-xs font-semibold text-blue-100 uppercase">
-<span>Total Estimasi Insentif</span>
-<i class="fa-solid fa-coins"></i>
+<div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 space-y-3">
+<div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-file-invoice-dollar"></i>
 </div>
-<div class="text-2xl font-bold" id="incTotalEstimate">Rp 0</div>
-<div class="text-[11px] text-blue-100" id="incGradeBadge">Grade Pencapaian: -</div>
+<h3 class="text-sm font-bold text-slate-900">Rekap Insentif VAS</h3>
+<p class="text-xs text-slate-600">Komisi tambahan dari pencapaian layanan Trade-In, Asuransi, serta program pembiayaan/finance.</p>
 </div>
 
-<div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-1.5">
-<div class="flex justify-between items-center text-xs font-semibold text-slate-500 uppercase">
-<span>Insentif Base / Penjualan</span>
-<span id="incBasePctBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600">0%</span>
+<div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-200 space-y-3">
+<div class="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white text-base shadow-md">
+<i class="fa-solid fa-award"></i>
 </div>
-<div class="text-xl font-bold text-slate-800" id="incBaseAmount">Rp 0</div>
-<div class="text-[11px] text-slate-400" id="incBaseDetail">0 Unit | Rp 0</div>
-</div>
-
-<div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-1.5">
-<div class="flex justify-between items-center text-xs font-semibold text-slate-500 uppercase">
-<span>Insentif VAS</span>
-<span id="incVasUnitBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600">0 Unit</span>
-</div>
-<div class="text-xl font-bold text-slate-800" id="incVasAmount">Rp 0</div>
-<div class="text-[11px] text-slate-400" id="incVasDetail">Trade-In + Asuransi + Finance</div>
-</div>
-
-<div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-1.5">
-<div class="flex justify-between items-center text-xs font-semibold text-slate-500 uppercase">
-<span>Bonus Produk Fokus</span>
-<span id="incFocusUnitBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600">0 Unit</span>
-</div>
-<div class="text-xl font-bold text-slate-800" id="incFocusAmount">Rp 0</div>
-<div class="text-[11px] text-slate-400" id="incFocusDetail">Segment Z, S & Fokus</div>
+<h3 class="text-sm font-bold text-slate-900">Insentif Produk Fokus</h3>
+<p class="text-xs text-slate-600">Bonus khusus untuk penjualan lini produk prioritas (Flagship, Fold/Flip, dan produk fokus mingguan lainnya).</p>
 </div>
 </div>
 
-<!-- Grid Parameter Perhitungan & Rincian -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<!-- Panel Pengaturan Tarif -->
-<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
-<h3 class="text-sm font-bold text-slate-800 border-b pb-2.5"><i class="fa-solid fa-sliders text-indigo-600 mr-2"></i> Parameter Tarif Insentif</h3>
-
-<div class="space-y-3 text-xs">
-<div>
-<label class="block font-semibold text-slate-600 mb-1">Base Insentif per Unit Terjual (Rp)</label>
-<input type="number" id="incRatePerUnit" value="50000" min="0" step="5000" oninput="saveIncentiveParams()" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-bold text-slate-800">
+<div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="space-y-1 text-center sm:text-left">
+<h4 class="text-sm font-bold text-slate-800">Akses Viewer Eksternal Insentif</h4>
+<p class="text-xs text-slate-500">Anda dapat melihat tabel dan rincian lengkap estimasi insentif melalui tautan web viewer khusus di tab baru.</p>
 </div>
-
-<div class="grid grid-cols-2 gap-2">
-<div>
-<label class="block font-semibold text-slate-600 mb-1">Multiplier Ach >= 100%</label>
-<input type="number" id="incMult100" value="1.25" min="0" step="0.05" oninput="saveIncentiveParams()" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-bold text-emerald-700">
-</div>
-<div>
-<label class="block font-semibold text-slate-600 mb-1">Multiplier Ach 80-99%</label>
-<input type="number" id="incMult80" value="1.0" min="0" step="0.05" oninput="saveIncentiveParams()" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-bold text-blue-700">
-</div>
-</div>
-
-<div class="pt-2 border-t border-slate-200 space-y-2">
-<span class="block font-bold text-slate-700 uppercase text-[10px]">Tarif Insentif VAS per Unit (Rp)</span>
-<div class="grid grid-cols-3 gap-2">
-<div>
-<label class="block text-[10px] text-slate-500 mb-0.5">Trade-In</label>
-<input type="number" id="incVasTradeIn" value="35000" min="0" step="5000" oninput="saveIncentiveParams()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold">
-</div>
-<div>
-<label class="block text-[10px] text-slate-500 mb-0.5">Asuransi</label>
-<input type="number" id="incVasInsurance" value="25000" min="0" step="5000" oninput="saveIncentiveParams()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold">
-</div>
-<div>
-<label class="block text-[10px] text-slate-500 mb-0.5">Finance</label>
-<input type="number" id="incVasFinance" value="20000" min="0" step="5000" oninput="saveIncentiveParams()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold">
-</div>
-</div>
-</div>
-
-<div class="pt-2 border-t border-slate-200 space-y-2">
-<span class="block font-bold text-slate-700 uppercase text-[10px]">Bonus Produk Fokus / Segment (Rp/Unit)</span>
-<div class="grid grid-cols-2 gap-2">
-<div>
-<label class="block text-[10px] text-slate-500 mb-0.5">Segment Z / S</label>
-<input type="number" id="incBonusFlagship" value="100000" min="0" step="10000" oninput="saveIncentiveParams()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold">
-</div>
-<div>
-<label class="block text-[10px] text-slate-500 mb-0.5">Produk Fokus Weekly</label>
-<input type="number" id="incBonusFocus" value="50000" min="0" step="10000" oninput="saveIncentiveParams()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white font-semibold">
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Rincian Perhitungan per Komponen -->
-<div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
-<div class="flex justify-between items-center border-b pb-2.5">
-<h3 class="text-sm font-bold text-slate-800"><i class="fa-solid fa-table-list text-blue-600 mr-2"></i> Rincian Komponen Estimasi Insentif</h3>
-<span class="text-[11px] text-slate-400">Otomatis sinkron dengan periode dipilih</span>
-</div>
-
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse text-xs">
-<thead>
-<tr class="bg-slate-50 text-slate-600 border-b">
-<th class="p-3 font-semibold rounded-l-xl">Komponen Insentif</th>
-<th class="p-3 font-semibold text-center">Qty / Ach</th>
-<th class="p-3 font-semibold">Tarif / Multiplier</th>
-<th class="p-3 font-semibold text-right rounded-r-xl">Estimasi (Rp)</th>
-</tr>
-</thead>
-<tbody id="incentiveBreakdownBody" class="divide-y divide-slate-100"></tbody>
-</table>
-</div>
-
-<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-<div class="space-y-0.5 text-center sm:text-left">
-<h4 class="text-xs font-bold text-slate-800">Butuh Rincian Posisi & Skema Resmi?</h4>
-<p class="text-[11px] text-slate-500">Buka viewer eksternal untuk melihat tabel skema insentif lengkap per posisi.</p>
-</div>
-<a href="https://leniaryanihh-a11y.github.io/INSENTIF/Estimate_Incentive_2026-11-11_VIEWER.html" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-xl text-xs transition shadow-sm inline-flex items-center gap-2 cursor-pointer">
-<span>Buka Viewer Insentif</span>
+<a href="https://whatsapp.provider.media/item/eb13bec1-127a-4c32-8b8c-7b3f4609827f" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 px-5 rounded-xl text-xs transition shadow-sm inline-flex items-center gap-2 cursor-pointer">
+<span>Kunjungi Halaman Viewer</span>
 <i class="fa-solid fa-arrow-right text-[10px]"></i>
 </a>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -959,19 +860,6 @@ let vasTargets = JSON.parse(localStorage.getItem('app_vas_targets')) || {
 "Finance": 40
 };
 
-const DEFAULT_INCENTIVE_PARAMS = {
-ratePerUnit: 50000,
-mult100: 1.25,
-mult80: 1.0,
-vasTradeIn: 35000,
-vasInsurance: 25000,
-vasFinance: 20000,
-bonusFlagship: 100000,
-bonusFocus: 50000
-};
-
-let incentiveParams = JSON.parse(localStorage.getItem('app_incentive_params')) || { ...DEFAULT_INCENTIVE_PARAMS };
-
 const segmentDisplayNames = {
 "S": "S Series",
 "Z": "Z Series",
@@ -1007,7 +895,6 @@ document.getElementById('sidebarStoreName').innerText = storeConfig.storeName.sp
 renderProducts();
 setFilterMode('monthly');
 setVasFilterMode('monthly');
-initIncentiveMenu();
 renderTrackingTable();
 renderMasterTable();
 renderIssuesTable();
@@ -1035,11 +922,6 @@ const activeBtn = document.getElementById('btn-' + tabId);
 activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
 activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
 
-if (tabId === 'incentive') {
-initIncentiveMonthSelect();
-renderIncentiveMenu();
-}
-
 if (window.innerWidth < 768) {
 toggleSidebar();
 }
@@ -1057,169 +939,6 @@ toast.classList.remove('translate-y-20', 'opacity-0');
 setTimeout(() => {
 toast.classList.add('translate-y-20', 'opacity-0');
 }, 3000);
-}
-
-// --- Fungsi Menu Insentif ---
-function initIncentiveMonthSelect() {
-const sel = document.getElementById('incentiveMonthFilter');
-if (!sel) return;
-const prevVal = sel.value || currentMonthKey;
-const keys = new Set([currentMonthKey, ...Object.keys(monthlyTargets)]);
-salesData.forEach(s => { if (s.tanggal) keys.add(s.tanggal.slice(0, 7)); });
-vasData.forEach(v => { if (v.tanggal) keys.add(v.tanggal.slice(0, 7)); });
-
-const sorted = Array.from(keys).sort().reverse();
-sel.innerHTML = sorted.map(k => {
-const [y, m] = k.split('-');
-const label = new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-return `<option value="${k}" ${k === prevVal ? 'selected' : ''}>${label}</option>`;
-}).join('');
-}
-
-function loadIncentiveInputs() {
-document.getElementById('incRatePerUnit').value = incentiveParams.ratePerUnit;
-document.getElementById('incMult100').value = incentiveParams.mult100;
-document.getElementById('incMult80').value = incentiveParams.mult80;
-document.getElementById('incVasTradeIn').value = incentiveParams.vasTradeIn;
-document.getElementById('incVasInsurance').value = incentiveParams.vasInsurance;
-document.getElementById('incVasFinance').value = incentiveParams.vasFinance;
-document.getElementById('incBonusFlagship').value = incentiveParams.bonusFlagship;
-document.getElementById('incBonusFocus').value = incentiveParams.bonusFocus;
-}
-
-function saveIncentiveParams() {
-incentiveParams = {
-ratePerUnit: parseFloat(document.getElementById('incRatePerUnit').value) || 0,
-mult100: parseFloat(document.getElementById('incMult100').value) || 1,
-mult80: parseFloat(document.getElementById('incMult80').value) || 1,
-vasTradeIn: parseFloat(document.getElementById('incVasTradeIn').value) || 0,
-vasInsurance: parseFloat(document.getElementById('incVasInsurance').value) || 0,
-vasFinance: parseFloat(document.getElementById('incVasFinance').value) || 0,
-bonusFlagship: parseFloat(document.getElementById('incBonusFlagship').value) || 0,
-bonusFocus: parseFloat(document.getElementById('incBonusFocus').value) || 0
-};
-localStorage.setItem('app_incentive_params', JSON.stringify(incentiveParams));
-renderIncentiveMenu();
-}
-
-function resetIncentiveParams() {
-incentiveParams = { ...DEFAULT_INCENTIVE_PARAMS };
-localStorage.setItem('app_incentive_params', JSON.stringify(incentiveParams));
-loadIncentiveInputs();
-renderIncentiveMenu();
-showToast('Parameter tarif insentif direset ke default.');
-}
-
-function initIncentiveMenu() {
-loadIncentiveInputs();
-initIncentiveMonthSelect();
-renderIncentiveMenu();
-}
-
-function renderIncentiveMenu() {
-const sel = document.getElementById('incentiveMonthFilter');
-const monthKey = sel?.value || currentMonthKey;
-
-const monthSales = salesData.filter(s => s.tanggal && s.tanggal.startsWith(monthKey));
-const monthVas = vasData.filter(v => v.tanggal && v.tanggal.startsWith(monthKey));
-
-const totalQty = monthSales.reduce((sum, s) => sum + (Number(s.qty) || 0), 0);
-const totalVal = monthSales.reduce((sum, s) => sum + (Number(s.value) || 0), 0);
-const targetCfg = monthlyTargets[monthKey] || { targetValue: 891647942, targetQty: 147 };
-const qtyAchPct = targetCfg.targetQty > 0 ? (totalQty / targetCfg.targetQty) * 100 : 0;
-
-let activeMult = 1.0;
-let gradeLabel = 'Grade C (< 80% Target Qty)';
-if (qtyAchPct >= 100) {
-activeMult = incentiveParams.mult100;
-gradeLabel = 'Grade A (>= 100% Target Qty)';
-} else if (qtyAchPct >= 80) {
-activeMult = incentiveParams.mult80;
-gradeLabel = 'Grade B (80% - 99% Target Qty)';
-}
-
-const baseIncentive = Math.round(totalQty * incentiveParams.ratePerUnit * activeMult);
-
-const tradeInQty = monthVas.filter(v => v.category === 'Trade-In').reduce((s, v) => s + (Number(v.qty) || 0), 0);
-const insuranceQty = monthVas.filter(v => v.category === 'Asuransi').reduce((s, v) => s + (Number(v.qty) || 0), 0);
-const financeQty = monthVas.filter(v => v.category === 'Finance').reduce((s, v) => s + (Number(v.qty) || 0), 0);
-const totalVasQty = tradeInQty + insuranceQty + financeQty;
-
-const vasTradeInInc = tradeInQty * incentiveParams.vasTradeIn;
-const vasInsuranceInc = insuranceQty * incentiveParams.vasInsurance;
-const vasFinanceInc = financeQty * incentiveParams.vasFinance;
-const totalVasInc = Math.round(vasTradeInInc + vasInsuranceInc + vasFinanceInc);
-
-const flagshipQty = monthSales.filter(s => s.segment === 'Z' || s.segment === 'S').reduce((s, item) => s + (Number(item.qty) || 0), 0);
-const focusCheckedNames = Array.from(document.querySelectorAll('.focus-prod-cb:checked')).map(cb => cb.value.toUpperCase());
-const focusProdQty = monthSales
-.filter(s => s.segment !== 'Z' && s.segment !== 'S' && focusCheckedNames.includes(String(s.namaProduk || '').toUpperCase()))
-.reduce((s, item) => s + (Number(item.qty) || 0), 0);
-
-const flagshipBonus = Math.round(flagshipQty * incentiveParams.bonusFlagship);
-const focusBonus = Math.round(focusProdQty * incentiveParams.bonusFocus);
-const totalFocusInc = flagshipBonus + focusBonus;
-
-const grandTotal = baseIncentive + totalVasInc + totalFocusInc;
-
-document.getElementById('incTotalEstimate').innerText = formatRupiah(grandTotal);
-document.getElementById('incGradeBadge').innerText = `${gradeLabel} (${qtyAchPct.toFixed(1)}%)`;
-
-document.getElementById('incBasePctBadge').innerText = `${qtyAchPct.toFixed(1)}%`;
-document.getElementById('incBaseAmount').innerText = formatRupiah(baseIncentive);
-document.getElementById('incBaseDetail').innerText = `${totalQty} Unit | ${formatRupiah(totalVal)}`;
-
-document.getElementById('incVasUnitBadge').innerText = `${totalVasQty} Unit`;
-document.getElementById('incVasAmount').innerText = formatRupiah(totalVasInc);
-document.getElementById('incVasDetail').innerText = `TI:${tradeInQty} | Ins:${insuranceQty} | Fin:${financeQty}`;
-
-document.getElementById('incFocusUnitBadge').innerText = `${flagshipQty + focusProdQty} Unit`;
-document.getElementById('incFocusAmount').innerText = formatRupiah(totalFocusInc);
-document.getElementById('incFocusDetail').innerText = `Z/S: ${flagshipQty} | Fokus: ${focusProdQty}`;
-
-const tbody = document.getElementById('incentiveBreakdownBody');
-tbody.innerHTML = `
-<tr>
-<td class="p-3 font-semibold text-slate-800">Base Insentif Penjualan</td>
-<td class="p-3 text-center font-semibold">${totalQty} Unit (${qtyAchPct.toFixed(1)}%)</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.ratePerUnit)} x ${activeMult}x</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(baseIncentive)}</td>
-</tr>
-<tr>
-<td class="p-3 font-semibold text-slate-800">VAS — Trade-In</td>
-<td class="p-3 text-center font-semibold">${tradeInQty} Unit</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.vasTradeIn)} / unit</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(vasTradeInInc)}</td>
-</tr>
-<tr>
-<td class="p-3 font-semibold text-slate-800">VAS — Asuransi / Insurance</td>
-<td class="p-3 text-center font-semibold">${insuranceQty} Unit</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.vasInsurance)} / unit</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(vasInsuranceInc)}</td>
-</tr>
-<tr>
-<td class="p-3 font-semibold text-slate-800">VAS — Finance</td>
-<td class="p-3 text-center font-semibold">${financeQty} Unit</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.vasFinance)} / unit</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(vasFinanceInc)}</td>
-</tr>
-<tr>
-<td class="p-3 font-semibold text-slate-800">Bonus Segment Flagship (Z & S)</td>
-<td class="p-3 text-center font-semibold">${flagshipQty} Unit</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.bonusFlagship)} / unit</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(flagshipBonus)}</td>
-</tr>
-<tr>
-<td class="p-3 font-semibold text-slate-800">Bonus Produk Fokus Weekly</td>
-<td class="p-3 text-center font-semibold">${focusProdQty} Unit</td>
-<td class="p-3 text-slate-600">${formatRupiah(incentiveParams.bonusFocus)} / unit</td>
-<td class="p-3 text-right font-bold text-slate-800">${formatRupiah(focusBonus)}</td>
-</tr>
-<tr class="bg-blue-50/70">
-<td class="p-3 font-bold text-slate-900" colspan="3">Total Estimasi Insentif Periode ${monthKey}</td>
-<td class="p-3 text-right font-bold text-blue-700 text-sm">${formatRupiah(grandTotal)}</td>
-</tr>
-`;
 }
 
 function setFilterMode(mode) {
@@ -1429,7 +1148,6 @@ document.getElementById('vasCategory').selectedIndex = 0;
 
 renderVasDashboard();
 renderVasTable();
-renderIncentiveMenu();
 showToast('Transaksi VAS berhasil disimpan!');
 });
 
@@ -1469,7 +1187,6 @@ vasData = vasData.filter(item => item.id !== id);
 localStorage.setItem('app_vas', JSON.stringify(vasData));
 renderVasDashboard();
 renderVasTable();
-renderIncentiveMenu();
 showToast('Transaksi VAS dihapus.');
 }
 }
@@ -1546,7 +1263,6 @@ document.getElementById('newMonthTargetQty').value = '';
 renderMonthlyList();
 renderFilterControls();
 renderDashboard();
-renderIncentiveMenu();
 showToast('Setup target bulanan berhasil disimpan & diterapkan!');
 }
 
@@ -1557,7 +1273,6 @@ localStorage.setItem('app_monthly_targets', JSON.stringify(monthlyTargets));
 renderMonthlyList();
 renderFilterControls();
 renderDashboard();
-renderIncentiveMenu();
 showToast('Setup bulanan dihapus.');
 }
 }
@@ -1659,7 +1374,7 @@ let div = document.createElement('div');
 div.className = "flex items-center justify-between text-xs";
 div.innerHTML = `
 <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
-<input type="checkbox" value="${p}" onchange="generateWAReport(); renderIncentiveMenu();" class="focus-prod-cb rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${['FF8', 'S26FE'].includes(p) ? 'checked' : ''}>
+<input type="checkbox" value="${p}" onchange="generateWAReport()" class="focus-prod-cb rounded border-slate-300 text-blue-600 focus:ring-blue-500" ${['FF8', 'S26FE'].includes(p) ? 'checked' : ''}>
 ${p}
 </label>
 <div class="flex items-center gap-1">
@@ -1700,7 +1415,6 @@ document.getElementById('value').value = '';
 renderDashboard();
 renderTrackingTable();
 renderMasterTable();
-renderIncentiveMenu();
 generateWAReport();
 showToast('Transaksi penjualan berhasil disimpan!');
 switchTab('dashboard');
@@ -1808,7 +1522,6 @@ renderProducts();
 renderDashboard();
 renderTrackingTable();
 renderMasterTable();
-renderIncentiveMenu();
 generateWAReport();
 showToast(`Berhasil mengimport ${importedCount} data penjualan!`);
 } catch (error) {
@@ -2117,7 +1830,6 @@ localStorage.setItem('app_sales', JSON.stringify(salesData));
 renderDashboard();
 renderTrackingTable();
 renderMasterTable();
-renderIncentiveMenu();
 generateWAReport();
 showToast('Data terpilih berhasil dihapus.');
 }
@@ -2134,7 +1846,6 @@ localStorage.removeItem('app_sales');
 renderDashboard();
 renderTrackingTable();
 renderMasterTable();
-renderIncentiveMenu();
 generateWAReport();
 showToast('Semua data penjualan berhasil dihapus.');
 }
@@ -2147,7 +1858,6 @@ localStorage.setItem('app_sales', JSON.stringify(salesData));
 renderDashboard();
 renderTrackingTable();
 renderMasterTable();
-renderIncentiveMenu();
 generateWAReport();
 showToast('Transaksi berhasil dihapus.');
 }
@@ -2332,6 +2042,7 @@ ${allSegmentText.trim()}
 
 Update Qty Daily
 ${dailyProductSummary.trim()}
+
 No Aciev daily buat issuenya
 * ${issueText}
 
